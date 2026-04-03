@@ -1,0 +1,430 @@
+import { supabase } from '@/lib/supabase'
+import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
+import Image from 'next/image'
+
+interface Creator {
+  id: string
+  display_name: string
+  bio: string | null
+  specialties: string[] | null
+  profile_image_url: string | null
+  studio_description: string | null
+  pricing_info: string | null
+  whats_included: string[] | null
+  cashapp_username: string | null
+  paypal_username: string | null
+  venmo_username: string | null
+  zelle_info: string | null
+}
+
+interface Video {
+  id: string
+  title: string
+  mux_playback_id: string | null
+  is_preview: boolean
+}
+
+interface Review {
+  id: string
+  rating: number
+  comment: string | null
+  created_at: string
+  profiles: {
+    display_name: string | null
+  } | null
+}
+
+async function getCreatorByUsernameOrId(identifier: string) {
+  let profile = null
+  let creator = null
+
+  // First try to find by username
+  const { data: profileByUsername } = await supabase
+    .from('profiles')
+    .select('id, username, display_name')
+    .eq('username', identifier)
+    .single()
+
+  if (profileByUsername) {
+    profile = profileByUsername
+    // Get creator data
+    const { data: creatorData } = await supabase
+      .from('creators')
+      .select('*')
+      .eq('id', profile.id)
+      .single()
+    creator = creatorData
+  } else {
+    // Try to find by creator ID (UUID)
+    const { data: creatorById } = await supabase
+      .from('creators')
+      .select('*')
+      .eq('id', identifier)
+      .single()
+
+    if (creatorById) {
+      creator = creatorById
+      // Get profile data
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('id, username, display_name')
+        .eq('id', identifier)
+        .single()
+      profile = profileData
+    }
+  }
+
+  if (!creator || !profile) {
+    return null
+  }
+
+  // Get preview videos
+  const { data: videos } = await supabase
+    .from('videos')
+    .select('id, title, mux_playback_id, is_preview')
+    .eq('creator_id', creator.id)
+    .eq('is_preview', true)
+    .order('created_at', { ascending: false })
+
+  // Get student count
+  const { count: studentCount } = await supabase
+    .from('subscriptions')
+    .select('*', { count: 'exact', head: true })
+    .eq('creator_id', creator.id)
+    .eq('status', 'active')
+
+  // Get video count
+  const { count: videoCount } = await supabase
+    .from('videos')
+    .select('*', { count: 'exact', head: true })
+    .eq('creator_id', creator.id)
+
+  // Get reviews
+  const { data: reviews } = await supabase
+    .from('reviews')
+    .select(`
+      id,
+      rating,
+      comment,
+      created_at,
+      profiles!reviews_student_id_fkey (
+        display_name
+      )
+    `)
+    .eq('creator_id', creator.id)
+    .order('created_at', { ascending: false })
+    .limit(5)
+
+  return {
+    profile,
+    creator: creator as Creator,
+    videos: (videos || []) as Video[],
+    reviews: (reviews || []).map(r => ({
+      ...r,
+      profiles: Array.isArray(r.profiles) ? r.profiles[0] : r.profiles
+    })) as Review[],
+    studentCount: studentCount || 0,
+    videoCount: videoCount || 0,
+  }
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const { username } = await params
+  const data = await getCreatorByUsernameOrId(username)
+
+  if (!data) {
+    return {
+      title: 'Creator Not Found | Sssion',
+    }
+  }
+
+  const { creator, profile } = data
+  const displayName = creator.display_name || profile.display_name || username
+
+  return {
+    title: `${displayName} | Sssion`,
+    description: creator.studio_description || creator.bio || `Join ${displayName}'s studio on Sssion`,
+    openGraph: {
+      title: `${displayName} | Sssion`,
+      description: creator.studio_description || creator.bio || `Join ${displayName}'s studio on Sssion`,
+      images: creator.profile_image_url ? [creator.profile_image_url] : [],
+      type: 'profile',
+    },
+  }
+}
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex gap-0.5">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <svg
+          key={star}
+          className={`w-4 h-4 ${star <= rating ? 'text-yellow-400' : 'text-white/20'}`}
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+    </div>
+  )
+}
+
+export default async function CreatorStudioPage({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params
+  const data = await getCreatorByUsernameOrId(username)
+
+  if (!data) {
+    notFound()
+  }
+
+  const { profile, creator, videos, reviews, studentCount, videoCount } = data
+  const displayName = creator.display_name || profile.display_name || username
+
+  const hasPaymentLinks = creator.cashapp_username || creator.paypal_username || creator.venmo_username || creator.zelle_info
+
+  return (
+    <div className="min-h-screen bg-[#1A1A2E]">
+      {/* Hero Section */}
+      <section className="relative pt-16 pb-24 px-6 bg-gradient-to-b from-[#B76E79]/30 to-[#1A1A2E]">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Profile Image */}
+          <div className="relative w-32 h-32 mx-auto mb-6">
+            {creator.profile_image_url ? (
+              <Image
+                src={creator.profile_image_url}
+                alt={displayName}
+                fill
+                className="rounded-full object-cover border-4 border-[#B76E79]"
+              />
+            ) : (
+              <div className="w-full h-full rounded-full bg-[#B76E79]/20 flex items-center justify-center border-4 border-[#B76E79]">
+                <span className="text-4xl font-bold text-[#B76E79]">
+                  {displayName.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Name */}
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            {displayName}
+          </h1>
+
+          {/* Specialties */}
+          {creator.specialties && creator.specialties.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {creator.specialties.map((specialty, index) => (
+                <span
+                  key={index}
+                  className="px-4 py-1.5 bg-[#B76E79]/20 text-[#B76E79] rounded-full text-sm font-medium"
+                >
+                  {specialty}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* About Section */}
+      {(creator.studio_description || creator.bio) && (
+        <section className="py-12 px-6">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-4">About</h2>
+            <p className="text-white/70 leading-relaxed whitespace-pre-wrap">
+              {creator.studio_description || creator.bio}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* What's Included Section */}
+      {creator.whats_included && creator.whats_included.length > 0 && (
+        <section className="py-12 px-6 bg-[#16162a]">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-6">What&apos;s Included</h2>
+            <ul className="space-y-3">
+              {creator.whats_included.map((item, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-[#B76E79] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-white/80">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* Pricing Section */}
+      {creator.pricing_info && (
+        <section className="py-12 px-6">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-6">Pricing</h2>
+            <div className="bg-gradient-to-br from-[#B76E79]/20 to-[#B76E79]/5 rounded-2xl p-8 border border-[#B76E79]/30">
+              <p className="text-white/90 text-lg whitespace-pre-wrap">{creator.pricing_info}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Stats Bar */}
+      <section className="py-8 px-6 bg-[#16162a]">
+        <div className="max-w-3xl mx-auto flex justify-center gap-12">
+          <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{studentCount}</p>
+            <p className="text-white/60 text-sm">Students</p>
+          </div>
+          <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{videoCount}</p>
+            <p className="text-white/60 text-sm">Videos</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Preview Content Section */}
+      {videos.length > 0 && (
+        <section className="py-12 px-6">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-6">Preview Content</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {videos.map((video) => (
+                <div key={video.id} className="relative aspect-video rounded-xl overflow-hidden bg-[#16162a]">
+                  {video.mux_playback_id ? (
+                    <Image
+                      src={`https://image.mux.com/${video.mux_playback_id}/thumbnail.jpg?time=0`}
+                      alt={video.title}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <svg className="w-12 h-12 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-white text-sm font-medium truncate">{video.title}</p>
+                  </div>
+                  {/* Play button overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Reviews Section */}
+      {reviews.length > 0 && (
+        <section className="py-12 px-6 bg-[#16162a]">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-6">Student Reviews</h2>
+            <div className="space-y-4">
+              {reviews.map((review) => (
+                <div key={review.id} className="bg-[#1A1A2E] rounded-xl p-6 border border-white/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-white font-medium">
+                      {review.profiles?.display_name || 'Student'}
+                    </span>
+                    <StarRating rating={review.rating} />
+                  </div>
+                  {review.comment && (
+                    <p className="text-white/70">{review.comment}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Payment Links Section */}
+      {hasPaymentLinks && (
+        <section className="py-12 px-6">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">Payment Options</h2>
+            <div className="flex flex-wrap justify-center gap-4">
+              {creator.cashapp_username && (
+                <a
+                  href={`https://cash.app/$${creator.cashapp_username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#00D632] text-black font-semibold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2"
+                >
+                  <span className="font-bold">$</span> Cash App
+                </a>
+              )}
+              {creator.paypal_username && (
+                <a
+                  href={`https://paypal.me/${creator.paypal_username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#0070ba] text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
+                >
+                  PayPal
+                </a>
+              )}
+              {creator.venmo_username && (
+                <a
+                  href={`https://venmo.com/${creator.venmo_username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#008CFF] text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
+                >
+                  Venmo
+                </a>
+              )}
+              {creator.zelle_info && (
+                <div className="px-6 py-3 bg-[#6D1ED4] text-white font-semibold rounded-full">
+                  Zelle: {creator.zelle_info}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Bottom CTA */}
+      <section className="py-16 px-6 bg-gradient-to-t from-[#B76E79]/20 to-transparent">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Join {displayName}&apos;s Studio
+          </h2>
+          <p className="text-white/60 mb-8">
+            Download Sssion to access all content and connect with {displayName}
+          </p>
+          <a
+            href="#"
+            className="inline-block px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+          >
+            Download Sssion
+          </a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-white/10">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-white/40 text-sm">
+            &copy; 2026 Sssion
+          </p>
+          <a href="/" className="text-[#B76E79] hover:text-[#B76E79]/80 text-sm transition-colors">
+            sssion.com
+          </a>
+        </div>
+      </footer>
+    </div>
+  )
+}
