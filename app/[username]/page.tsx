@@ -36,48 +36,65 @@ interface Review {
 }
 
 async function getCreatorByUsernameOrId(identifier: string) {
+  console.log('=== CREATOR LOOKUP DEBUG ===')
+  console.log('Identifier received:', identifier)
+
   let profile = null
   let creator = null
 
-  // First try to find by username
-  const { data: profileByUsername } = await supabase
+  // First try to find by username (must be a creator)
+  const { data: profileByUsername, error: profileError } = await supabase
     .from('profiles')
-    .select('id, username, display_name')
+    .select('*')
     .eq('username', identifier)
+    .eq('role', 'creator')
     .single()
+
+  console.log('Profile query result:', profileByUsername)
+  console.log('Profile query error:', profileError)
 
   if (profileByUsername) {
     profile = profileByUsername
     // Get creator data
-    const { data: creatorData } = await supabase
+    const { data: creatorData, error: creatorError } = await supabase
       .from('creators')
       .select('*')
       .eq('id', profile.id)
       .single()
+    console.log('Creator query result:', creatorData)
+    console.log('Creator query error:', creatorError)
     creator = creatorData
   } else {
     // Try to find by creator ID (UUID)
-    const { data: creatorById } = await supabase
+    console.log('Username not found, trying ID lookup...')
+    const { data: creatorById, error: creatorIdError } = await supabase
       .from('creators')
       .select('*')
       .eq('id', identifier)
       .single()
+
+    console.log('Creator by ID result:', creatorById)
+    console.log('Creator by ID error:', creatorIdError)
 
     if (creatorById) {
       creator = creatorById
       // Get profile data
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('id, username, display_name')
+        .select('*')
         .eq('id', identifier)
         .single()
       profile = profileData
+      console.log('Profile by ID result:', profileData)
     }
   }
 
   if (!creator || !profile) {
+    console.log('Creator or profile not found, returning null')
     return null
   }
+
+  console.log('=== LOOKUP SUCCESS ===')
 
   // Get preview videos
   const { data: videos } = await supabase
