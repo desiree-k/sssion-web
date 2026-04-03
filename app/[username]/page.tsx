@@ -55,11 +55,11 @@ async function getCreatorByUsernameOrId(identifier: string) {
 
   if (profileByUsername) {
     profile = profileByUsername
-    // Get creator data
+    // Get creator data - use user_id, not id
     const { data: creatorData, error: creatorError } = await supabase
       .from('creators')
       .select('*')
-      .eq('id', profile.id)
+      .eq('user_id', profile.id)
       .single()
     console.log('Creator query result:', creatorData)
     console.log('Creator query error:', creatorError)
@@ -78,11 +78,11 @@ async function getCreatorByUsernameOrId(identifier: string) {
 
     if (creatorById) {
       creator = creatorById
-      // Get profile data
+      // Get profile data using creator's user_id
       const { data: profileData } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', identifier)
+        .eq('id', creatorById.user_id)
         .single()
       profile = profileData
       console.log('Profile by ID result:', profileData)
