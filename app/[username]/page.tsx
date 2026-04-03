@@ -3,12 +3,21 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import Image from 'next/image'
 
+interface Profile {
+  id: string
+  username: string | null
+  display_name: string | null
+  profile_image_url: string | null
+  bio: string | null
+  role: string
+}
+
 interface Creator {
   id: string
-  display_name: string
+  user_id: string
+  display_name: string | null
   bio: string | null
   specialties: string[] | null
-  profile_image_url: string | null
   studio_description: string | null
   pricing_info: string | null
   whats_included: string[] | null
@@ -18,11 +27,12 @@ interface Creator {
   zelle_info: string | null
 }
 
-interface Video {
+interface ContentItem {
   id: string
   title: string
   mux_playback_id: string | null
   is_preview: boolean
+  difficulty_level: string | null
 }
 
 interface Review {
@@ -96,24 +106,28 @@ async function getCreatorByUsernameOrId(identifier: string) {
 
   console.log('=== LOOKUP SUCCESS ===')
 
-  // Get preview videos
-  const { data: videos } = await supabase
-    .from('videos')
-    .select('id, title, mux_playback_id, is_preview')
+  // Get preview content items
+  const { data: contentItems, error: contentError } = await supabase
+    .from('content_items')
+    .select('id, title, mux_playback_id, is_preview, difficulty_level')
     .eq('creator_id', creator.id)
     .eq('is_preview', true)
+    .not('mux_playback_id', 'is', null)
     .order('created_at', { ascending: false })
 
-  // Get student count
+  console.log('Content items result:', contentItems)
+  console.log('Content items error:', contentError)
+
+  // Get student count from studio_access
   const { count: studentCount } = await supabase
-    .from('subscriptions')
+    .from('studio_access')
     .select('*', { count: 'exact', head: true })
     .eq('creator_id', creator.id)
-    .eq('status', 'active')
+    .eq('status', 'approved')
 
-  // Get video count
+  // Get content count
   const { count: videoCount } = await supabase
-    .from('videos')
+    .from('content_items')
     .select('*', { count: 'exact', head: true })
     .eq('creator_id', creator.id)
 
@@ -134,9 +148,9 @@ async function getCreatorByUsernameOrId(identifier: string) {
     .limit(5)
 
   return {
-    profile,
+    profile: profile as Profile,
     creator: creator as Creator,
-    videos: (videos || []) as Video[],
+    contentItems: (contentItems || []) as ContentItem[],
     reviews: (reviews || []).map(r => ({
       ...r,
       profiles: Array.isArray(r.profiles) ? r.profiles[0] : r.profiles
@@ -159,13 +173,15 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   const { creator, profile } = data
   const displayName = creator.display_name || profile.display_name || username
 
+  const profileImageUrl = profile.profile_image_url
+
   return {
     title: `${displayName} | Sssion`,
     description: creator.studio_description || creator.bio || `Join ${displayName}'s studio on Sssion`,
     openGraph: {
       title: `${displayName} | Sssion`,
       description: creator.studio_description || creator.bio || `Join ${displayName}'s studio on Sssion`,
-      images: creator.profile_image_url ? [creator.profile_image_url] : [],
+      images: profileImageUrl ? [profileImageUrl] : [],
       type: 'profile',
     },
   }
@@ -196,8 +212,9 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
     notFound()
   }
 
-  const { profile, creator, videos, reviews, studentCount, videoCount } = data
+  const { profile, creator, contentItems, reviews, studentCount, videoCount } = data
   const displayName = creator.display_name || profile.display_name || username
+  const profileImageUrl = profile.profile_image_url
 
   const hasPaymentLinks = creator.cashapp_username || creator.paypal_username || creator.venmo_username || creator.zelle_info
 
@@ -208,12 +225,11 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         <div className="max-w-4xl mx-auto text-center">
           {/* Profile Image */}
           <div className="relative w-32 h-32 mx-auto mb-6">
-            {creator.profile_image_url ? (
-              <Image
-                src={creator.profile_image_url}
+            {profileImageUrl ? (
+              <img
+                src={profileImageUrl}
                 alt={displayName}
-                fill
-                className="rounded-full object-cover border-4 border-[#B76E79]"
+                className="w-full h-full rounded-full object-cover border-4 border-[#B76E79]"
               />
             ) : (
               <div className="w-full h-full rounded-full bg-[#B76E79]/20 flex items-center justify-center border-4 border-[#B76E79]">
@@ -303,30 +319,37 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       </section>
 
       {/* Preview Content Section */}
-      {videos.length > 0 && (
+      {contentItems.length > 0 && (
         <section className="py-12 px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Preview Content</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {videos.map((video) => (
-                <div key={video.id} className="relative aspect-video rounded-xl overflow-hidden bg-[#16162a]">
-                  {video.mux_playback_id ? (
-                    <Image
-                      src={`https://image.mux.com/${video.mux_playback_id}/thumbnail.jpg?time=0`}
-                      alt={video.title}
-                      fill
-                      className="object-cover"
+              {contentItems.map((item) => (
+                <div key={item.id} className="relative aspect-video rounded-xl overflow-hidden bg-[#16162a]">
+                  {item.mux_playback_id ? (
+                    <img
+                      src={`https://image.mux.com/${item.mux_playback_id}/thumbnail.jpg`}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#B76E79]/20 to-[#1A1A2E]">
                       <svg className="w-12 h-12 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  {/* Difficulty badge */}
+                  {item.difficulty_level && (
+                    <div className="absolute top-2 right-2">
+                      <span className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white/90 text-xs rounded-full capitalize">
+                        {item.difficulty_level.replace('_', ' ')}
+                      </span>
+                    </div>
+                  )}
                   <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <p className="text-white text-sm font-medium truncate">{video.title}</p>
+                    <p className="text-white text-sm font-medium truncate">{item.title}</p>
                   </div>
                   {/* Play button overlay */}
                   <div className="absolute inset-0 flex items-center justify-center">
