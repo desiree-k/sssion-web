@@ -66,12 +66,20 @@ export default async function DiscoverPage() {
           <a href="/" className="text-2xl font-bold text-[#B76E79]">
             Sssion
           </a>
-          <a
-            href="/join"
-            className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
-          >
-            Join as Creator
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/signin"
+              className="text-white/70 hover:text-white text-sm transition-colors"
+            >
+              Creator Sign In
+            </a>
+            <a
+              href="/join"
+              className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+            >
+              Join as Creator
+            </a>
+          </div>
         </div>
       </header>
 
@@ -121,6 +129,9 @@ export default async function DiscoverPage() {
           <div className="flex gap-6">
             <a href="/" className="text-white/40 hover:text-white/60 text-sm transition-colors">
               Home
+            </a>
+            <a href="/signin" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+              Creator Sign In
             </a>
             <a href="/join" className="text-white/40 hover:text-white/60 text-sm transition-colors">
               Creator Signup

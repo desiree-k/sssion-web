@@ -255,12 +255,20 @@ export default function JoinPage() {
               </button>
             </div>
 
-            <p className="text-center text-white/40 text-sm">
-              Don&apos;t have a code?{' '}
-              <a href="mailto:hello@sssion.com" className="text-[#B76E79] hover:underline">
-                Contact us to apply
-              </a>
-            </p>
+            <div className="space-y-2 text-center text-white/40 text-sm">
+              <p>
+                Don&apos;t have a code?{' '}
+                <a href="mailto:hello@sssion.com" className="text-[#B76E79] hover:underline">
+                  Contact us to apply
+                </a>
+              </p>
+              <p>
+                Already have an account?{' '}
+                <a href="/signin" className="text-[#B76E79] hover:underline">
+                  Sign in
+                </a>
+              </p>
+            </div>
           </div>
         )}
 
@@ -389,6 +397,22 @@ export default function JoinPage() {
               </p>
             </div>
 
+            {/* Email Verification Notice */}
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-5">
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <div>
+                  <p className="font-semibold text-amber-400 mb-1">Check your email</p>
+                  <p className="text-white/60 text-sm">
+                    We sent a verification link to <span className="text-white">{email}</span>.
+                    Please verify your email before signing in to your dashboard.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Studio Link */}
             <div className="bg-[#16162a] rounded-xl p-5 border border-white/10">
               <p className="text-sm text-white/60 mb-2">Your studio link</p>
@@ -443,6 +467,16 @@ export default function JoinPage() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Sign In Link */}
+            <div className="text-center">
+              <p className="text-white/40 text-sm">
+                Verified your email?{' '}
+                <a href="/signin" className="text-[#B76E79] hover:underline font-medium">
+                  Sign in to your dashboard
+                </a>
+              </p>
             </div>
           </div>
         )}

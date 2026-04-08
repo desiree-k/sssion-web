@@ -13,6 +13,12 @@ export default function Home() {
               Discover Creators
             </a>
             <a
+              href="/signin"
+              className="text-white/70 hover:text-white transition-colors hidden sm:block"
+            >
+              Creator Sign In
+            </a>
+            <a
               href="/join"
               className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
             >
@@ -166,6 +172,9 @@ export default function Home() {
           <div className="flex gap-6">
             <a href="/discover" className="text-white/40 hover:text-white/60 text-sm transition-colors">
               Discover
+            </a>
+            <a href="/signin" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+              Creator Sign In
             </a>
             <a href="/join" className="text-white/40 hover:text-white/60 text-sm transition-colors">
               Creator Signup
