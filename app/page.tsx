@@ -15,7 +15,7 @@ export default function Home() {
 
         <div className="flex flex-col sm:flex-row gap-4">
           <a
-            href="#features"
+            href="/join"
             className="px-8 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
           >
             I&apos;m a Creator
@@ -98,12 +98,20 @@ export default function Home() {
           <p className="text-white/60 mb-8 max-w-xl mx-auto">
             Join creators who are building thriving movement instruction businesses on Sssion.
           </p>
-          <a
-            href="#"
-            className="inline-block px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
-          >
-            Download Sssion
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/join"
+              className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+            >
+              Join as Creator
+            </a>
+            <a
+              href="#"
+              className="px-10 py-4 border-2 border-white/20 text-white/80 font-semibold rounded-full hover:bg-white/5 transition-colors"
+            >
+              Download App
+            </a>
+          </div>
         </div>
       </section>
 
