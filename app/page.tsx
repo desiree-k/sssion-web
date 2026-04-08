@@ -1,6 +1,27 @@
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Navigation */}
+      <nav className="absolute top-0 left-0 right-0 z-10 py-6 px-6">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <span className="text-2xl font-bold text-[#B76E79]">Sssion</span>
+          <div className="flex items-center gap-6">
+            <a
+              href="/discover"
+              className="text-white/70 hover:text-white transition-colors hidden sm:block"
+            >
+              Discover Creators
+            </a>
+            <a
+              href="/join"
+              className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+            >
+              Join as Creator
+            </a>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center min-h-screen px-6 text-center">
         <h1 className="text-6xl md:text-8xl font-bold text-[#B76E79] tracking-tight mb-6">
@@ -21,7 +42,7 @@ export default function Home() {
             I&apos;m a Creator
           </a>
           <a
-            href="#features"
+            href="/discover"
             className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors"
           >
             I&apos;m a Student
@@ -115,6 +136,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Browse Creators Section */}
+      <section className="py-16 px-6 bg-[#16162a]">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Find Your Instructor
+          </h2>
+          <p className="text-white/60 mb-8 max-w-xl mx-auto">
+            Browse our growing community of talented movement creators
+          </p>
+          <a
+            href="/discover"
+            className="inline-flex items-center gap-2 px-10 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors"
+          >
+            Browse Creators
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -122,8 +164,11 @@ export default function Home() {
             &copy; 2026 Sssion
           </p>
           <div className="flex gap-6">
-            <a href="https://sssion.com" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              sssion.com
+            <a href="/discover" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+              Discover
+            </a>
+            <a href="/join" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+              Creator Signup
             </a>
           </div>
         </div>

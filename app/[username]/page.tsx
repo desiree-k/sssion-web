@@ -419,15 +419,38 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </div>
       </section>
 
+      {/* Discover More */}
+      <section className="py-12 px-6 bg-[#16162a]">
+        <div className="max-w-3xl mx-auto text-center">
+          <a
+            href="/discover"
+            className="inline-flex items-center gap-2 text-white/60 hover:text-[#B76E79] transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Discover more creators
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-sm">
             &copy; 2026 Sssion
           </p>
-          <a href="/" className="text-[#B76E79] hover:text-[#B76E79]/80 text-sm transition-colors">
-            sssion.com
-          </a>
+          <div className="flex gap-6">
+            <a href="/" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+              Home
+            </a>
+            <a href="/discover" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+              Discover
+            </a>
+          </div>
         </div>
       </footer>
     </div>
