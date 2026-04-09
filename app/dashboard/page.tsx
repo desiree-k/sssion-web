@@ -31,44 +31,44 @@ export default function DashboardPage() {
         return
       }
 
-      // Get profile data
-      let { data: profile } = await supabase
+      console.log('Dashboard loading for user:', user.id)
+
+      // Check for pending username from signup flow FIRST
+      const pendingUsername = localStorage.getItem('pending_username')
+      if (pendingUsername) {
+        console.log('Found pending username in localStorage:', pendingUsername)
+        const { data: updatedProfile, error: updateError } = await supabase
+          .from('profiles')
+          .update({ username: pendingUsername.toLowerCase() })
+          .eq('id', user.id)
+          .select()
+          .single()
+
+        if (updatedProfile) {
+          console.log('Username updated successfully:', updatedProfile)
+          localStorage.removeItem('pending_username')
+        } else {
+          console.error('Failed to update username:', updateError)
+        }
+      }
+
+      // Now fetch fresh profile data
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('username, full_name, display_name')
+        .select('*')
         .eq('id', user.id)
         .single()
 
-      // Check for pending username from signup flow
-      if (!profile?.username) {
-        const pendingUsername = localStorage.getItem('pending_username')
-        if (pendingUsername) {
-          console.log('Found pending username, applying:', pendingUsername)
-          const { data: updatedProfile, error: updateError } = await supabase
-            .from('profiles')
-            .update({ username: pendingUsername })
-            .eq('id', user.id)
-            .select('username, full_name, display_name')
-            .single()
-
-          if (updatedProfile) {
-            console.log('Username updated successfully:', updatedProfile)
-            profile = updatedProfile
-            localStorage.removeItem('pending_username')
-          } else {
-            console.error('Failed to update username:', updateError)
-          }
-        }
-      } else {
-        // Clear any stale pending username if user already has one
-        localStorage.removeItem('pending_username')
-      }
+      console.log('Profile data:', profile, 'Error:', profileError)
 
       // Get creator data
-      const { data: creator } = await supabase
+      const { data: creator, error: creatorError } = await supabase
         .from('creators')
-        .select('id, display_name')
+        .select('*')
         .eq('user_id', user.id)
         .single()
+
+      console.log('Creator data:', creator, 'Error:', creatorError)
 
       if (!creator) {
         // User is not a creator
@@ -96,9 +96,12 @@ export default function DashboardPage() {
         .eq('creator_id', creator.id)
         .eq('status', 'pending')
 
+      const finalUsername = profile?.username || null
+      console.log('Setting userData with username:', finalUsername)
+
       setUserData({
         displayName: creator.display_name || profile?.full_name || profile?.display_name || 'Creator',
-        username: profile?.username || null,
+        username: finalUsername,
         studentCount: studentCount || 0,
         videoCount: videoCount || 0,
         pendingRequestsCount: pendingRequestsCount || 0,
