@@ -1,97 +1,77 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
-function CallbackHandler() {
+export default function AuthCallback() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const [status, setStatus] = useState('Verifying your email...')
 
   useEffect(() => {
-    handleCallback()
-  }, [])
-
-  const handleCallback = async () => {
-    try {
-      const code = searchParams.get('code')
-
-      if (!code) {
-        setStatus('Invalid verification link')
-        setTimeout(() => router.push('/signin'), 2000)
-        return
-      }
-
-      // Exchange the code for a session
-      const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    const handleCallback = async () => {
+      // supabase-js automatically detects tokens in the URL hash
+      // and establishes the session. We just need to wait for it.
+      const { data: { session }, error } = await supabase.auth.getSession()
 
       if (error) {
-        console.error('Error exchanging code:', error)
-        setStatus('Verification failed. Please try again.')
-        setTimeout(() => router.push('/signin'), 2000)
+        console.error('Auth callback error:', error)
+        router.push('/signin')
         return
       }
 
-      if (!data.user) {
-        setStatus('Verification failed. Please try again.')
-        setTimeout(() => router.push('/signin'), 2000)
-        return
-      }
+      if (session) {
+        // Session established — check for pending username
+        const pendingUsername = localStorage.getItem('pending_username')
+        if (pendingUsername) {
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({ username: pendingUsername.toLowerCase() })
+            .eq('id', session.user.id)
 
-      setStatus('Email verified! Setting up your account...')
-
-      // Check for pending username from signup flow
-      const pendingUsername = localStorage.getItem('pending_username')
-      if (pendingUsername) {
-        console.log('Found pending username, applying:', pendingUsername)
-
-        const { data: updatedProfile, error: updateError } = await supabase
-          .from('profiles')
-          .update({ username: pendingUsername })
-          .eq('id', data.user.id)
-          .select()
-          .single()
-
-        if (updatedProfile) {
-          console.log('Username updated successfully:', updatedProfile)
-          localStorage.removeItem('pending_username')
-        } else {
-          console.error('Failed to update username:', updateError)
-          // Continue anyway - user can update in app
+          if (!updateError) {
+            localStorage.removeItem('pending_username')
+          } else {
+            console.error('Username update error:', updateError)
+          }
         }
-      }
+        router.push('/dashboard')
+      } else {
+        // No session yet — supabase might still be processing
+        // Listen for auth state change
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+              const pendingUsername = localStorage.getItem('pending_username')
+              if (pendingUsername) {
+                await supabase
+                  .from('profiles')
+                  .update({ username: pendingUsername.toLowerCase() })
+                  .eq('id', session.user.id)
+                localStorage.removeItem('pending_username')
+              }
+              subscription.unsubscribe()
+              router.push('/dashboard')
+            }
+          }
+        )
 
-      setStatus('Success! Redirecting to dashboard...')
-      router.push('/dashboard')
-    } catch (err) {
-      console.error('Callback error:', err)
-      setStatus('An error occurred. Redirecting...')
-      setTimeout(() => router.push('/signin'), 2000)
+        // Timeout after 10 seconds
+        setTimeout(() => {
+          subscription.unsubscribe()
+          router.push('/signin?error=timeout')
+        }, 10000)
+      }
     }
-  }
+
+    handleCallback()
+  }, [router])
 
   return (
-    <div className="text-center">
-      <div className="w-12 h-12 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-      <p className="text-lg text-white/80">{status}</p>
-    </div>
-  )
-}
-
-export default function AuthCallbackPage() {
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
-      <Suspense
-        fallback={
-          <div className="text-center">
-            <div className="w-12 h-12 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-            <p className="text-lg text-white/80">Loading...</p>
-          </div>
-        }
-      >
-        <CallbackHandler />
-      </Suspense>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-12 h-12 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+        <p className="text-lg text-white/80">Verifying your account...</p>
+      </div>
     </div>
   )
 }
