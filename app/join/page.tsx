@@ -136,18 +136,36 @@ export default function JoinPage() {
 
       const userId = authData.user.id
 
-      // 2. Wait a moment for the trigger to create profile + creator rows
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // 2. Wait for trigger to create profile, then update username with retries
+      let usernameUpdated = false
+      let retries = 0
+      const maxRetries = 5
 
-      // 3. Update the profile with the chosen username
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ username: username.toLowerCase() })
-        .eq('id', userId)
+      console.log('Starting username update for user:', userId, 'username:', username.toLowerCase())
 
-      if (profileError) {
-        console.error('Error updating username:', profileError)
-        // Continue anyway - user can update username later
+      while (retries < maxRetries && !usernameUpdated) {
+        // Wait before each attempt (trigger needs time to create profile row)
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        const { data, error: profileError } = await supabase
+          .from('profiles')
+          .update({ username: username.toLowerCase() })
+          .eq('id', userId)
+          .select()
+          .single()
+
+        if (data) {
+          console.log('Username update succeeded on attempt', retries + 1, ':', data)
+          usernameUpdated = true
+        } else {
+          console.log('Username update attempt', retries + 1, 'failed:', profileError?.message || 'No row returned')
+          retries++
+        }
+      }
+
+      if (!usernameUpdated) {
+        console.error('Failed to update username after', maxRetries, 'attempts')
+        // Continue anyway - user can update username later in the app
       }
 
       // 4. Claim the invite code
