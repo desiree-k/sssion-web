@@ -32,11 +32,36 @@ export default function DashboardPage() {
       }
 
       // Get profile data
-      const { data: profile } = await supabase
+      let { data: profile } = await supabase
         .from('profiles')
         .select('username, full_name, display_name')
         .eq('id', user.id)
         .single()
+
+      // Check for pending username from signup flow
+      if (!profile?.username) {
+        const pendingUsername = localStorage.getItem('pending_username')
+        if (pendingUsername) {
+          console.log('Found pending username, applying:', pendingUsername)
+          const { data: updatedProfile, error: updateError } = await supabase
+            .from('profiles')
+            .update({ username: pendingUsername })
+            .eq('id', user.id)
+            .select('username, full_name, display_name')
+            .single()
+
+          if (updatedProfile) {
+            console.log('Username updated successfully:', updatedProfile)
+            profile = updatedProfile
+            localStorage.removeItem('pending_username')
+          } else {
+            console.error('Failed to update username:', updateError)
+          }
+        }
+      } else {
+        // Clear any stale pending username if user already has one
+        localStorage.removeItem('pending_username')
+      }
 
       // Get creator data
       const { data: creator } = await supabase
