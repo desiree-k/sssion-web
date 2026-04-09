@@ -128,6 +128,7 @@ export default function JoinPage() {
             role: 'creator',
             full_name: fullName.trim(),
           },
+          emailRedirectTo: 'https://sssion.studio/auth/callback',
         },
       })
 
