@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sssion Studio — Stop building on borrowed land</title>
+<meta name="description" content="The platform built for sensual movement creators. Own your audience, own your content, own your earnings. Founding cohort waitlist now open.">
+
+<style>
+  /* ---------- TOKENS ---------- */
+  :root {
+    --ink: #0d0508;
+    --ink-2: #1a0a14;
+    --ink-3: #2a1420;
+    --rose: #d4527a;
+    --rose-deep: #b03e64;
+    --rose-soft: #e8a3b8;
+    --cream: #f4e8e0;
+    --cream-dim: #d4c0c8;
+    --cream-faint: #8a6e7a;
+    --gold: #c9a878;
+
+    --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+    --max: 1200px;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--rose); color: var(--cream); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(13, 5, 8, 0.6);
+    border-bottom: 1px solid rgba(212, 82, 122, 0.1);
+  }
+
+  .logo {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+  }
+  .logo .dot { color: var(--rose); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .nav-links a {
+    color: var(--cream-dim);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--rose); }
+
+  .nav-cta {
+    padding: 10px 22px;
+    border: 1px solid var(--rose);
+    border-radius: 100px;
+    color: var(--cream) !important;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover {
+    background: var(--rose);
+    color: var(--ink) !important;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    min-height: 100vh;
+    padding: 140px 40px 80px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(212, 82, 122, 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 50% at 10% 90%, rgba(120, 40, 140, 0.22) 0%, transparent 55%),
+      linear-gradient(165deg, var(--ink-2) 0%, var(--ink) 100%);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noise'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23noise)' opacity='0.04'/></svg>");
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  .hero-content {
+    max-width: var(--max);
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--rose);
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -2px;
+    margin-bottom: 32px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--rose);
+    font-weight: 300;
+  }
+
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--cream-dim);
+    line-height: 1.4;
+    margin-bottom: 48px;
+    max-width: 540px;
+  }
+
+  /* Form */
+  .signup-form {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    margin-bottom: 24px;
+  }
+
+  .signup-form input[type="email"] {
+    flex: 1;
+    padding: 16px 20px;
+    background: rgba(244, 232, 224, 0.06);
+    border: 1px solid rgba(244, 232, 224, 0.2);
+    border-radius: 100px;
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 300;
+    transition: all 0.2s;
+  }
+  .signup-form input[type="email"]:focus {
+    outline: none;
+    border-color: var(--rose);
+    background: rgba(212, 82, 122, 0.08);
+  }
+  .signup-form input[type="email"]::placeholder {
+    color: var(--cream-faint);
+  }
+
+  .signup-form button {
+    padding: 16px 32px;
+    background: var(--rose);
+    border: none;
+    border-radius: 100px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .signup-form button:hover {
+    background: var(--cream);
+    transform: translateY(-1px);
+  }
+
+  .role-toggle {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--cream-faint);
+    margin-bottom: 16px;
+  }
+  .role-toggle label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+  .role-toggle label:hover { color: var(--cream); }
+  .role-toggle input[type="radio"] {
+    accent-color: var(--rose);
+  }
+  .role-toggle input[type="radio"]:checked + span {
+    color: var(--rose);
+  }
+
+  .hero-fineprint {
+    font-size: 12px;
+    color: var(--cream-faint);
+    letter-spacing: 0.3px;
+  }
+
+  .student-link {
+    margin-top: 32px;
+    font-size: 13px;
+    color: var(--cream-dim);
+  }
+  .student-link a {
+    color: var(--rose);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .student-link a:hover { border-bottom-color: var(--rose); }
+
+  /* Hero visual */
+  .hero-visual {
+    position: relative;
+    aspect-ratio: 4/5;
+    width: 100%;
+  }
+
+  .visual-card {
+    position: absolute;
+    background: linear-gradient(145deg, rgba(42, 20, 32, 0.9), rgba(26, 10, 20, 0.95));
+    border: 1px solid rgba(212, 82, 122, 0.25);
+    border-radius: 14px;
+    padding: 24px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  .visual-card.main {
+    inset: 8% 12% 8% 0;
+    transform: rotate(-2deg);
+    z-index: 2;
+  }
+
+  .visual-card.sub {
+    bottom: 12%;
+    right: 0;
+    width: 45%;
+    transform: rotate(3deg);
+    z-index: 1;
+  }
+
+  .card-eyebrow {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .card-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    color: var(--cream);
+  }
+  .card-meta {
+    font-size: 11px;
+    color: var(--cream-faint);
+    margin-bottom: 16px;
+  }
+
+  .card-tile {
+    background: rgba(212, 82, 122, 0.1);
+    border: 1px solid rgba(212, 82, 122, 0.2);
+    border-radius: 8px;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rose);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  .card-stat {
+    font-family: var(--serif);
+    font-size: 36px;
+    color: var(--rose);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  /* ---------- SECTIONS COMMON ---------- */
+  section {
+    padding: 120px 40px;
+    position: relative;
+  }
+
+  .container {
+    max-width: var(--max);
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  }
+  .section-eyebrow::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--rose);
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+    max-width: 800px;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .section-lede {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-style: italic;
+    color: var(--cream-dim);
+    max-width: 640px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* ---------- PROBLEM SECTION ---------- */
+  .problem {
+    background: var(--ink-2);
+    position: relative;
+  }
+
+  .problem-list {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(244, 232, 224, 0.08);
+  }
+
+  .problem-item {
+    padding: 36px 0;
+    border-bottom: 1px solid rgba(244, 232, 224, 0.08);
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding-right: 40px;
+  }
+  .problem-item:nth-child(2n) {
+    padding-left: 40px;
+    padding-right: 0;
+    border-left: 1px solid rgba(244, 232, 224, 0.08);
+  }
+
+  .problem-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 28px;
+    color: var(--rose);
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 4px;
+  }
+
+  .problem-text {
+    font-family: var(--serif);
+    font-size: 21px;
+    line-height: 1.35;
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  /* ---------- SOLUTION ---------- */
+  .solution {
+    background:
+      radial-gradient(ellipse 50% 40% at 50% 100%, rgba(212, 82, 122, 0.15) 0%, transparent 60%),
+      var(--ink);
+  }
+
+  .solution-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-top: 80px;
+  }
+
+  .feature-card {
+    padding: 40px;
+    background: linear-gradient(145deg, rgba(42, 20, 32, 0.4), rgba(26, 10, 20, 0.4));
+    border: 1px solid rgba(212, 82, 122, 0.15);
+    border-radius: 12px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(212, 82, 122, 0.4);
+    transform: translateY(-4px);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 60px;
+    height: 1px;
+    background: var(--rose);
+  }
+
+  .feature-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--rose);
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+  }
+
+  .feature-title {
+    font-family: var(--serif);
+    font-size: 32px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: var(--cream);
+  }
+
+  .feature-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--cream-dim);
+  }
+
+  /* ---------- FOUNDING COHORT ---------- */
+  .founding {
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 50%, rgba(212, 82, 122, 0.1) 0%, transparent 65%),
+      var(--ink-2);
+    text-align: center;
+  }
+
+  .founding .container {
+    text-align: left;
+  }
+
+  .founding-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 80px;
+  }
+
+  .founding-header .section-title,
+  .founding-header .section-lede {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .founding-header .section-eyebrow {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .perks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-bottom: 64px;
+  }
+
+  .perk {
+    text-align: left;
+    padding: 32px 28px;
+    border: 1px solid rgba(212, 82, 122, 0.2);
+    border-radius: 10px;
+    background: rgba(13, 5, 8, 0.4);
+    position: relative;
+  }
+
+  .perk-mark {
+    font-family: var(--serif);
+    color: var(--rose);
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .perk-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: var(--cream);
+  }
+
+  .perk-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--cream-dim);
+  }
+
+  .scarcity {
+    text-align: center;
+    padding: 32px;
+    border-top: 1px solid rgba(212, 82, 122, 0.2);
+    border-bottom: 1px solid rgba(212, 82, 122, 0.2);
+  }
+
+  .scarcity-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--cream);
+    margin-bottom: 24px;
+  }
+  .scarcity-text strong {
+    color: var(--rose);
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  .scarcity-cta {
+    display: inline-block;
+    padding: 16px 40px;
+    background: var(--rose);
+    color: var(--ink);
+    border-radius: 100px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .scarcity-cta:hover {
+    background: var(--cream);
+    transform: translateY(-1px);
+  }
+
+  /* ---------- STUDENT ---------- */
+  .student {
+    background: var(--ink);
+    border-top: 1px solid rgba(244, 232, 224, 0.08);
+  }
+
+  .student .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .student-form {
+    background: linear-gradient(145deg, rgba(42, 20, 32, 0.5), rgba(26, 10, 20, 0.5));
+    border: 1px solid rgba(212, 82, 122, 0.2);
+    border-radius: 14px;
+    padding: 48px;
+  }
+
+  .student-form .section-title {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq {
+    background: var(--ink-2);
+  }
+
+  .faq-list {
+    margin-top: 64px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  details {
+    border-bottom: 1px solid rgba(244, 232, 224, 0.1);
+    padding: 24px 0;
+  }
+  details:first-child { border-top: 1px solid rgba(244, 232, 224, 0.1); }
+
+  details summary {
+    cursor: pointer;
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--cream);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.2s;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after {
+    content: '+';
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--rose);
+    font-size: 28px;
+    transition: transform 0.3s;
+  }
+  details[open] summary::after { transform: rotate(45deg); }
+  details summary:hover { color: var(--rose); }
+
+  details p {
+    margin-top: 16px;
+    color: var(--cream-dim);
+    line-height: 1.65;
+    font-size: 15px;
+    max-width: 90%;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    padding: 80px 40px 40px;
+    background: var(--ink);
+    border-top: 1px solid rgba(244, 232, 224, 0.08);
+  }
+
+  .footer-grid {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .footer-brand {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  .footer-tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--cream-dim);
+    font-size: 16px;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  .footer-col h4 {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .footer-col a {
+    display: block;
+    color: var(--cream-dim);
+    font-size: 14px;
+    margin-bottom: 12px;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--rose); }
+
+  .footer-bottom {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding-top: 40px;
+    border-top: 1px solid rgba(244, 232, 224, 0.08);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--cream-faint);
+  }
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.6s 0.1s both; }
+  .hero-title { animation: fadeUp 0.7s 0.2s both; }
+  .hero-sub { animation: fadeUp 0.7s 0.35s both; }
+  .signup-form, .role-toggle, .hero-fineprint, .student-link { animation: fadeUp 0.7s 0.5s both; }
+  .visual-card.main { animation: fadeUp 0.9s 0.6s both; }
+  .visual-card.sub { animation: fadeUp 0.9s 0.8s both; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    .nav { padding: 16px 20px; }
+    .nav-links { gap: 16px; }
+    .nav-links a:not(.nav-cta):not(.logo) { display: none; }
+
+    section, .hero { padding: 80px 20px; }
+    .hero { padding-top: 120px; }
+
+    .hero-content { grid-template-columns: 1fr; gap: 60px; }
+    .hero-visual { aspect-ratio: 5/4; }
+
+    .signup-form { flex-direction: column; }
+    .signup-form button { width: 100%; }
+
+    .problem-list { grid-template-columns: 1fr; }
+    .problem-item, .problem-item:nth-child(2n) {
+      padding: 28px 0;
+      border-left: none;
+    }
+
+    .solution-grid, .perks-grid { grid-template-columns: 1fr; gap: 24px; }
+    .student .container { grid-template-columns: 1fr; gap: 40px; }
+    .student-form { padding: 32px 24px; }
+
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-bottom { flex-direction: column; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="logo">sssion<span class="dot">.</span> studio</a>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#founding">Founding cohort</a>
+    <a href="#faq">FAQ</a>
+    <a href="#signup" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="signup">
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow">For movement creators</div>
+      <h1 class="hero-title">Stop building on <em>borrowed land.</em></h1>
+      <p class="hero-sub">The platform built for sensual movement and pole — by people who get it. Your studio. Your students. Your terms.</p>
+
+      <form class="signup-form" onsubmit="handleSignup(event)">
+        <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit">Claim my spot</button>
+      </form>
+
+      <div class="role-toggle">
+        <label><input type="radio" name="role" value="creator" checked> <span>I'm a creator</span></label>
+        <label><input type="radio" name="role" value="student"> <span>I'm a student</span></label>
+      </div>
+
+      <p class="hero-fineprint">Founding cohort · Limited spots · No spam, ever.</p>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="visual-card main">
+        <div class="card-eyebrow">Studio space</div>
+        <div class="card-title">Floor flow & sensual technique</div>
+        <div class="card-meta">12 classes · 847 members</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="card-tile">▶ class 01</div>
+          <div class="card-tile">▶ class 02</div>
+          <div class="card-tile">▶ class 03</div>
+          <div class="card-tile">▶ class 04</div>
+        </div>
+      </div>
+      <div class="visual-card sub">
+        <div class="card-eyebrow">This month</div>
+        <div class="card-stat">$4,280</div>
+        <div class="card-meta">Direct payout · 0% lost to ads</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <div class="section-eyebrow">The problem you already know</div>
+    <h2 class="section-title">If you teach sensual movement, you've lived this.</h2>
+    <p class="section-lede">You've poured years into building an audience on platforms that don't want you there. Every post is a coin flip. Every account is a hostage situation.</p>
+
+    <div class="problem-list">
+      <div class="problem-item">
+        <span class="problem-num">01</span>
+        <p class="problem-text">Your reach gets quietly throttled the moment the algorithm decides your work is "sensitive."</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-num">02</span>
+        <p class="problem-text">A single flagged video can erase years of community in an afternoon.</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-num">03</span>
+        <p class="problem-text">You're paying for ads, classes, and content tools that all funnel back to platforms that profit off your suppression.</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-num">04</span>
+        <p class="problem-text">Your students can't find you when they need you most — they have to remember to check.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="how">
+  <div class="container">
+    <div class="section-eyebrow">What you actually own</div>
+    <h2 class="section-title">A studio space that <em>belongs to you.</em></h2>
+    <p class="section-lede">Sssion Studio is a customizable home for your work. Build your space, set your prices, host your classes, grow your community — all on a platform built for our movement, not against it.</p>
+
+    <div class="solution-grid">
+      <div class="feature-card">
+        <div class="feature-num">01 / Studio space</div>
+        <h3 class="feature-title">Your storefront, fully yours.</h3>
+        <p class="feature-desc">A modular profile builder — hero sections, video showcases, subscription tiers, content libraries — designed to look like a brand, not a feed. Customize it once, own it forever.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-num">02 / Monetization</div>
+        <h3 class="feature-title">Get paid like you should be.</h3>
+        <p class="feature-desc">Subscriptions, single-class purchases, content libraries, tips. Powered by Stripe. Direct payouts to you, transparent platform fee, no surprises.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-num">03 / Community</div>
+        <h3 class="feature-title">A place students can come home to.</h3>
+        <p class="feature-desc">Your audience finds you on purpose, not by accident. Notifications they actually receive. A clientele, not just a follower count.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-num">04 / Built for the work</div>
+        <h3 class="feature-title">Sensual movement is the point.</h3>
+        <p class="feature-desc">Clear, transparent content guidelines built in collaboration with our community. Spice ratings (General / Mature / Explicit) so students choose what they're ready for and creators teach without guessing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDING COHORT -->
+<section class="founding" id="founding">
+  <div class="container">
+    <div class="founding-header">
+      <div class="section-eyebrow">Founding cohort</div>
+      <h2 class="section-title">Be among the <em>first.</em></h2>
+      <p class="section-lede">We're opening Sssion Studio with a small founding cohort of creators who'll shape the platform alongside us. The perks below are for them — and only them.</p>
+    </div>
+
+    <div class="perks-grid">
+      <div class="perk">
+        <div class="perk-mark">◆</div>
+        <h3 class="perk-title">Locked-in lower fees</h3>
+        <p class="perk-desc">Founding creators keep their introductory platform fee for life — even as the platform grows and standard rates change.</p>
+      </div>
+      <div class="perk">
+        <div class="perk-mark">◆</div>
+        <h3 class="perk-title">1:1 onboarding & setup</h3>
+        <p class="perk-desc">A real human walks you through building your space, importing content, and launching to your audience. No tutorials, no help docs.</p>
+      </div>
+      <div class="perk">
+        <div class="perk-mark">◆</div>
+        <h3 class="perk-title">A seat at the table</h3>
+        <p class="perk-desc">Direct input on roadmap, features, and policy. Founding creators have a private channel to the team and shape the platform's direction.</p>
+      </div>
+      <div class="perk">
+        <div class="perk-mark">◆</div>
+        <h3 class="perk-title">Co-marketing & launch push</h3>
+        <p class="perk-desc">We feature founding creators across our channels at launch. Your studio gets seen by the entire incoming community on day one.</p>
+      </div>
+      <div class="perk">
+        <div class="perk-mark">◆</div>
+        <h3 class="perk-title">Founding creator badge</h3>
+        <p class="perk-desc">A permanent mark on your studio space. Students see who built this with us — and they remember.</p>
+      </div>
+      <div class="perk">
+        <div class="perk-mark">◆</div>
+        <h3 class="perk-title">Early access to everything</h3>
+        <p class="perk-desc">New features, beta tools, integrations — founding cohort gets first access before anyone else.</p>
+      </div>
+    </div>
+
+    <div class="scarcity">
+      <p class="scarcity-text">We're accepting <strong>50 founding creators.</strong> Applications open by waitlist invite.</p>
+      <a href="#signup" class="scarcity-cta">Apply for a spot</a>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT -->
+<section class="student" id="student">
+  <div class="container">
+    <div>
+      <div class="section-eyebrow">For students</div>
+      <h2 class="section-title">Found your <em>favorite teacher?</em></h2>
+      <p class="section-lede">Be the first to know when their studio opens. Get early access to founding creator content, locked-in subscription pricing, and an inbox full of teachers worth following.</p>
+    </div>
+
+    <div class="student-form">
+      <h3 class="section-title">Join the student waitlist.</h3>
+      <p style="color:var(--cream-dim); margin-bottom: 32px; font-size: 15px;">Students get access ~4 weeks after creators launch their spaces. We'll let you know the moment doors open.</p>
+
+      <form class="signup-form" onsubmit="handleStudentSignup(event)">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">I'm in</button>
+      </form>
+      <p class="hero-fineprint" style="margin-top:16px;">No spam. We'll only email you about creator launches and platform updates.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="section-eyebrow">Questions</div>
+    <h2 class="section-title">The things we get asked.</h2>
+
+    <div class="faq-list">
+      <details>
+        <summary>What kind of content is allowed?</summary>
+        <p>Sssion Studio supports the full spectrum of sensual movement — from gentle somatic flow to advanced pole, burlesque-inspired choreography, and floor work. We use a three-tier "spice rating" system (General / Mature / Explicit) so creators teach in their natural voice and students opt into what they're ready for. Mature and Explicit content requires age confirmation. Full nudity and content designed for sexual gratification fall outside our scope — but we've worked hard to draw lines that protect creators rather than restrict them.</p>
+      </details>
+
+      <details>
+        <summary>How does payment work?</summary>
+        <p>We use Stripe Connect, which means creators get paid directly to their own bank accounts, not to us. The platform takes a transparent percentage fee — no hidden cuts, no held funds, no surprise deductions. Founding creators lock in lower fees for life.</p>
+      </details>
+
+      <details>
+        <summary>Can my account get shut down without warning?</summary>
+        <p>No. Our content policy is published, specific, and built in collaboration with the community. If something we publish is unclear, we work it out with you — we don't ban-first-ask-questions-later. Account terminations require documented policy violations and we provide notice and appeal paths in nearly every case. We're explicitly building the opposite of what creators have experienced on mainstream platforms.</p>
+      </details>
+
+      <details>
+        <summary>I already have a Patreon / Ko-fi / OnlyFans. Why switch?</summary>
+        <p>You don't have to switch — many of our creators run multiple platforms. But Sssion Studio is built specifically for movement instruction in a way general platforms aren't: structured class libraries, video-first storefronts, student progression tracking, a community built around the work. Patreon is a tip jar; we're a studio.</p>
+      </details>
+
+      <details>
+        <summary>Do I need a big audience to apply for the founding cohort?</summary>
+        <p>No. We care about the work, not follower counts. We're looking for instructors who teach with intention, treat their students well, and are ready to build something that lasts. If that's you, apply.</p>
+      </details>
+
+      <details>
+        <summary>When does the platform launch?</summary>
+        <p>Founding creators are being onboarded now, with student doors opening shortly after. Joining the waitlist is the only way to get an early invitation — and once we hit our founding cohort cap, the waitlist becomes the line for the next opening.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">sssion<span style="color:var(--rose);">.</span> studio</div>
+      <p class="footer-tagline">A platform built for sensual movement creators — by people who get it.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#how">How it works</a>
+      <a href="#founding">Founding cohort</a>
+      <a href="#student">For students</a>
+      <a href="#faq">FAQ</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+      <a href="mailto:hello@sssion.studio">hello@sssion.studio</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Sssion Studio</span>
+    <div style="display:flex; gap:24px;">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Content policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function handleSignup(e) {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const role = document.querySelector('input[name="role"]:checked').value;
+    // TODO: Replace with actual ESP integration (Kit/ConvertKit, Beehiiv, etc.)
+    console.log('Waitlist signup:', { email, role });
+    e.target.querySelector('button').textContent = "You're in ✓";
+    e.target.querySelector('button').style.background = 'var(--cream)';
+  }
+
+  function handleStudentSignup(e) {
+    e.preventDefault();
+    const email = e.target.email.value;
+    console.log('Student waitlist signup:', { email, role: 'student' });
+    e.target.querySelector('button').textContent = "You're in ✓";
+    e.target.querySelector('button').style.background = 'var(--cream)';
+  }
+</script>
+
+</body>
+</html>
