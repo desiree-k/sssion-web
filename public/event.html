@@ -266,13 +266,20 @@
 
   /* Hero visual */
   .hero-visual {
-    position: relative;
-    aspect-ratio: 4/5;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
     width: 100%;
   }
 
+  .hero-screenshot {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid rgba(212, 82, 122, 0.25);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  }
+
   .visual-card {
-    position: absolute;
     background: linear-gradient(145deg, rgba(42, 20, 32, 0.9), rgba(26, 10, 20, 0.95));
     border: 1px solid rgba(212, 82, 122, 0.25);
     border-radius: 14px;
@@ -281,18 +288,8 @@
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
   }
 
-  .visual-card.main {
-    inset: 8% 12% 8% 0;
-    transform: rotate(-2deg);
-    z-index: 2;
-  }
-
   .visual-card.sub {
-    bottom: 12%;
-    right: 0;
-    width: 45%;
-    transform: rotate(3deg);
-    z-index: 1;
+    max-width: 280px;
   }
 
   .card-eyebrow {
@@ -747,7 +744,7 @@
   .hero-title { animation: fadeUp 0.7s 0.2s both; }
   .hero-sub { animation: fadeUp 0.7s 0.35s both; }
   .signup-form, .role-toggle, .hero-fineprint, .student-link { animation: fadeUp 0.7s 0.5s both; }
-  .visual-card.main { animation: fadeUp 0.9s 0.6s both; }
+  .hero-screenshot { animation: fadeUp 0.9s 0.6s both; }
   .visual-card.sub { animation: fadeUp 0.9s 0.8s both; }
 
   /* ---------- RESPONSIVE ---------- */
@@ -760,7 +757,7 @@
     .hero { padding-top: 120px; }
 
     .hero-content { grid-template-columns: 1fr; gap: 60px; }
-    .hero-visual { aspect-ratio: 5/4; }
+    .hero-visual { gap: 16px; }
 
     .signup-form { flex-direction: column; }
     .signup-form button { width: 100%; }
@@ -814,18 +811,8 @@
       <p class="hero-fineprint">Founding cohort · Limited spots · No spam, ever.</p>
     </div>
 
-    <div class="hero-visual" aria-hidden="true">
-      <div class="visual-card main">
-        <div class="card-eyebrow">Studio space</div>
-        <div class="card-title">Floor flow & sensual technique</div>
-        <div class="card-meta">12 classes · 847 members</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div class="card-tile">▶ class 01</div>
-          <div class="card-tile">▶ class 02</div>
-          <div class="card-tile">▶ class 03</div>
-          <div class="card-tile">▶ class 04</div>
-        </div>
-      </div>
+    <div class="hero-visual">
+      <img src="/discovery%20screenshot.png" alt="Sssion Studio app screenshot" class="hero-screenshot">
       <div class="visual-card sub">
         <div class="card-eyebrow">This month</div>
         <div class="card-stat">$4,280</div>
