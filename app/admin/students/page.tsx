@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 
 interface Student {
   id: string
-  display_name: string
+  full_name: string | null
   email: string
   username: string | null
   created_at: string
@@ -128,7 +128,7 @@ export default function StudentsPage() {
               <tbody>
                 {students.map((student, i) => (
                   <tr key={student.id} className={i < students.length - 1 ? 'border-b border-white/4' : ''}>
-                    <td className="px-5 py-3 text-white font-medium">{student.display_name || '—'}</td>
+                    <td className="px-5 py-3 text-white font-medium">{student.full_name || '—'}</td>
                     <td className="px-5 py-3 text-white/60">{student.email || '—'}</td>
                     <td className="px-5 py-3 text-white/40 font-mono text-xs">
                       {student.username ? `@${student.username}` : <span className="text-white/20">—</span>}
@@ -189,7 +189,7 @@ export default function StudentsPage() {
           <div className="bg-[#111127] rounded-2xl border border-white/10 p-6 w-full max-w-md space-y-5">
             <h2 className="text-lg font-semibold text-white">Revoke Studio Access?</h2>
             <p className="text-white/60 text-sm leading-relaxed">
-              This will remove <span className="text-white font-medium">{confirmRemove.display_name}</span> from all studios they have access to. They will not be deleted — just lose studio membership.
+              This will remove <span className="text-white font-medium">{confirmRemove.full_name || confirmRemove.email}</span> from all studios they have access to. They will not be deleted — just lose studio membership.
             </p>
             <div className="flex gap-3">
               <button

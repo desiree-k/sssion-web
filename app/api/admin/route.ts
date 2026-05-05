@@ -156,12 +156,12 @@ export async function POST(req: NextRequest) {
         const pageSize = 50
         let query = serviceClient
           .from('profiles')
-          .select('id, display_name, email, created_at, username', { count: 'exact' })
+          .select('id, full_name, email, created_at, username', { count: 'exact' })
           .eq('role', 'student')
           .order('created_at', { ascending: false })
           .range((page - 1) * pageSize, page * pageSize - 1)
         if (search) {
-          query = query.or(`display_name.ilike.%${search}%,email.ilike.%${search}%`)
+          query = query.or(`full_name.ilike.%${search}%,email.ilike.%${search}%`)
         }
         const { data, error, count } = await query
         console.log('[admin] get_students error:', error, 'count:', count)
@@ -198,8 +198,8 @@ export async function POST(req: NextRequest) {
         let query = serviceClient
           .from('creators')
           .select(`
-            id, display_name, username, created_at, is_published,
-            profile:user_id(id, email, profile_image_url)
+            id, display_name, created_at,
+            profile:user_id(id, email, full_name, username, bio, profile_image_url)
           `, { count: 'exact' })
           .order('created_at', { ascending: false })
           .range((page - 1) * pageSize, page * pageSize - 1)
@@ -239,16 +239,6 @@ export async function POST(req: NextRequest) {
           })),
           total: count ?? 0,
         })
-      }
-
-      case 'toggle_creator_published': {
-        const { creatorId, is_published } = payload as { creatorId: string; is_published: boolean }
-        const { error } = await serviceClient
-          .from('creators')
-          .update({ is_published })
-          .eq('id', creatorId)
-        if (error) throw error
-        return NextResponse.json({ ok: true })
       }
 
       default:

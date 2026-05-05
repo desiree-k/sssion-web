@@ -3,19 +3,22 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 
+interface CreatorProfile {
+  id: string
+  email: string
+  full_name: string | null
+  username: string | null
+  bio: string | null
+  profile_image_url: string | null
+}
+
 interface Creator {
   id: string
   display_name: string
-  username: string | null
   created_at: string
-  is_published: boolean | null
   studentCount: number
   videoCount: number
-  profile: {
-    id: string
-    email: string
-    profile_image_url: string | null
-  } | null
+  profile: CreatorProfile | null
 }
 
 async function adminPost(action: string, payload?: unknown) {
@@ -38,7 +41,6 @@ export default function CreatorsPage() {
   const [searchInput, setSearchInput] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [togglingId, setTogglingId] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<string | null>(null)
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const PAGE_SIZE = 50
@@ -66,19 +68,6 @@ export default function CreatorsPage() {
       setSearch(val)
       setPage(1)
     }, 400)
-  }
-
-  const handleTogglePublished = async (creator: Creator) => {
-    setTogglingId(creator.id)
-    const next = !creator.is_published
-    try {
-      await adminPost('toggle_creator_published', { creatorId: creator.id, is_published: next })
-      setCreators(prev => prev.map(c => c.id === creator.id ? { ...c, is_published: next } : c))
-    } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Failed')
-    } finally {
-      setTogglingId(null)
-    }
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE)
@@ -117,8 +106,8 @@ export default function CreatorsPage() {
         ) : (
           creators.map(creator => {
             const isExpanded = expanded === creator.id
-            const studioUrl = creator.username ? `sssion.studio/${creator.username}` : null
-            const published = creator.is_published ?? false
+            const username = creator.profile?.username ?? null
+            const studioUrl = username ? `sssion.studio/${username}` : null
 
             return (
               <div key={creator.id} className="bg-[#111127] rounded-xl border border-white/6 overflow-hidden">
@@ -138,14 +127,7 @@ export default function CreatorsPage() {
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="text-white font-medium text-sm">{creator.display_name || '—'}</p>
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
-                        published ? 'bg-green-500/15 text-green-400' : 'bg-white/8 text-white/40'
-                      }`}>
-                        {published ? 'Published' : 'Unlisted'}
-                      </span>
-                    </div>
+                    <p className="text-white font-medium text-sm">{creator.display_name || '—'}</p>
                     <div className="flex items-center gap-3 mt-0.5 flex-wrap">
                       {studioUrl && (
                         <span className="text-white/30 text-xs font-mono">{studioUrl}</span>
@@ -166,27 +148,17 @@ export default function CreatorsPage() {
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <button
-                      onClick={() => handleTogglePublished(creator)}
-                      disabled={togglingId === creator.id}
-                      className={`relative w-9 h-5 rounded-full transition-colors disabled:opacity-40 ${published ? 'bg-[#B76E79]' : 'bg-white/15'}`}
-                      title={published ? 'Unlist studio' : 'Publish studio'}
+                  {/* Expand */}
+                  <button
+                    onClick={() => setExpanded(isExpanded ? null : creator.id)}
+                    className="text-white/30 hover:text-white transition-colors p-1 flex-shrink-0"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"
+                      style={{ transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
                     >
-                      <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${published ? 'left-4' : 'left-0.5'}`} />
-                    </button>
-                    <button
-                      onClick={() => setExpanded(isExpanded ? null : creator.id)}
-                      className="text-white/30 hover:text-white transition-colors p-1"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"
-                        style={{ transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
-                      >
-                        <polyline points="2,4 7,10 12,4" />
-                      </svg>
-                    </button>
-                  </div>
+                      <polyline points="2,4 7,10 12,4" />
+                    </svg>
+                  </button>
                 </div>
 
                 {/* Expanded detail */}
@@ -221,6 +193,12 @@ export default function CreatorsPage() {
                         <span className="text-white/20">No username set</span>
                       )}
                     </div>
+                    {creator.profile?.bio && (
+                      <div className="col-span-2 sm:col-span-4">
+                        <p className="text-white/40 text-xs mb-1">Bio</p>
+                        <p className="text-white/70 text-sm">{creator.profile.bio}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
