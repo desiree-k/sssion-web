@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
   const serviceClient = getServiceClient()
   const { action, payload } = await req.json()
+  console.log('[admin] action:', action)
 
   try {
     switch (action) {
@@ -163,6 +164,7 @@ export async function POST(req: NextRequest) {
           query = query.or(`display_name.ilike.%${search}%,email.ilike.%${search}%`)
         }
         const { data, error, count } = await query
+        console.log('[admin] get_students error:', error, 'count:', count)
         if (error) throw error
         // Fetch studio access counts per student
         const ids = (data ?? []).map(s => s.id)
@@ -205,6 +207,7 @@ export async function POST(req: NextRequest) {
           query = query.ilike('display_name', `%${search}%`)
         }
         const { data, error, count } = await query
+        console.log('[admin] get_creators error:', error, 'count:', count)
         if (error) throw error
         const creatorIds = (data ?? []).map(c => c.id)
         let studentMap: Record<string, number> = {}
@@ -252,7 +255,15 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
     }
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Unknown error'
+    console.error('[admin] caught error:', err)
+    // Supabase PostgrestError has a message property but is not an Error instance
+    const message =
+      err instanceof Error
+        ? err.message
+        : typeof err === 'object' && err !== null && 'message' in err
+          ? String((err as { message: unknown }).message)
+          : JSON.stringify(err)
+    console.error('[admin] returning error message:', message)
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
