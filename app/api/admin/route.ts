@@ -283,7 +283,7 @@ export async function POST(req: NextRequest) {
         const { id } = payload as { id: string }
         const { error } = await serviceClient
           .from('content_reports')
-          .update({ status: 'resolved' })
+          .update({ status: 'actioned' })
           .eq('id', id)
         if (error) throw error
         return NextResponse.json({ ok: true })
@@ -293,7 +293,7 @@ export async function POST(req: NextRequest) {
         const { id } = payload as { id: string }
         const { error } = await serviceClient
           .from('content_reports')
-          .update({ status: 'dismissed' })
+          .update({ status: 'reviewed' })
           .eq('id', id)
         if (error) throw error
         return NextResponse.json({ ok: true })

@@ -13,7 +13,7 @@ interface Report {
   reason: string
   details: string | null
   report_type: string | null
-  status: 'pending' | 'resolved' | 'dismissed'
+  status: 'pending' | 'reviewed' | 'actioned'
   created_at: string
   content_item_id: string | null
   post_id: string | null
@@ -21,7 +21,7 @@ interface Report {
   reported_user: UserRef | null
 }
 
-type FilterTab = 'all' | 'pending' | 'resolved' | 'dismissed'
+type FilterTab = 'all' | 'pending' | 'reviewed' | 'actioned'
 
 async function adminPost(action: string, payload?: unknown) {
   const { data: { session } } = await supabase.auth.getSession()
@@ -71,7 +71,7 @@ export default function ReportsPage() {
       await adminPost(action, { id })
       setReports(prev => prev.map(r =>
         r.id === id
-          ? { ...r, status: action === 'resolve_report' ? 'resolved' : 'dismissed' }
+          ? { ...r, status: action === 'resolve_report' ? 'actioned' : 'reviewed' }
           : r
       ))
     } catch (e: unknown) {
@@ -104,7 +104,7 @@ export default function ReportsPage() {
 
       {/* Filter tabs */}
       <div className="flex gap-1 bg-[#111127] rounded-lg p-1 w-fit">
-        {(['pending', 'all', 'resolved', 'dismissed'] as FilterTab[]).map(tab => (
+        {(['pending', 'all', 'reviewed', 'actioned'] as FilterTab[]).map(tab => (
           <button
             key={tab}
             onClick={() => { setFilter(tab); setPage(1) }}
@@ -146,7 +146,7 @@ export default function ReportsPage() {
                     <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
                       report.status === 'pending'
                         ? 'bg-red-500/15 text-red-400'
-                        : report.status === 'resolved'
+                        : report.status === 'actioned'
                           ? 'bg-green-500/15 text-green-400'
                           : 'bg-white/8 text-white/40'
                     }`}>
