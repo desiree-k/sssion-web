@@ -241,6 +241,64 @@ export async function POST(req: NextRequest) {
         })
       }
 
+      case 'get_reports': {
+        const { status, page = 1 } = (payload ?? {}) as { status?: string; page?: number }
+        const pageSize = 50
+        let query = serviceClient
+          .from('content_reports')
+          .select('id, reason, details, report_type, status, created_at, content_item_id, post_id, reporter_id, reported_user_id', { count: 'exact' })
+          .order('created_at', { ascending: false })
+          .range((page - 1) * pageSize, page * pageSize - 1)
+        if (status && status !== 'all') {
+          query = query.eq('status', status)
+        }
+        const { data, error, count } = await query
+        console.log('[admin] get_reports error:', error, 'count:', count)
+        if (error) throw error
+
+        const reports = data ?? []
+        const allIds = [...new Set([
+          ...reports.map(r => r.reporter_id).filter(Boolean),
+          ...reports.map(r => r.reported_user_id).filter(Boolean),
+        ])]
+        let profileMap: Record<string, { full_name: string | null; email: string }> = {}
+        if (allIds.length > 0) {
+          const { data: profiles } = await serviceClient
+            .from('profiles')
+            .select('id, full_name, email')
+            .in('id', allIds)
+          for (const p of profiles ?? []) {
+            profileMap[p.id] = { full_name: p.full_name, email: p.email }
+          }
+        }
+        const enriched = reports.map(r => ({
+          ...r,
+          reporter: r.reporter_id ? profileMap[r.reporter_id] ?? null : null,
+          reported_user: r.reported_user_id ? profileMap[r.reported_user_id] ?? null : null,
+        }))
+        return NextResponse.json({ reports: enriched, total: count ?? 0 })
+      }
+
+      case 'resolve_report': {
+        const { id } = payload as { id: string }
+        const { error } = await serviceClient
+          .from('content_reports')
+          .update({ status: 'resolved' })
+          .eq('id', id)
+        if (error) throw error
+        return NextResponse.json({ ok: true })
+      }
+
+      case 'dismiss_report': {
+        const { id } = payload as { id: string }
+        const { error } = await serviceClient
+          .from('content_reports')
+          .update({ status: 'dismissed' })
+          .eq('id', id)
+        if (error) throw error
+        return NextResponse.json({ ok: true })
+      }
+
       default:
         return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
     }
