@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
 
 export const dynamic = 'force-dynamic'
 
@@ -297,6 +298,71 @@ export async function POST(req: NextRequest) {
           .eq('id', id)
         if (error) throw error
         return NextResponse.json({ ok: true })
+      }
+
+      case 'send_announcement': {
+        const { subject, body, audience = 'creators' } = payload as {
+          subject: string
+          body: string
+          audience?: 'creators' | 'students' | 'all'
+        }
+        if (!subject?.trim() || !body?.trim()) {
+          return NextResponse.json({ error: 'Subject and body are required' }, { status: 400 })
+        }
+
+        // Fetch target emails
+        let emails: string[] = []
+        if (audience === 'creators' || audience === 'all') {
+          const { data: creators } = await serviceClient
+            .from('creators')
+            .select('profile:user_id(email)')
+          for (const c of creators ?? []) {
+            const email = (c.profile as { email?: string } | null)?.email
+            if (email) emails.push(email)
+          }
+        }
+        if (audience === 'students' || audience === 'all') {
+          const { data: students } = await serviceClient
+            .from('profiles')
+            .select('email')
+            .eq('role', 'student')
+          for (const s of students ?? []) {
+            if (s.email) emails.push(s.email)
+          }
+        }
+        // Deduplicate
+        emails = [...new Set(emails.filter(Boolean))]
+        console.log(`[admin] send_announcement to ${emails.length} recipients`)
+
+        if (emails.length === 0) {
+          return NextResponse.json({ error: 'No recipients found' }, { status: 400 })
+        }
+
+        const resend = new Resend(process.env.RESEND_API_KEY)
+        const failures: string[] = []
+        let sent = 0
+
+        // Send in batches of 10 to avoid rate limits
+        const BATCH = 10
+        for (let i = 0; i < emails.length; i += BATCH) {
+          const batch = emails.slice(i, i + BATCH)
+          await Promise.all(batch.map(async (email) => {
+            try {
+              await resend.emails.send({
+                from: 'Sssion <updates@updates.sssion.studio>',
+                to: email,
+                subject: subject.trim(),
+                html: body,
+              })
+              sent++
+            } catch (e) {
+              console.error(`[admin] failed to send to ${email}:`, e)
+              failures.push(email)
+            }
+          }))
+        }
+
+        return NextResponse.json({ sent, failures, total: emails.length })
       }
 
       default:
