@@ -10,8 +10,8 @@ interface InviteCode {
   created_at: string
   used_at: string | null
   used_by: string | null
+  used_by_name: string | null
   used_by_email: string | null
-  creator: { display_name: string } | null
 }
 
 type FilterTab = 'all' | 'active' | 'used' | 'deactivated'
@@ -238,7 +238,7 @@ export default function InviteCodesPage() {
                       <td className="px-5 py-3">
                         {isUsed ? (
                           <div>
-                            <p className="text-white text-sm">{code.creator?.display_name ?? '—'}</p>
+                            <p className="text-white text-sm">{code.used_by_name ?? code.used_by_email ?? '—'}</p>
                             <p className="text-white/40 text-xs">{code.used_by_email ?? ''}</p>
                           </div>
                         ) : (

@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
             safeCount('invite_codes', serviceClient.from('invite_codes').select('id', { count: 'exact', head: true }).eq('is_active', true).is('used_by', null) as any),
             serviceClient
               .from('profiles')
-              .select('id, display_name, role, created_at')
+              .select('id, full_name, role, created_at')
               .order('created_at', { ascending: false })
               .limit(10),
           ])
@@ -88,30 +88,25 @@ export async function POST(req: NextRequest) {
       case 'get_invite_codes': {
         const { data, error } = await serviceClient
           .from('invite_codes')
-          .select(`
-            id, code, is_active, created_at, used_at,
-            used_by,
-            creator:used_by(display_name),
-            profile:used_by(email)
-          `)
+          .select('id, code, is_active, created_at, used_at, used_by')
           .order('created_at', { ascending: false })
         if (error) throw error
-        // Fetch emails separately since profiles has email
         const codes = data ?? []
         const usedByIds = codes.filter(c => c.used_by).map(c => c.used_by as string)
-        let emailMap: Record<string, string> = {}
+        let profileMap: Record<string, { full_name: string | null; email: string }> = {}
         if (usedByIds.length > 0) {
           const { data: profileData } = await serviceClient
             .from('profiles')
-            .select('id, email')
+            .select('id, full_name, email')
             .in('id', usedByIds)
           for (const p of profileData ?? []) {
-            emailMap[p.id] = p.email
+            profileMap[p.id] = { full_name: p.full_name, email: p.email }
           }
         }
         const enriched = codes.map(c => ({
           ...c,
-          used_by_email: c.used_by ? emailMap[c.used_by] ?? null : null,
+          used_by_name: c.used_by ? (profileMap[c.used_by]?.full_name ?? null) : null,
+          used_by_email: c.used_by ? (profileMap[c.used_by]?.email ?? null) : null,
         }))
         return NextResponse.json({ codes: enriched })
       }

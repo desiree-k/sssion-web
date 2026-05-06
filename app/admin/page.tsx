@@ -10,7 +10,7 @@ interface Overview {
   videoCount: number
   pendingReports: number
   activeInviteCodes: number
-  recentSignups: { id: string; display_name: string; role: string; created_at: string }[]
+  recentSignups: { id: string; full_name: string | null; role: string; created_at: string }[]
 }
 
 async function fetchAdminToken() {
@@ -137,7 +137,7 @@ export default function AdminOverviewPage() {
               <tbody>
                 {data.recentSignups.map((user, i) => (
                   <tr key={user.id} className={i < data.recentSignups.length - 1 ? 'border-b border-white/4' : ''}>
-                    <td className="px-5 py-3 text-white">{user.display_name || '—'}</td>
+                    <td className="px-5 py-3 text-white">{user.full_name || '—'}</td>
                     <td className="px-5 py-3">
                       <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
                         user.role === 'creator'
