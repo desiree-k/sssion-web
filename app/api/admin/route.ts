@@ -338,6 +338,9 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: 'No recipients found' }, { status: 400 })
         }
 
+        if (!process.env.RESEND_API_KEY) {
+          return NextResponse.json({ error: 'RESEND_API_KEY environment variable is not set' }, { status: 500 })
+        }
         const resend = new Resend(process.env.RESEND_API_KEY)
         const failures: string[] = []
         let sent = 0
