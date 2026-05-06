@@ -10,6 +10,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Sssion | Movement. Mastered.",
   description: "A private studio platform for movement creators and their students. Build your dance instruction business with Sssion.",
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/icon-192.png',
+  },
   openGraph: {
     title: "Sssion | Movement. Mastered.",
     description: "A private studio platform for movement creators and their students.",
