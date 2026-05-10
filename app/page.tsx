@@ -7,6 +7,12 @@ export default function Home() {
           <span className="text-2xl font-bold text-[#B76E79]">Sssion</span>
           <div className="flex items-center gap-6">
             <a
+              href="/features"
+              className="text-white/70 hover:text-white transition-colors hidden sm:block"
+            >
+              Features &amp; Pricing
+            </a>
+            <a
               href="/discover"
               className="text-white/70 hover:text-white transition-colors hidden sm:block"
             >
