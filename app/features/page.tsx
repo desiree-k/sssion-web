@@ -188,6 +188,7 @@ const proFeatures = [
   'Priority in discovery feed',
   'Native payment processing',
   'Custom studio branding',
+  'Multiple studio spaces — organize by style, level, or series',
 ]
 
 const roadmap = [
