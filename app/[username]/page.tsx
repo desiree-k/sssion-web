@@ -411,7 +411,9 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             Download Sssion to access all content and connect with {displayName}
           </p>
           <a
-            href="#"
+            href="https://apps.apple.com/us/app/sssion/id6763607808"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
           >
             Download Sssion

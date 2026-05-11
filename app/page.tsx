@@ -1,3 +1,5 @@
+import AppStoreBadge from '@/components/AppStoreBadge'
+
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -139,7 +141,9 @@ export default function Home() {
               Join as Creator
             </a>
             <a
-              href="#"
+              href="https://apps.apple.com/us/app/sssion/id6763607808"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-10 py-4 border-2 border-white/20 text-white/80 font-semibold rounded-full hover:bg-white/5 transition-colors"
             >
               Download App
@@ -171,10 +175,13 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm">
-            &copy; 2026 Sssion
-          </p>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <p className="text-white/40 text-sm">
+              &copy; 2026 Sssion
+            </p>
+            <AppStoreBadge className="scale-90 origin-left" />
+          </div>
           <div className="flex gap-6">
             <a href="/discover" className="text-white/40 hover:text-white/60 text-sm transition-colors">
               Discover

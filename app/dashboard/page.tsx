@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import AppStoreBadge from '@/components/AppStoreBadge'
 
 interface UserData {
   displayName: string
@@ -242,7 +243,7 @@ export default function DashboardPage() {
               Upload videos, approve students, and engage with your community in the Sssion app.
             </p>
             <a
-              href="https://testflight.apple.com/join/PLACEHOLDER"
+              href="https://apps.apple.com/us/app/sssion/id6763607808"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-3 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors"
@@ -258,10 +259,13 @@ export default function DashboardPage() {
 
       {/* Footer */}
       <footer className="py-6 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <p className="text-white/40 text-sm">
-            &copy; 2026 Sssion
-          </p>
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <p className="text-white/40 text-sm">
+              &copy; 2026 Sssion
+            </p>
+            <AppStoreBadge className="scale-90 origin-left" />
+          </div>
           <div className="flex gap-6">
             <a href="/" className="text-white/40 hover:text-white/60 text-sm transition-colors">
               Home

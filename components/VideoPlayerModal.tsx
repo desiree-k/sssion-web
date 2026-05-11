@@ -125,7 +125,9 @@ export default function VideoPlayerModal({
               Want to see more? Join {creatorName}&apos;s Studio
             </p>
             <a
-              href="#"
+              href="https://apps.apple.com/us/app/sssion/id6763607808"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-block px-6 py-3 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
             >
               Download Sssion

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import AppStoreBadge from '@/components/AppStoreBadge'
 
 // ─── Scroll-fade wrapper ──────────────────────────────────────────────────────
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -484,8 +485,11 @@ export default function FeaturesPage() {
 
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-white/8">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/30 text-sm">&copy; 2026 Sssion</p>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <p className="text-white/30 text-sm">&copy; 2026 Sssion</p>
+            <AppStoreBadge className="scale-90 origin-left" />
+          </div>
           <div className="flex flex-wrap gap-6 justify-center">
             <a href="/features" className="text-white/30 hover:text-white/60 text-sm transition-colors">Features &amp; Pricing</a>
             <a href="/discover" className="text-white/30 hover:text-white/60 text-sm transition-colors">Discover</a>
