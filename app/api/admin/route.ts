@@ -188,6 +188,49 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ ok: true })
       }
 
+      case 'delete_student': {
+        const { userId } = payload as { userId: string }
+        await serviceClient.from('community_likes').delete().eq('user_id', userId)
+        await serviceClient.from('community_comments').delete().eq('author_id', userId)
+        await serviceClient.from('community_posts').delete().eq('author_id', userId)
+        await serviceClient.from('content_reports').delete().or(`reporter_id.eq.${userId},reported_user_id.eq.${userId}`)
+        await serviceClient.from('blocked_users').delete().or(`user_id.eq.${userId},blocked_user_id.eq.${userId}`)
+        await serviceClient.from('watch_history').delete().eq('user_id', userId)
+        await serviceClient.from('studio_access').delete().eq('student_id', userId)
+        await serviceClient.from('studio_access').delete().eq('user_id', userId)
+        await serviceClient.from('profiles').delete().eq('id', userId)
+        await serviceClient.auth.admin.deleteUser(userId)
+        return NextResponse.json({ ok: true })
+      }
+
+      case 'delete_creator': {
+        const { creatorId, userId } = payload as { creatorId: string; userId: string }
+        // Clear invite code reference
+        await serviceClient.from('invite_codes').update({ used_by: null, used_at: null }).eq('used_by', userId)
+        // Delete related data
+        await serviceClient.from('community_likes').delete().eq('user_id', userId)
+        await serviceClient.from('community_comments').delete().eq('author_id', userId)
+        await serviceClient.from('community_posts').delete().eq('studio_id', creatorId)
+        await serviceClient.from('community_posts').delete().eq('author_id', userId)
+        await serviceClient.from('content_reports').delete().or(`reporter_id.eq.${userId},reported_user_id.eq.${userId}`)
+        await serviceClient.from('blocked_users').delete().or(`user_id.eq.${userId},blocked_user_id.eq.${userId}`)
+        await serviceClient.from('reviews').delete().eq('creator_id', creatorId)
+        await serviceClient.from('live_classes').delete().eq('creator_id', creatorId)
+        // Delete watch history for their content
+        const { data: contentIds } = await serviceClient.from('content_items').select('id').eq('creator_id', creatorId)
+        if (contentIds?.length) {
+          const ids = contentIds.map((c: { id: string }) => c.id)
+          await serviceClient.from('watch_history').delete().in('content_item_id', ids)
+        }
+        await serviceClient.from('content_items').delete().eq('creator_id', creatorId)
+        await serviceClient.from('studio_access').delete().eq('creator_id', creatorId)
+        await serviceClient.from('studio_access').delete().eq('student_id', userId)
+        await serviceClient.from('creators').delete().eq('id', creatorId)
+        await serviceClient.from('profiles').delete().eq('id', userId)
+        await serviceClient.auth.admin.deleteUser(userId)
+        return NextResponse.json({ ok: true })
+      }
+
       case 'get_creators': {
         const { search, page = 1 } = (payload ?? {}) as { search?: string; page?: number }
         const pageSize = 50

@@ -42,6 +42,9 @@ export default function CreatorsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<Creator | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const PAGE_SIZE = 50
 
@@ -70,6 +73,24 @@ export default function CreatorsPage() {
     }, 400)
   }
 
+  const handleDelete = async (creator: Creator) => {
+    const userId = creator.profile?.id
+    if (!userId) return
+    setDeletingId(creator.id)
+    try {
+      await adminPost('delete_creator', { creatorId: creator.id, userId })
+      setCreators(prev => prev.filter(c => c.id !== creator.id))
+      setTotal(prev => prev - 1)
+      setSuccessMsg(`${creator.display_name} has been deleted`)
+      setTimeout(() => setSuccessMsg(null), 4000)
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to delete')
+    } finally {
+      setDeletingId(null)
+      setConfirmDelete(null)
+    }
+  }
+
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
   return (
@@ -91,6 +112,12 @@ export default function CreatorsPage() {
       {error && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">
           {error}
+        </div>
+      )}
+
+      {successMsg && (
+        <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3 text-green-400 text-sm">
+          {successMsg}
         </div>
       )}
 
@@ -147,6 +174,21 @@ export default function CreatorsPage() {
                       <p className="text-white/30 text-xs">videos</p>
                     </div>
                   </div>
+
+                  {/* Delete */}
+                  <button
+                    onClick={() => setConfirmDelete(creator)}
+                    disabled={deletingId === creator.id}
+                    title="Delete creator"
+                    className="text-red-400/40 hover:text-red-400 transition-colors p-1 flex-shrink-0 disabled:opacity-30"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                      <path d="M10 11v6M14 11v6" />
+                      <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                    </svg>
+                  </button>
 
                   {/* Expand */}
                   <button
@@ -226,6 +268,34 @@ export default function CreatorsPage() {
             >
               Next →
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm delete modal */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-[#111127] rounded-2xl border border-white/10 p-6 w-full max-w-md space-y-5">
+            <h2 className="text-lg font-semibold text-white">Delete Creator?</h2>
+            <p className="text-white/60 text-sm leading-relaxed">
+              Delete <span className="text-white font-medium">{confirmDelete.display_name}</span> and all their data? This removes their videos, community posts, student access, and account. <span className="text-red-400 font-medium">This cannot be undone.</span>
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmDelete(null)}
+                disabled={deletingId === confirmDelete.id}
+                className="flex-1 py-2.5 border border-white/10 text-white/60 text-sm rounded-lg hover:text-white hover:bg-white/5 transition-colors disabled:opacity-30"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(confirmDelete)}
+                disabled={deletingId === confirmDelete.id}
+                className="flex-1 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-500 disabled:opacity-50 transition-colors"
+              >
+                {deletingId === confirmDelete.id ? 'Deleting…' : 'Delete Creator'}
+              </button>
+            </div>
           </div>
         </div>
       )}
