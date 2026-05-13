@@ -198,6 +198,9 @@ export default function Home() {
             <a href="/terms" className="text-white/40 hover:text-white/60 text-sm transition-colors">
               Terms of Use
             </a>
+            <a href="/polecon" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+              PoleCon Planner
+            </a>
           </div>
         </div>
       </footer>

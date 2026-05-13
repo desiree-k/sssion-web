@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pole Expo Planner — May 27–31, 2026</title>
+<meta name="description" content="Drag-and-drop planner for the 2026 PoleCon DMV. Build your daily schedule across all 5 days, see conflicts, and add picks to Google Calendar.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.10.27/interact.min.js"></script>
+<style>
+:root {
+  --bg: #faf8f4;
+  --bg-secondary: #f0ece4;
+  --bg-primary: #ffffff;
+  --bg-info: #e6f1fb;
+  --bg-warning: #faeeda;
+  --bg-success: #eaf3de;
+  --bg-danger: #fcebeb;
+  --text-primary: #1a1715;
+  --text-secondary: #5f5e5a;
+  --text-tertiary: #888780;
+  --text-info: #0c447c;
+  --text-warning: #633806;
+  --text-success: #27500a;
+  --text-danger: #791f1f;
+  --border-tertiary: rgba(0,0,0,0.1);
+  --border-secondary: rgba(0,0,0,0.2);
+  --border-warning: #ba7517;
+  --border-info: #378add;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1715;
+    --bg-secondary: #252220;
+    --bg-primary: #2c2926;
+    --bg-info: #0c447c;
+    --bg-warning: #633806;
+    --bg-success: #27500a;
+    --bg-danger: #791f1f;
+    --text-primary: #faf4ee;
+    --text-secondary: #c9c5be;
+    --text-tertiary: #888780;
+    --text-info: #b5d4f4;
+    --text-warning: #fac775;
+    --text-success: #c0dd97;
+    --text-danger: #f7c1c1;
+    --border-tertiary: rgba(255,255,255,0.1);
+    --border-secondary: rgba(255,255,255,0.2);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text-primary); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+body { padding: 1rem; max-width: 980px; margin: 0 auto; min-height: 100vh; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.page-header { margin-bottom: 1.5rem; }
+.page-title { font-size: 22px; font-weight: 500; margin: 0 0 4px; }
+.page-sub { font-size: 13px; color: var(--text-secondary); }
+button { font-family: var(--font-sans); font-size: 13px; padding: 6px 12px; border-radius: var(--radius-md); border: 0.5px solid var(--border-secondary); background: var(--bg-primary); color: var(--text-primary); cursor: pointer; }
+button:hover { background: var(--bg-secondary); }
+button:active { transform: scale(0.98); }
+input[type=text] { font-family: var(--font-sans); height: 32px; padding: 4px 10px; font-size: 13px; flex: 1; min-width: 150px; border-radius: var(--radius-md); border: 0.5px solid var(--border-tertiary); background: var(--bg-primary); color: var(--text-primary); }
+.dd-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+.dd-tabs { display: flex; gap: 4px; background: var(--bg-secondary); padding: 4px; border-radius: var(--radius-md); flex-wrap: wrap; }
+.dd-tab { background: transparent; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; color: var(--text-secondary); }
+.dd-tab.active { background: var(--bg-primary); color: var(--text-primary); font-weight: 500; }
+.dd-hint { font-size: 12px; color: var(--text-tertiary); }
+.dd-legend { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; padding: 8px 10px; background: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 8px; font-size: 11px; color: var(--text-secondary); }
+.dd-legend-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dd-legend-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); margin-right: 2px; }
+.dd-filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 8px 10px; background: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 12px; font-size: 12px; }
+.dd-filter-group { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.dd-filter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); }
+.dd-chip { font-size: 11px; padding: 3px 8px; border-radius: 12px; cursor: pointer; user-select: none; border: 0.5px solid var(--border-tertiary); background: var(--bg-primary); color: var(--text-secondary); }
+.dd-chip.on { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
+.dd-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.dd-col { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 12px; display: flex; flex-direction: column; min-height: 700px; }
+.dd-col-head { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 0 0 10px; padding: 0 4px; display: flex; justify-content: space-between; align-items: center; }
+.dd-col-head .count { font-size: 11px; color: var(--text-secondary); }
+.dd-list { flex: 1; }
+.dd-card { background: var(--bg-primary); border: 0.5px solid var(--border-tertiary); border-radius: var(--radius-md); padding: 8px 10px; margin-bottom: 6px; cursor: grab; touch-action: none; user-select: none; position: relative; }
+.dd-card:active { cursor: grabbing; }
+.dd-card.dragging { opacity: 0.4; }
+.dd-card.placed { opacity: 0.35; border-style: dashed; }
+.dd-card.conflict { background: var(--bg-warning); border-color: var(--border-warning); }
+.dd-card-title { font-size: 13px; color: var(--text-primary); margin: 0 0 2px; line-height: 1.3; }
+.dd-card-meta { font-size: 11px; color: var(--text-secondary); display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.dd-card-time { font-variant-numeric: tabular-nums; font-weight: 500; }
+.lvl-pill { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500; }
+.lvl-beg { background: #EAF3DE; color: #27500A; }
+.lvl-bi { background: #FAEEDA; color: #633806; }
+.lvl-int { background: #FCEBEB; color: #791F1F; }
+.lvl-ia { background: #EEEDFE; color: #3C3489; }
+.lvl-adv { background: #E6F1FB; color: #0C447C; }
+.dd-cat { font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 500; }
+.cat-show { background: var(--bg-secondary); color: var(--text-secondary); }
+.cat-free { background: var(--bg-info); color: var(--text-info); }
+.cat-paid { background: var(--bg-success); color: var(--text-success); }
+.cat-cert { background: #EEEDFE; color: #3C3489; }
+.cat-info { background: #FAEEDA; color: #633806; }
+.dd-empty-source { padding: 24px; text-align: center; color: var(--text-tertiary); font-size: 12px; }
+.dd-timeline { flex: 1; position: relative; padding-left: 48px; min-height: 600px; }
+.dd-hour { position: absolute; left: 0; width: 44px; font-size: 10px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.dd-hour-line { position: absolute; left: 44px; right: 0; height: 0.5px; background: var(--border-tertiary); }
+.dd-lunch-zone { position: absolute; left: 44px; right: 0; background: var(--bg-warning); opacity: 0.25; border-radius: var(--radius-md); }
+.dd-lunch-label { position: absolute; right: 8px; font-size: 10px; color: var(--text-warning); text-transform: uppercase; letter-spacing: 0.06em; pointer-events: none; }
+.dd-plan-card { position: absolute; left: 48px; right: 4px; background: var(--bg-primary); border: 0.5px solid var(--border-tertiary); border-radius: var(--radius-md); padding: 6px 8px; cursor: grab; touch-action: none; user-select: none; overflow: hidden; }
+.dd-plan-card.dragging { opacity: 0.4; }
+.dd-plan-card.conflict { background: var(--bg-warning); border-color: var(--border-warning); }
+.dd-plan-card.info { background: #FAEEDA; border-color: #BA7517; cursor: default; }
+.dd-plan-card .dd-card-title { font-size: 12px; }
+.dd-plan-card .dd-card-meta { font-size: 10px; }
+.dd-cal-btn { position: absolute; top: 4px; right: 6px; font-size: 10px; color: var(--text-info); cursor: pointer; padding: 2px 6px; border-radius: 3px; background: var(--bg-primary); border: 0.5px solid var(--border-tertiary); pointer-events: auto; z-index: 2; text-decoration: none; }
+.dd-cal-btn:hover { background: var(--bg-info); }
+.dd-empty-plan { position: absolute; left: 48px; right: 4px; top: 50%; transform: translateY(-50%); text-align: center; color: var(--text-tertiary); font-size: 12px; pointer-events: none; border: 1.5px dashed var(--border-tertiary); border-radius: var(--radius-md); padding: 16px; }
+.dd-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.dd-warn { background: var(--bg-warning); color: var(--text-warning); padding: 8px 12px; border-radius: var(--radius-md); font-size: 12px; margin-bottom: 8px; display: none; align-items: center; gap: 6px; }
+.dd-info { background: var(--bg-info); color: var(--text-info); padding: 8px 12px; border-radius: var(--radius-md); font-size: 12px; margin-bottom: 8px; display: none; align-items: center; gap: 6px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text-primary); color: var(--bg-primary); padding: 10px 16px; border-radius: var(--radius-md); font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 1000; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+.footer { margin-top: 2rem; padding-top: 1rem; border-top: 0.5px solid var(--border-tertiary); font-size: 11px; color: var(--text-tertiary); line-height: 1.6; }
+.footer a { color: var(--text-info); }
+@media (max-width: 600px) {
+  .dd-cols { grid-template-columns: 1fr; }
+  .dd-col { min-height: 400px; }
+  .dd-timeline { min-height: 500px; }
+}
+</style>
+</head>
+<body>
+
+<h1 class="sr-only">Pole Expo Planner for PoleCon DMV May 27-31, 2026</h1>
+
+<div class="page-header">
+  <div class="page-title">PoleCon DMV — May 27–31, 2026</div>
+  <div class="page-sub">Drag sessions into your plan, see conflicts, add to Google Calendar. Your picks save automatically.</div>
+</div>
+
+<div class="dd-header">
+  <div class="dd-tabs">
+    <button class="dd-tab" data-day="wed">Wed May 27</button>
+    <button class="dd-tab" data-day="thu">Thu May 28</button>
+    <button class="dd-tab" data-day="fri">Fri May 29</button>
+    <button class="dd-tab active" data-day="sat">Sat May 30</button>
+    <button class="dd-tab" data-day="sun">Sun May 31</button>
+  </div>
+  <div class="dd-hint">Drag → plan, then add to calendar</div>
+</div>
+
+<div class="dd-legend">
+  <div class="dd-legend-group">
+    <span class="dd-legend-label">Level:</span>
+    <span class="lvl-pill lvl-beg">Beg</span>
+    <span class="lvl-pill lvl-bi">Beg-Int</span>
+    <span class="lvl-pill lvl-int">Int</span>
+    <span class="lvl-pill lvl-ia">Int-Adv</span>
+    <span class="lvl-pill lvl-adv">Adv</span>
+  </div>
+  <div class="dd-legend-group">
+    <span class="dd-legend-label">Type:</span>
+    <span class="dd-cat cat-show">Showcase</span>
+    <span class="dd-cat cat-free">Free</span>
+    <span class="dd-cat cat-paid">Paid</span>
+    <span class="dd-cat cat-cert">Cert</span>
+    <span class="dd-cat cat-info">Info</span>
+  </div>
+</div>
+
+<div class="dd-filters">
+  <input type="text" id="filter-search" placeholder="Search instructor or session..." />
+  <div class="dd-filter-group">
+    <span class="dd-filter-label">Level:</span>
+    <span class="dd-chip on" data-lvl="beg">Beg</span>
+    <span class="dd-chip on" data-lvl="bi">Beg-Int</span>
+    <span class="dd-chip on" data-lvl="int">Int</span>
+    <span class="dd-chip on" data-lvl="ia">Int-Adv</span>
+    <span class="dd-chip on" data-lvl="adv">Adv</span>
+  </div>
+  <div class="dd-filter-group">
+    <span class="dd-filter-label">Type:</span>
+    <span class="dd-chip on" data-cat="show">Show</span>
+    <span class="dd-chip on" data-cat="free">Free</span>
+    <span class="dd-chip on" data-cat="paid">Paid</span>
+    <span class="dd-chip on" data-cat="cert">Cert</span>
+    <span class="dd-chip on" data-cat="info">Info</span>
+  </div>
+</div>
+
+<div class="dd-warn" id="dd-warn"></div>
+<div class="dd-info" id="dd-info"></div>
+
+<div class="dd-cols">
+  <div class="dd-col">
+    <div class="dd-col-head">
+      <span>All sessions</span>
+      <span class="count" id="src-count"></span>
+    </div>
+    <div class="dd-list" id="source-list"></div>
+  </div>
+  <div class="dd-col">
+    <div class="dd-col-head">
+      <span>My plan</span>
+      <span class="count" id="plan-count"></span>
+    </div>
+    <div class="dd-timeline" id="dropzone"></div>
+    <div class="dd-actions">
+      <button onclick="clearPlan()"><i class="ti ti-trash" aria-hidden="true"></i> Clear day</button>
+      <button onclick="copyShareLink()"><i class="ti ti-link" aria-hidden="true"></i> Copy share link</button>
+      <button onclick="addAllToCalendar()"><i class="ti ti-calendar-plus" aria-hidden="true"></i> Add all to Google Calendar</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Schedule transcribed from official PoleCon screenshots — please double-check times and rooms against the official event materials before locking in your day. Times shown in Eastern Time (America/New_York).</p>
+  <p>Your picks are saved to this browser. Click "Copy share link" to share your plan with friends or move it to another device. Built as a community planning tool — not affiliated with PoleCon.</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATES = {wed:'20260527', thu:'20260528', fri:'20260529', sat:'20260530', sun:'20260531'};
+const DAY_LABELS = {wed:'Wednesday', thu:'Thursday', fri:'Friday', sat:'Saturday', sun:'Sunday'};
+const STORAGE_KEY = 'poleExpoPlanner_v1';
+
+const DATA = {
+  wed: [
+    {id:'wp1', cat:'cert', t:'XPert Level 1 and 2 Certification (2-day)', m:'XPert', r:'Pole 1', s:540, e:1050},
+    {id:'wp2', cat:'cert', t:'XPert Level 3 and 4 Certification (2-day)', m:'XPert', r:'Pole 2', s:540, e:1050},
+    {id:'wp3', cat:'cert', t:'Instructor Training for Inclusive & Adaptive Pole', m:'Xscape Pole Fitness', r:'Pole 3', s:540, e:720},
+    {id:'wp4', cat:'cert', t:'MoxieMovez Senior Pole Fitness Intensive', m:'MoxieMovez', r:'Pole 3', s:750, e:990},
+    {id:'wp5', cat:'paid', t:'High & Heavy: Hard Style & Big Energy for the Plus-Size Poler', m:'Akasha Thorn', r:'Pole 3', s:1020, e:1260},
+    {id:'wp6', cat:'cert', t:'XPert Flexibility Flow (2-day)', m:'XPert', r:'Non-Pole 1', s:540, e:1050},
+    {id:'wp7', cat:'cert', t:'Lap Ryderz Certification (6 hr)', m:'Lap Ryderz', r:'Non-Pole 2', s:660, e:1020},
+  ],
+  thu: [
+    {id:'ti1', cat:'info', t:'PoleCon Check-in', m:'Starts at noon · check in by name for wristband', s:720, e:1020},
+    {id:'ti2', cat:'info', t:'Opening reception + vendor room + cash bar', m:'First show starts 6pm', s:1020, e:1080},
+    {id:'ts1', cat:'show', t:'Networking', m:'PoleCon', s:1020, e:1080},
+    {id:'ts2', cat:'show', t:'Para Pole', m:'Xscape Pole Fitness', s:1080, e:1110},
+    {id:'ts3', cat:'show', t:'Sexy Showcase', m:'Naughty Goddexx', s:1110, e:1200},
+    {id:'tf1', cat:'free', t:'Full CPR AED (Pediatric/Adult) Training', m:'Elite Response Training', s:720, e:840},
+    {id:'tf2', cat:'free', t:'Studio Owner Meetup', m:'Sponsored by Groovio', s:855, e:1020},
+    {id:'tp1', cat:'cert', t:'XPert Level 1 and 2 Certification (day 2)', m:'XPert', r:'Pole 1', s:540, e:1050},
+    {id:'tp2', cat:'cert', t:'XPert Level 3 and 4 Certification (day 2)', m:'XPert', r:'Pole 2', s:540, e:1050},
+    {id:'tp3', cat:'paid', t:'Coaching Plus Size Pole Dancers Intensive', m:'Roz the Diva', r:'Pole 3', s:540, e:720},
+    {id:'tp4', cat:'paid', t:'Shape Shifting', m:'Jeni Janover', r:'Pole 3', s:750, e:990},
+    {id:'tp5', cat:'cert', t:'XPert Flexibility Flow (day 2)', m:'XPert', r:'Non-Pole 1', s:540, e:1050},
+    {id:'tp6', cat:'cert', t:'Twerk Technician Certification (6 hr)', m:'Twerk Technicians', r:'Non-Pole 2', s:660, e:1020},
+  ],
+  fri: [
+    {id:'s1', cat:'show', t:'Troupes and Groups', m:'Lush Escapades Revue', s:540, e:630},
+    {id:'p1', cat:'paid', t:'Take a Dump with Chiemi Chunga', m:'Chiemi Chunga', r:'Pole 1', l:'adv', s:540, e:630},
+    {id:'p2', cat:'paid', t:'Alternative Inversions', m:'Phoenix Kazree', r:'Pole 2', l:'bi', s:540, e:630},
+    {id:'p3', cat:'paid', t:"Let's Get Splitty", m:'Abbey Eff', r:'Pole 3', l:'int', s:540, e:630},
+    {id:'p4', cat:'paid', t:'Trust In Your Gut', m:'ACRO PT', r:'Non-Pole 1', l:'beg', s:540, e:630},
+    {id:'p5', cat:'paid', t:'Strengthen and Lengthen: Backbends', m:'Natasha Wang', r:'Non-Pole 2', l:'beg', s:540, e:630},
+    {id:'f1', cat:'free', t:'Flexibility Flow', m:'XPERT', s:540, e:600},
+    {id:'f2', cat:'free', t:'Top 10 Tips: Older Adults on the Pole', m:'Moxie Movez', s:600, e:630},
+    {id:'s2', cat:'show', t:'Sport', m:'RoseRea', s:645, e:690},
+    {id:'s3', cat:'show', t:'Youth', m:'Bee Creative', s:690, e:720},
+    {id:'p6', cat:'paid', t:'Baddie Show Camp — Live Music Choreo', m:'Milan', r:'Pole 1', l:'bi', s:645, e:720},
+    {id:'p7', cat:'paid', t:"Revolution n' Motion: Aerial Tricks", m:'BAELIEN aka AnnaKia', r:'Pole 2', l:'ia', s:645, e:720},
+    {id:'p8', cat:'paid', t:'Back to Basics', m:'Jax Spencer', r:'Pole 3', l:'beg', s:645, e:720},
+    {id:'p9', cat:'paid', t:'Intro to Hand Balancing', m:'ElizabethBFit', r:'Non-Pole 1', l:'bi', s:645, e:720},
+    {id:'p10', cat:'paid', t:'Fierce FloorWERK', m:'Kheanna Walker', r:'Non-Pole 2', l:'int', s:645, e:720},
+    {id:'f3', cat:'free', t:'POSE Like a BOSS', m:'Svitlana Yurchak', s:645, e:690},
+    {id:'f4', cat:'free', t:'Content Creation for Pole Dancers', m:'Accro Brandon', s:690, e:720},
+    {id:'p11', cat:'paid', t:"Intro To Pole 'tastic Gymnastics", m:'Heidi Coker', r:'Pole 1', l:'bi', s:720, e:810},
+    {id:'p12', cat:'paid', t:'The Art of Spin Pole', m:'Shaina Cruea', r:'Pole 2', l:'int', s:720, e:810},
+    {id:'p13', cat:'paid', t:'Midnight Necromancer', m:"Leah Von O'Daera", r:'Pole 3', l:'ia', s:720, e:810},
+    {id:'p14', cat:'paid', t:'Heels Ready — Prep without the Pole', m:'Emily Laura', r:'Non-Pole 1', l:'beg', s:720, e:810},
+    {id:'p15', cat:'paid', t:'LEGWORK LIKE A BOSS. Floorwork', m:'Svitlana Yurchak', r:'Non-Pole 2', l:'beg', s:720, e:810},
+    {id:'s4', cat:'show', t:'Up and Coming Stars', m:'Pole Plus Studio', s:810, e:900},
+    {id:'p16', cat:'paid', t:'Static Descents', m:'Maggie Ann', r:'Pole 1', l:'ia', s:810, e:900},
+    {id:'p17', cat:'paid', t:'K-Pop for Pole', m:'Kitty Steel', r:'Pole 2', l:'beg', s:810, e:900},
+    {id:'p18', cat:'paid', t:'Southern Low Flow Pole', m:'FiyaStarta', r:'Pole 3', l:'bi', s:810, e:900},
+    {id:'p19', cat:'paid', t:'Floor. Flex. Flow.', m:'Zippora', r:'Non-Pole 1', l:'bi', s:810, e:900},
+    {id:'p20', cat:'paid', t:'Lap Dancing', m:'Jax Spencer', r:'Non-Pole 2', l:'beg', s:810, e:900},
+    {id:'f5', cat:'free', t:'Queer Panel', m:'Moderated by Leon Swords', s:810, e:885},
+    {id:'f6', cat:'free', t:'Why Pole Needs an Archive', m:'Irlanda', s:885, e:900},
+    {id:'s5', cat:'show', t:'PowerFlow', m:'Alter Ego Dance Space', s:900, e:960},
+    {id:'p21', cat:'paid', t:'Unique Tricks', m:'Ashley Fox', r:'Pole 1', l:'int', s:900, e:990},
+    {id:'p22', cat:'paid', t:'Tumbles 4 Lyfe', m:'Natasha Wang', r:'Pole 2', l:'adv', s:900, e:990},
+    {id:'p23', cat:'paid', t:'Strength Meets Flow: Athletic Transitions', m:'Adonis Vernail', r:'Pole 3', l:'ia', s:900, e:990},
+    {id:'p24', cat:'paid', t:'How to Choreograph a Pole Show', m:'Kristy Sellars', r:'Non-Pole 1', l:'beg', s:900, e:990},
+    {id:'p25', cat:'paid', t:'99 Ways to Twerk: Twerkcentric', m:'Twerk Technicians', r:'Non-Pole 2', l:'beg', s:900, e:990},
+    {id:'f7', cat:'free', t:'Change the Font: Embodied Flow Lab', m:'Armaniii', s:900, e:945},
+    {id:'f8', cat:'free', t:'Altered Space: meditation & pole', m:'Heidi Coker', s:945, e:990},
+    {id:'s6', cat:'show', t:'Dangerous Curves', m:'Curves & Chrome', s:990, e:1035},
+    {id:'s7', cat:'show', t:'Contemporary/Artistic', m:'Pole Theatre USA', s:1035, e:1080},
+    {id:'p26', cat:'paid', t:'Inverts 101', m:'Roz the Diva', r:'Pole 1', l:'beg', s:990, e:1080},
+    {id:'p27', cat:'paid', t:'CIRCLE LIKE A BOSS. Pole Edition', m:'Svitlana Yurchak', r:'Pole 2', l:'bi', s:990, e:1080},
+    {id:'p28', cat:'paid', t:'Delicious and Despacito', m:'Baila Jennie', r:'Pole 3', l:'beg', s:990, e:1080},
+    {id:'p29', cat:'paid', t:'Advanced Floor-e0 2.0', m:'Accro Brandon', r:'Non-Pole 1', l:'int', s:990, e:1080},
+    {id:'p30', cat:'paid', t:'Fairy Flirtatious Floorwork', m:'Tink', r:'Non-Pole 2', l:'beg', s:990, e:1080},
+    {id:'f9', cat:'free', t:'Stripper/Sex Worker Panel', m:'Moderated by AM Davies', s:990, e:1080},
+    {id:'s8', cat:'show', t:'Creepy', m:'Phoenix Fitness and Dance', s:1080, e:1140},
+    {id:'p31', cat:'paid', t:'Video Vixxen', m:'Yung Pole Master', r:'Pole 1', l:'bi', s:1080, e:1170},
+    {id:'p32', cat:'paid', t:'Handsprings are Bae', m:'Tink', r:'Pole 2', l:'int', s:1080, e:1170},
+    {id:'p33', cat:'paid', t:'Bend & Split: Spatchcock Series', m:'Lisel', r:'Pole 3', l:'adv', s:1080, e:1170},
+    {id:'p34', cat:'paid', t:'Body Snatcher', m:'Kushina', r:'Non-Pole 1', l:'beg', s:1080, e:1170},
+    {id:'p35', cat:'paid', t:'Handstands', m:'Samantha Star', r:'Non-Pole 2', l:'beg', s:1080, e:1170},
+    {id:'f10', cat:'free', t:'Studio Owner Colloquium', m:'Tanya Christopher', s:1080, e:1140},
+  ],
+  sat: [
+    {id:'ss1', cat:'show', t:'Experimental', m:'the Stanek Spinner', s:540, e:585},
+    {id:'ss2', cat:'show', t:'Pole Comedy', m:'Pole Savage Performance', s:585, e:630},
+    {id:'sp1', cat:'paid', t:'Backbend Shapes and Flow', m:'Stephanie Tallant', r:'Pole 1', l:'adv', s:540, e:630},
+    {id:'sp2', cat:'paid', t:'Doubles Shapes and Transitions', m:'Sara and Tylis', r:'Pole 2', l:'ia', s:540, e:630},
+    {id:'sp3', cat:'paid', t:'Home Base', m:'Jazz the Poler', r:'Pole 3', l:'bi', s:540, e:630},
+    {id:'sp4', cat:'paid', t:'Strictly Dance', m:'Phoenix Kazree', r:'Non-Pole 1', l:'beg', s:540, e:630},
+    {id:'sp5', cat:'paid', t:'Split the Difference', m:'Aerial Crystal', r:'Non-Pole 2', l:'beg', s:540, e:630},
+    {id:'sf1', cat:'free', t:'Thicc Bodies Flow', m:'Alicia', s:540, e:600},
+    {id:'sf2', cat:'free', t:'Studio Growth', m:'Kristy Sellars', s:600, e:630},
+    {id:'ss3', cat:'show', t:'Pole Masters & Grand Masters', m:'Moxie Movez', s:645, e:720},
+    {id:'sp6', cat:'paid', t:'Dynamic Static Tricks and Combos', m:'Kheanna Walker', r:'Pole 1', l:'ia', s:645, e:720},
+    {id:'sp7', cat:'paid', t:'Art and Sport — Pole Choreography', m:'Marshall', r:'Pole 2', l:'int', s:645, e:720},
+    {id:'sp8', cat:'paid', t:'Janeiro Ins and Outs', m:'ElizabethBFit', r:'Pole 3', l:'int', s:645, e:720},
+    {id:'sp9', cat:'paid', t:'Stakes, Screws, and Slides', m:'Jeni Janover', r:'Non-Pole 1', l:'beg', s:645, e:720},
+    {id:'sp10', cat:'paid', t:'Gravity: Grounded Floorwork', m:'BAELIEN aka AnnaKia', r:'Non-Pole 2', l:'bi', s:645, e:720},
+    {id:'sf3', cat:'free', t:'Why Embodiment & Sensual Mvmt', m:'Cassie Flows', s:645, e:675},
+    {id:'sf4', cat:'free', t:'Blurred Lines', m:'Kimberly Nobrega', s:675, e:720},
+    {id:'sp11', cat:'paid', t:'Phreestyle Clinic', m:'Dey Phoenix', r:'Pole 1', l:'beg', s:720, e:810},
+    {id:'sp12', cat:'paid', t:'Unlocking Your Powerspin', m:'Kira Bucca', r:'Pole 2', l:'bi', s:720, e:810},
+    {id:'sp13', cat:'paid', t:'Pour it Up, Pour it Up!', m:'Nicole the Pole', r:'Pole 3', l:'ia', s:720, e:810},
+    {id:'sp14', cat:'paid', t:"Release the Clackins'!", m:'Jax Spencer', r:'Non-Pole 1', l:'beg', s:720, e:810},
+    {id:'sp15', cat:'paid', t:'Electric Chair', m:'Crystal Belcher', r:'Non-Pole 2', l:'beg', s:720, e:810},
+    {id:'ss4', cat:'show', t:'Latin Heritage', m:'MishMash by Design', s:810, e:885},
+    {id:'sp16', cat:'paid', t:'Flowing in Cursive: Transitions', m:'Asia Q', r:'Pole 1', l:'bi', s:810, e:900},
+    {id:'sp17', cat:'paid', t:'Bird of Paradise', m:'Jade Bensilum', r:'Pole 2', l:'adv', s:810, e:900},
+    {id:'sp18', cat:'paid', t:'Pole Conditioning in Disguise', m:'Pole Rage', r:'Pole 3', l:'bi', s:810, e:900},
+    {id:'sp19', cat:'paid', t:'Bendy Flexy', m:'Ashley Fox', r:'Non-Pole 1', l:'bi', s:810, e:900},
+    {id:'sp20', cat:'paid', t:'Slow Burn', m:'Jynx', r:'Non-Pole 2', l:'bi', s:810, e:900},
+    {id:'sf5', cat:'free', t:'Amorous Chair', m:'Tanya Christopher', s:810, e:870},
+    {id:'sf6', cat:'free', t:'Ready, Set, Compete', m:'Ella Devon', s:870, e:885},
+    {id:'ss5', cat:'show', t:'Low Flow & Floorwork', m:'Liquid Motion', s:900, e:975},
+    {id:'sp21', cat:'paid', t:'Dance like a Stripper', m:'Vanity', r:'Pole 1', l:'beg', s:900, e:990},
+    {id:'sp22', cat:'paid', t:'Fonjis for Life', m:'Samantha Star', r:'Pole 2', l:'int', s:900, e:990},
+    {id:'sp23', cat:'paid', t:'Shapeshifting for Pole Creatures', m:'Natasha Wang', r:'Pole 3', l:'bi', s:900, e:990},
+    {id:'sp24', cat:'paid', t:'Hallowed Grounds', m:"Leah Von O'Daera", r:'Non-Pole 1', l:'int', s:900, e:990},
+    {id:'sp25', cat:'paid', t:'The Chair Affair: Trap & Floorwork', m:'Milan', r:'Non-Pole 2', l:'beg', s:900, e:990},
+    {id:'sf7', cat:'free', t:'Pole Injury Prevention', m:'Vernita Blue', s:900, e:930},
+    {id:'sf8', cat:'free', t:'Just Enjoy the Slink', m:'Joi, Elixir, and Sweet T', s:930, e:975},
+    {id:'ss6', cat:'show', t:'Men of Pole', m:'the Milan Method', s:990, e:1050},
+    {id:'sp26', cat:'paid', t:'Inversions University', m:'Nicole the Pole', r:'Pole 1', l:'int', s:990, e:1080},
+    {id:'sp27', cat:'paid', t:'Disarm Them with Poise', m:'AMDavies', r:'Pole 2', l:'beg', s:990, e:1080},
+    {id:'sp28', cat:'paid', t:'Edgework Mastery', m:'Emily Laura', r:'Pole 3', l:'bi', s:990, e:1080},
+    {id:'sp29', cat:'paid', t:'The Inner Engineer', m:'Heidi Coker', r:'Non-Pole 1', l:'beg', s:990, e:1080},
+    {id:'sp30', cat:'paid', t:'When in Doubt, Shimmy', m:'Ziva Lynn', r:'Non-Pole 2', l:'beg', s:990, e:1080},
+    {id:'sf9', cat:'free', t:'Off the Pole, Stronger Together', m:'Abby', s:990, e:1050},
+    {id:'ss7', cat:'show', t:'Queer Pole', m:'FloorPlay Apparel', s:1080, e:1140},
+    {id:'sp31', cat:'paid', t:'Twizzles and Thread Throughs', m:'ElizabethBFit', r:'Pole 1', l:'int', s:1080, e:1170},
+    {id:'sp32', cat:'paid', t:"Pole'Riginality", m:'Heidi Coker', r:'Pole 2', l:'beg', s:1080, e:1170},
+    {id:'sp33', cat:'paid', t:'Signature Tricks with Kristy Sellars', m:'Kristy Sellars', r:'Pole 3', l:'ia', s:1080, e:1170},
+    {id:'sp34', cat:'paid', t:'Off Like a Prom Dress', m:'Feral Binds', r:'Non-Pole 1', l:'beg', s:1080, e:1170},
+    {id:'sp35', cat:'paid', t:'Forearm Stands: Finding Shapes', m:'Flexy Squirrel', r:'Non-Pole 2', l:'beg', s:1080, e:1170},
+    {id:'ss8', cat:'show', t:'Bet on Black', m:'Mind Bodies Pole', s:1230, e:1380},
+    {id:'sf10', cat:'free', t:'Plus Size Panel', m:'Moderated by Roz the Diva', s:1080, e:1140},
+  ],
+  sun: [
+    {id:'us1', cat:'show', t:'Breakfast', m:'(8:45am start)', s:525, e:570},
+    {id:'us2', cat:'show', t:'Freestyle', m:'XPERT', s:570, e:600},
+    {id:'us3', cat:'show', t:'Aerial Showcase', m:'Aerial Star Organization', s:615, e:720},
+    {id:'us4', cat:'show', t:'On stage thank you!', m:'Closing', s:720, e:780},
+    {id:'uf1', cat:'free', t:'How to be a Traveling Workshop Instructor', m:'Roz the Diva', s:540, e:570},
+    {id:'uf2', cat:'free', t:'Magic Whole Body Recovery', m:'Teri', s:570, e:600},
+    {id:'uf3', cat:'free', t:'Race and Cultural Appropriation in Pole Panel', m:'Moderated by Shay Jones', s:615, e:720},
+    {id:'up1', cat:'paid', t:'LIFT', m:'Zippora', r:'Pole 1', l:'ia', s:540, e:600},
+    {id:'up2', cat:'paid', t:'American Club Icon', m:'Yung Pole Master', r:'Pole 1', l:'int', s:615, e:720},
+    {id:'up3', cat:'paid', t:'Pulse Code Pathways: Low Flow Transitions', m:'BAELIEN aka AnnaKia', r:'Pole 2', l:'bi', s:540, e:600},
+    {id:'up4', cat:'paid', t:'Throw that Ass in a Circle', m:'Roz the Diva', r:'Pole 2', l:'beg', s:615, e:720},
+    {id:'up5', cat:'paid', t:'Flips and Drops', m:'Ashley Fox', r:'Pole 3', l:'adv', s:540, e:600},
+    {id:'up6', cat:'paid', t:'Dance with Kristy Sellars', m:'Kristy Sellars', r:'Pole 3', l:'int', s:615, e:720},
+    {id:'up7', cat:'paid', t:"Fake it 'Til You Make it", m:'Abbey Eff', r:'Non-Pole 1', l:'beg', s:540, e:600},
+    {id:'up8', cat:'paid', t:'Floorwork and Acro Flow', m:'Lisel', r:'Non-Pole 1', l:'bi', s:615, e:720},
+    {id:'up9', cat:'paid', t:'Bridges and Hoes: Sexy Backbends', m:'Ms Vegas', r:'Non-Pole 2', l:'beg', s:540, e:600},
+    {id:'up10', cat:'paid', t:'Fix a Friend', m:'ACRO PT', r:'Non-Pole 2', l:'beg', s:615, e:720},
+  ],
+};
+
+const LVL_LABELS = {beg:{l:'Beg',c:'lvl-beg'}, bi:{l:'Beg-Int',c:'lvl-bi'}, int:{l:'Int',c:'lvl-int'}, ia:{l:'Int-Adv',c:'lvl-ia'}, adv:{l:'Adv',c:'lvl-adv'}};
+const CAT_LABELS = {show:{l:'Showcase',c:'cat-show'}, free:{l:'Free',c:'cat-free'}, paid:{l:'Paid',c:'cat-paid'}, cert:{l:'Cert',c:'cat-cert'}, info:{l:'Info',c:'cat-info'}};
+
+const START_MIN = 540;
+const END_MIN = 1380;
+const PX_PER_MIN = 0.85;
+const LUNCH_START = 720;
+const LUNCH_END = 810;
+
+let currentDay = 'sat';
+let searchText = '';
+const enabledLevels = new Set(['beg','bi','int','ia','adv']);
+const enabledCats = new Set(['show','free','paid','cert','info']);
+const plans = {wed:[], thu:[], fri:[], sat:[], sun:[]};
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    Object.keys(plans).forEach(d => {
+      if (Array.isArray(saved[d])) {
+        plans[d] = saved[d].map(id => DATA[d].find(i => i.id === id)).filter(Boolean);
+      }
+    });
+  } catch (e) { console.warn('Could not load saved picks', e); }
+}
+function saveToStorage() {
+  try {
+    const minimal = {};
+    Object.keys(plans).forEach(d => { minimal[d] = plans[d].map(i => i.id); });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(minimal));
+  } catch (e) { console.warn('Could not save picks', e); }
+}
+function loadFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  let loadedAny = false;
+  ['wed','thu','fri','sat','sun'].forEach(d => {
+    const v = params.get(d);
+    if (v) {
+      const ids = v.split(',').filter(Boolean);
+      const items = ids.map(id => DATA[d].find(i => i.id === id)).filter(Boolean);
+      if (items.length > 0) {
+        plans[d] = items;
+        loadedAny = true;
+      }
+    }
+  });
+  if (loadedAny) {
+    saveToStorage();
+    showToast('Loaded shared plan');
+  }
+}
+function buildShareURL() {
+  const url = new URL(window.location.href);
+  url.search = '';
+  Object.keys(plans).forEach(d => {
+    if (plans[d].length > 0) {
+      url.searchParams.set(d, plans[d].map(i => i.id).join(','));
+    }
+  });
+  return url.toString();
+}
+
+function fmt(mins) {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  const period = h >= 12 ? 'p' : 'a';
+  const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
+  return m === 0 ? `${h12}${period}` : `${h12}:${m.toString().padStart(2,'0')}${period}`;
+}
+function minsToPx(mins) { return (mins - START_MIN) * PX_PER_MIN; }
+function pad(n) { return n.toString().padStart(2,'0'); }
+function gcalTime(day, mins) {
+  const date = DATES[day];
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `${date}T${pad(h)}${pad(m)}00`;
+}
+function gcalLink(item, day) {
+  const start = gcalTime(day, item.s);
+  const end = gcalTime(day, item.e);
+  const title = `${item.t}${item.m ? ' — '+item.m : ''}`;
+  const details = `Pole Expo ${DAY_LABELS[day]} session.\n\nInstructor/host: ${item.m}\nType: ${CAT_LABELS[item.cat].l}${item.l ? '\nLevel: '+LVL_LABELS[item.l].l : ''}${item.r ? '\nRoom: '+item.r : ''}`;
+  const loc = item.r || '';
+  const params = new URLSearchParams({
+    action: 'TEMPLATE', text: title,
+    dates: `${start}/${end}`, details: details,
+    location: loc, ctz: 'America/New_York',
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function cardHTML(item) {
+  const lvl = item.l ? `<span class="lvl-pill ${LVL_LABELS[item.l].c}">${LVL_LABELS[item.l].l}</span>` : '';
+  const room = item.r ? ` · ${item.r}` : '';
+  const cat = CAT_LABELS[item.cat];
+  return `
+    <div class="dd-card-title">${item.t}</div>
+    <div class="dd-card-meta">
+      <span class="dd-card-time">${fmt(item.s)}–${fmt(item.e)}</span>
+      <span class="dd-cat ${cat.c}">${cat.l}</span>
+      ${lvl}
+      <span>${item.m}${room}</span>
+    </div>
+  `;
+}
+
+function getConflicts(day) {
+  const plan = plans[day];
+  const conflicts = new Set();
+  for (let i = 0; i < plan.length; i++) {
+    for (let j = i + 1; j < plan.length; j++) {
+      const a = plan[i], b = plan[j];
+      if (a.cat === 'show' || b.cat === 'show' || a.cat === 'info' || b.cat === 'info') continue;
+      if (a.s < b.e && b.s < a.e) { conflicts.add(a.id); conflicts.add(b.id); }
+    }
+  }
+  return conflicts;
+}
+function lunchStatus(day) {
+  return plans[day].filter(p => (p.cat === 'paid' || p.cat === 'cert') && p.s < LUNCH_END && p.e > LUNCH_START);
+}
+function passesFilter(item) {
+  if (!enabledCats.has(item.cat)) return false;
+  if (item.l && !enabledLevels.has(item.l)) return false;
+  if (searchText) {
+    const q = searchText.toLowerCase();
+    const hay = (item.t + ' ' + item.m + ' ' + (item.r || '')).toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function renderSource() {
+  const list = document.getElementById('source-list');
+  const items = DATA[currentDay].filter(passesFilter);
+  const planIds = new Set(plans[currentDay].map(p => p.id));
+  list.innerHTML = '';
+  if (items.length === 0) {
+    list.innerHTML = '<div class="dd-empty-source">No sessions match your filters.</div>';
+  } else {
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'dd-card draggable' + (planIds.has(item.id) ? ' placed' : '');
+      card.dataset.id = item.id;
+      card.dataset.from = 'source';
+      card.innerHTML = cardHTML(item);
+      list.appendChild(card);
+    });
+  }
+  const total = DATA[currentDay].length;
+  document.getElementById('src-count').textContent = items.length === total ? `${total} sessions` : `${items.length} of ${total}`;
+}
+
+function renderPlan() {
+  const dz = document.getElementById('dropzone');
+  const plan = [...plans[currentDay]].sort((a,b) => a.s - b.s);
+  const conflicts = getConflicts(currentDay);
+  dz.innerHTML = '';
+  for (let h = 9; h <= 22; h++) {
+    const mins = h * 60;
+    const top = minsToPx(mins);
+    const label = document.createElement('div');
+    label.className = 'dd-hour';
+    label.style.top = top + 'px';
+    const h12 = h > 12 ? h - 12 : h;
+    const period = h >= 12 ? 'p' : 'a';
+    label.textContent = `${h12}${period}`;
+    dz.appendChild(label);
+    const line = document.createElement('div');
+    line.className = 'dd-hour-line';
+    line.style.top = (top + 6) + 'px';
+    dz.appendChild(line);
+  }
+  const lunchZone = document.createElement('div');
+  lunchZone.className = 'dd-lunch-zone';
+  lunchZone.style.top = minsToPx(LUNCH_START) + 'px';
+  lunchZone.style.height = (minsToPx(LUNCH_END) - minsToPx(LUNCH_START)) + 'px';
+  dz.appendChild(lunchZone);
+  const lunchLabel = document.createElement('div');
+  lunchLabel.className = 'dd-lunch-label';
+  lunchLabel.style.top = (minsToPx(LUNCH_START) + 4) + 'px';
+  lunchLabel.textContent = 'Lunch window';
+  dz.appendChild(lunchLabel);
+  dz.style.height = (minsToPx(END_MIN) + 30) + 'px';
+
+  if (plan.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'dd-empty-plan';
+    empty.innerHTML = '<i class="ti ti-arrow-down-left" aria-hidden="true" style="font-size:20px;color:var(--text-tertiary);"></i><br>Drag sessions here<br><span style="font-size:11px;">They\'ll snap to their real times</span>';
+    dz.appendChild(empty);
+  } else {
+    plan.forEach(item => {
+      const card = document.createElement('div');
+      const isInfo = item.cat === 'info';
+      card.className = 'dd-plan-card' + (isInfo ? ' info' : ' draggable') + (conflicts.has(item.id) ? ' conflict' : '');
+      card.dataset.id = item.id;
+      card.dataset.from = 'plan';
+      card.style.top = minsToPx(item.s) + 'px';
+      const height = Math.max(38, (item.e - item.s) * PX_PER_MIN - 2);
+      card.style.height = height + 'px';
+      card.innerHTML = cardHTML(item);
+      if (!isInfo) {
+        const calBtn = document.createElement('a');
+        calBtn.className = 'dd-cal-btn';
+        calBtn.href = gcalLink(item, currentDay);
+        calBtn.target = '_blank';
+        calBtn.rel = 'noopener';
+        calBtn.title = 'Add to Google Calendar';
+        calBtn.innerHTML = '<i class="ti ti-calendar-plus" aria-hidden="true"></i>';
+        calBtn.onclick = (e) => { e.stopPropagation(); };
+        calBtn.onmousedown = (e) => { e.stopPropagation(); };
+        calBtn.ontouchstart = (e) => { e.stopPropagation(); };
+        card.appendChild(calBtn);
+      }
+      dz.appendChild(card);
+    });
+  }
+  document.getElementById('plan-count').textContent = `${plan.length} picked`;
+  const warn = document.getElementById('dd-warn');
+  if (conflicts.size > 0) {
+    warn.style.display = 'flex';
+    warn.innerHTML = `<i class="ti ti-alert-triangle" aria-hidden="true"></i> You have overlapping sessions. Showcases never conflict.`;
+  } else { warn.style.display = 'none'; }
+  const info = document.getElementById('dd-info');
+  const lunchOverlaps = lunchStatus(currentDay);
+  if (lunchOverlaps.length > 0) {
+    info.style.display = 'flex';
+    info.innerHTML = `<i class="ti ti-bowl" aria-hidden="true"></i> Heads up — you've booked through the lunch window. Plan a snack on the go.`;
+  } else { info.style.display = 'none'; }
+}
+
+function render() { renderSource(); renderPlan(); saveToStorage(); }
+function addToPlan(id) {
+  if (plans[currentDay].some(p => p.id === id)) return;
+  const item = DATA[currentDay].find(i => i.id === id);
+  if (item) plans[currentDay].push(item);
+  render();
+}
+function removeFromPlan(id) {
+  plans[currentDay] = plans[currentDay].filter(p => p.id !== id);
+  render();
+}
+
+function setupDrag() {
+  interact('.draggable').draggable({
+    inertia: false, autoScroll: true,
+    listeners: {
+      start(e) { e.target.classList.add('dragging'); e.target.style.zIndex = 1000; },
+      move(e) {
+        const x = (parseFloat(e.target.dataset.x) || 0) + e.dx;
+        const y = (parseFloat(e.target.dataset.y) || 0) + e.dy;
+        e.target.style.transform = `translate(${x}px, ${y}px)`;
+        e.target.dataset.x = x; e.target.dataset.y = y;
+      },
+      end(e) {
+        e.target.classList.remove('dragging');
+        e.target.style.transform = ''; e.target.style.zIndex = '';
+        e.target.dataset.x = 0; e.target.dataset.y = 0;
+      }
+    }
+  });
+  interact('#dropzone').dropzone({
+    accept: '.draggable', overlap: 0.1,
+    ondropactivate(e) { e.target.style.background = 'rgba(0,0,0,0.02)'; },
+    ondropdeactivate(e) { e.target.style.background = ''; },
+    ondrop(e) {
+      const id = e.relatedTarget.dataset.id;
+      const from = e.relatedTarget.dataset.from;
+      if (from === 'source') addToPlan(id);
+    }
+  });
+  interact('#source-list').dropzone({
+    accept: '.draggable', overlap: 0.25,
+    ondrop(e) {
+      const id = e.relatedTarget.dataset.id;
+      const from = e.relatedTarget.dataset.from;
+      if (from === 'plan') removeFromPlan(id);
+    }
+  });
+}
+
+function clearPlan() {
+  if (plans[currentDay].length === 0) return;
+  if (!confirm(`Clear all picks for ${DAY_LABELS[currentDay]}?`)) return;
+  plans[currentDay] = [];
+  render();
+}
+function copyShareLink() {
+  const url = buildShareURL();
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Share link copied — paste it anywhere');
+  }).catch(() => {
+    prompt('Copy this link:', url);
+  });
+}
+function addAllToCalendar() {
+  const plan = [...plans[currentDay]].sort((a,b) => a.s - b.s).filter(i => i.cat !== 'info');
+  if (plan.length === 0) { alert('Pick some sessions first.'); return; }
+  if (plan.length > 5) {
+    if (!confirm(`This will open ${plan.length} new tabs (one per session). Continue?`)) return;
+  }
+  plan.forEach((item, idx) => {
+    setTimeout(() => { window.open(gcalLink(item, currentDay), '_blank'); }, idx * 200);
+  });
+}
+
+document.querySelectorAll('.dd-tab').forEach(t => {
+  t.onclick = () => {
+    currentDay = t.dataset.day;
+    document.querySelectorAll('.dd-tab').forEach(x => x.classList.toggle('active', x.dataset.day === currentDay));
+    render();
+  };
+});
+document.querySelectorAll('.dd-chip').forEach(c => {
+  c.onclick = () => {
+    if (c.dataset.lvl) {
+      const lvl = c.dataset.lvl;
+      if (enabledLevels.has(lvl)) { enabledLevels.delete(lvl); c.classList.remove('on'); }
+      else { enabledLevels.add(lvl); c.classList.add('on'); }
+    } else if (c.dataset.cat) {
+      const cat = c.dataset.cat;
+      if (enabledCats.has(cat)) { enabledCats.delete(cat); c.classList.remove('on'); }
+      else { enabledCats.add(cat); c.classList.add('on'); }
+    }
+    renderSource();
+  };
+});
+document.getElementById('filter-search').oninput = (e) => {
+  searchText = e.target.value;
+  renderSource();
+};
+
+loadFromStorage();
+loadFromURL();
+render();
+setupDrag();
+</script>
+
+</body>
+</html>
