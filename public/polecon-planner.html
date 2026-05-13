@@ -208,7 +208,8 @@ input[type=text] { font-family: var(--font-sans); height: 32px; padding: 4px 10p
     <div class="dd-actions">
       <button onclick="clearPlan()"><i class="ti ti-trash" aria-hidden="true"></i> Clear day</button>
       <button onclick="copyShareLink()"><i class="ti ti-link" aria-hidden="true"></i> Copy share link</button>
-      <button onclick="addAllToCalendar()"><i class="ti ti-calendar-plus" aria-hidden="true"></i> Add all to Google Calendar</button>
+      <button onclick="downloadICS('day')"><i class="ti ti-calendar-down" aria-hidden="true"></i> Download .ics (this day)</button>
+      <button onclick="downloadICS('all')"><i class="ti ti-calendar-down" aria-hidden="true"></i> Download .ics (all days)</button>
     </div>
   </div>
 </div>
@@ -381,6 +382,10 @@ const DATA = {
   ],
 };
 
+const _swapTmp = DATA.fri;
+DATA.fri = DATA.sat;
+DATA.sat = _swapTmp;
+
 const LVL_LABELS = {beg:{l:'Beg',c:'lvl-beg'}, bi:{l:'Beg-Int',c:'lvl-bi'}, int:{l:'Int',c:'lvl-int'}, ia:{l:'Int-Adv',c:'lvl-ia'}, adv:{l:'Adv',c:'lvl-adv'}};
 const CAT_LABELS = {show:{l:'Showcase',c:'cat-show'}, free:{l:'Free',c:'cat-free'}, paid:{l:'Paid',c:'cat-paid'}, cert:{l:'Cert',c:'cat-cert'}, info:{l:'Info',c:'cat-info'}};
 
@@ -543,6 +548,46 @@ function renderSource() {
   document.getElementById('src-count').textContent = items.length === total ? `${total} sessions` : `${items.length} of ${total}`;
 }
 
+function assignLanes(plan) {
+  const results = plan.map(() => ({ lane: 0, totalLanesInCluster: 1 }));
+  const clusters = [];
+  let currentCluster = [];
+  let currentClusterEnd = -1;
+  plan.forEach((item, idx) => {
+    if (item.s >= currentClusterEnd) {
+      if (currentCluster.length > 0) clusters.push(currentCluster);
+      currentCluster = [idx];
+      currentClusterEnd = item.e;
+    } else {
+      currentCluster.push(idx);
+      currentClusterEnd = Math.max(currentClusterEnd, item.e);
+    }
+  });
+  if (currentCluster.length > 0) clusters.push(currentCluster);
+  clusters.forEach(cluster => {
+    const laneEndTimes = [];
+    cluster.forEach(idx => {
+      const item = plan[idx];
+      let assigned = -1;
+      for (let lane = 0; lane < laneEndTimes.length; lane++) {
+        if (laneEndTimes[lane] <= item.s) {
+          assigned = lane;
+          laneEndTimes[lane] = item.e;
+          break;
+        }
+      }
+      if (assigned === -1) {
+        assigned = laneEndTimes.length;
+        laneEndTimes.push(item.e);
+      }
+      results[idx].lane = assigned;
+    });
+    const total = laneEndTimes.length;
+    cluster.forEach(idx => { results[idx].totalLanesInCluster = total; });
+  });
+  return results;
+}
+
 function renderPlan() {
   const dz = document.getElementById('dropzone');
   const plan = [...plans[currentDay]].sort((a,b) => a.s - b.s);
@@ -581,7 +626,9 @@ function renderPlan() {
     empty.innerHTML = '<i class="ti ti-arrow-down-left" aria-hidden="true" style="font-size:20px;color:var(--text-tertiary);"></i><br>Drag sessions here<br><span style="font-size:11px;">They\'ll snap to their real times</span>';
     dz.appendChild(empty);
   } else {
-    plan.forEach(item => {
+    const lanes = assignLanes(plan);
+    const maxLane = Math.max(...lanes.map(l => l.lane)) + 1;
+    plan.forEach((item, idx) => {
       const card = document.createElement('div');
       const isInfo = item.cat === 'info';
       card.className = 'dd-plan-card' + (isInfo ? ' info' : ' draggable') + (conflicts.has(item.id) ? ' conflict' : '');
@@ -590,6 +637,17 @@ function renderPlan() {
       card.style.top = minsToPx(item.s) + 'px';
       const height = Math.max(38, (item.e - item.s) * PX_PER_MIN - 2);
       card.style.height = height + 'px';
+      const laneInfo = lanes[idx];
+      const totalLanes = laneInfo.totalLanesInCluster;
+      if (totalLanes > 1) {
+        const baseLeft = 48;
+        const baseRight = 4;
+        const availableWidth = `calc(100% - ${baseLeft + baseRight}px)`;
+        const laneWidth = `calc((100% - ${baseLeft + baseRight}px) / ${totalLanes})`;
+        card.style.left = `calc(${baseLeft}px + (100% - ${baseLeft + baseRight}px) * ${laneInfo.lane} / ${totalLanes})`;
+        card.style.width = `calc((100% - ${baseLeft + baseRight}px) / ${totalLanes} - 2px)`;
+        card.style.right = 'auto';
+      }
       card.innerHTML = cardHTML(item);
       if (!isInfo) {
         const calBtn = document.createElement('a');
@@ -671,6 +729,85 @@ function setupDrag() {
   });
 }
 
+function icsTime(day, mins) {
+  const date = DATES[day];
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `${date}T${pad(h)}${pad(m)}00`;
+}
+function icsEscape(s) {
+  return String(s).replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+}
+function buildICS(picksByDay) {
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Pole Expo Planner//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:PoleCon DMV 2026',
+    'X-WR-TIMEZONE:America/New_York',
+    'BEGIN:VTIMEZONE',
+    'TZID:America/New_York',
+    'BEGIN:DAYLIGHT',
+    'TZOFFSETFROM:-0500',
+    'TZOFFSETTO:-0400',
+    'TZNAME:EDT',
+    'DTSTART:19700308T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU',
+    'END:DAYLIGHT',
+    'BEGIN:STANDARD',
+    'TZOFFSETFROM:-0400',
+    'TZOFFSETTO:-0500',
+    'TZNAME:EST',
+    'DTSTART:19701101T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU',
+    'END:STANDARD',
+    'END:VTIMEZONE',
+  ];
+  const now = new Date();
+  const stamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth()+1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`;
+  Object.keys(picksByDay).forEach(day => {
+    picksByDay[day].forEach(item => {
+      if (item.cat === 'info') return;
+      const title = `${item.t}${item.m ? ' — '+item.m : ''}`;
+      const desc = `Type: ${CAT_LABELS[item.cat].l}${item.l ? '\nLevel: '+LVL_LABELS[item.l].l : ''}${item.m ? '\nInstructor/host: '+item.m : ''}${item.r ? '\nRoom: '+item.r : ''}`;
+      lines.push(
+        'BEGIN:VEVENT',
+        `UID:${item.id}-${day}@poleexpoplanner`,
+        `DTSTAMP:${stamp}`,
+        `DTSTART;TZID=America/New_York:${icsTime(day, item.s)}`,
+        `DTEND;TZID=America/New_York:${icsTime(day, item.e)}`,
+        `SUMMARY:${icsEscape(title)}`,
+        `DESCRIPTION:${icsEscape(desc)}`,
+        item.r ? `LOCATION:${icsEscape(item.r)}` : 'LOCATION:',
+        'END:VEVENT'
+      );
+    });
+  });
+  lines.push('END:VCALENDAR');
+  return lines.join('\r\n');
+}
+function downloadICS(scope) {
+  const picksByDay = scope === 'all' ? plans : { [currentDay]: plans[currentDay] };
+  const totalEvents = Object.values(picksByDay).flat().filter(i => i.cat !== 'info').length;
+  if (totalEvents === 0) {
+    alert(scope === 'all' ? 'No sessions picked yet — drag some in first.' : 'No sessions picked for this day yet.');
+    return;
+  }
+  const ics = buildICS(picksByDay);
+  const blob = new Blob([ics], {type: 'text/calendar;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = scope === 'all' ? 'polecon-2026-my-plan.ics' : `polecon-2026-${DAY_LABELS[currentDay].toLowerCase()}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  showToast(`Downloaded ${totalEvents} event${totalEvents>1?'s':''} — open the .ics file to import`);
+}
+
 function clearPlan() {
   if (plans[currentDay].length === 0) return;
   if (!confirm(`Clear all picks for ${DAY_LABELS[currentDay]}?`)) return;
@@ -683,16 +820,6 @@ function copyShareLink() {
     showToast('Share link copied — paste it anywhere');
   }).catch(() => {
     prompt('Copy this link:', url);
-  });
-}
-function addAllToCalendar() {
-  const plan = [...plans[currentDay]].sort((a,b) => a.s - b.s).filter(i => i.cat !== 'info');
-  if (plan.length === 0) { alert('Pick some sessions first.'); return; }
-  if (plan.length > 5) {
-    if (!confirm(`This will open ${plan.length} new tabs (one per session). Continue?`)) return;
-  }
-  plan.forEach((item, idx) => {
-    setTimeout(() => { window.open(gcalLink(item, currentDay), '_blank'); }, idx * 200);
   });
 }
 
