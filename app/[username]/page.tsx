@@ -28,6 +28,16 @@ interface Creator {
   paypal_username: string | null
   venmo_username: string | null
   zelle_info: string | null
+  payment_links: {
+    cashapp?: string
+    paypal?: string
+    venmo?: string
+    gumroad?: string
+    kofi?: string
+    square?: string
+    custom_label?: string
+    custom_url?: string
+  } | null
 }
 
 interface ContentItem {
@@ -219,7 +229,9 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const displayName = creator.display_name || profile.display_name || username
   const profileImageUrl = profile.profile_image_url
 
-  const hasPaymentLinks = creator.cashapp_username || creator.paypal_username || creator.venmo_username || creator.zelle_info
+  const pl = creator.payment_links
+  const hasPaymentLinks = creator.cashapp_username || creator.paypal_username || creator.venmo_username || creator.zelle_info ||
+    pl?.square || (pl?.custom_label && pl?.custom_url)
 
   return (
     <div className="min-h-screen bg-[#1A1A2E]">
@@ -398,6 +410,26 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                 <div className="px-6 py-3 bg-[#6D1ED4] text-white font-semibold rounded-full">
                   Zelle: {creator.zelle_info}
                 </div>
+              )}
+              {pl?.square && (
+                <a
+                  href={pl.square.startsWith('http') ? pl.square : `https://${pl.square}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-black text-white font-semibold rounded-full hover:opacity-80 transition-opacity flex items-center gap-2"
+                >
+                  <span className="inline-block w-4 h-4 border-2 border-white rounded-sm" /> Square
+                </a>
+              )}
+              {pl?.custom_label && pl?.custom_url && (
+                <a
+                  href={pl.custom_url.startsWith('http') ? pl.custom_url : `https://${pl.custom_url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#B76E79] text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
+                >
+                  {pl.custom_label}
+                </a>
               )}
             </div>
           </div>
