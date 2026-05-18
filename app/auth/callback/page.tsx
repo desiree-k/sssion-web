@@ -7,8 +7,25 @@ import { supabase } from '@/lib/supabase'
 export default function AuthCallback() {
   const router = useRouter()
   const [showConfirmation, setShowConfirmation] = useState(false)
+  const [showExpiredLink, setShowExpiredLink] = useState(false)
 
   useEffect(() => {
+    // Check URL hash and query params for Supabase error codes
+    // Supabase puts expired-link errors in the hash fragment:
+    // #error=access_denied&error_code=otp_expired&error_description=...
+    const hash = window.location.hash.slice(1)
+    const search = window.location.search.slice(1)
+    const params = new URLSearchParams(hash || search)
+    const errorCode = params.get('error_code')
+    const error = params.get('error')
+    if (
+      errorCode === 'otp_expired' ||
+      (error === 'access_denied' && (hash.includes('otp_expired') || search.includes('otp_expired')))
+    ) {
+      setShowExpiredLink(true)
+      return
+    }
+
     const handleCallback = async () => {
       // supabase-js automatically detects tokens in the URL hash
       // and establishes the session. We just need to wait for it.
@@ -68,6 +85,38 @@ export default function AuthCallback() {
 
     handleCallback()
   }, [router])
+
+  // Expired / invalid link
+  if (showExpiredLink) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <h1 className="text-4xl font-bold text-[#B76E79] mb-8">Sssion</h1>
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#B76E79]/20 flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-[#B76E79]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-semibold text-white mb-3">
+            This verification link has expired.
+          </h2>
+          <p className="text-white/60 text-base leading-relaxed">
+            Go back to the app and tap <span className="text-[#B76E79] font-medium">&ldquo;Resend verification email&rdquo;</span> to get a new one.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   // Show confirmation page for app-based email verification
   if (showConfirmation) {
