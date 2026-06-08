@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import AppStoreBadge from '@/components/AppStoreBadge'
+import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 
 // ─── Scroll-fade wrapper ──────────────────────────────────────────────────────
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -465,30 +466,34 @@ export default function FeaturesPage() {
             <p className="text-2xl text-white/60 mb-12">
               Build your studio. Own your movement.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
               <a
                 href="/join"
                 className="px-10 py-5 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors text-lg"
               >
                 Get Started Free
               </a>
-              <a
-                href="mailto:support@sssion.studio"
-                className="text-white/50 hover:text-white transition-colors text-sm"
-              >
-                Questions? support@sssion.studio
-              </a>
+              <AppStoreBadge size="lg" />
             </div>
+            <p className="mt-6 text-white/40 text-sm">
+              Questions?{' '}
+              <a href="mailto:support@sssion.studio" className="hover:text-white/70 transition-colors underline underline-offset-2">
+                support@sssion.studio
+              </a>
+            </p>
           </FadeIn>
         </div>
       </section>
+
+      {/* Floating mobile download banner */}
+      <MobileDownloadBanner />
 
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-white/8">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <p className="text-white/30 text-sm">&copy; 2026 Sssion</p>
-            <AppStoreBadge className="scale-90 origin-left" />
+            <AppStoreBadge />
           </div>
           <div className="flex flex-wrap gap-6 justify-center">
             <a href="/features" className="text-white/30 hover:text-white/60 text-sm transition-colors">Features &amp; Pricing</a>

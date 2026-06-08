@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import PreviewContentGrid from '@/components/PreviewContentGrid'
+import AppStoreBadge from '@/components/AppStoreBadge'
+import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 
 interface Profile {
   id: string
@@ -437,24 +439,25 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       )}
 
       {/* Bottom CTA */}
-      <section className="py-16 px-6 bg-gradient-to-t from-[#B76E79]/20 to-transparent">
+      <section className="py-20 px-6 bg-gradient-to-t from-[#B76E79]/25 to-transparent">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <p className="text-[#B76E79] font-semibold text-sm uppercase tracking-widest mb-4">
+            Available on iOS
+          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Join {displayName}&apos;s Studio
           </h2>
-          <p className="text-white/60 mb-8">
-            Download Sssion to access all content and connect with {displayName}
+          <p className="text-white/60 mb-10 max-w-md mx-auto">
+            Download Sssion to access all content, join live classes, and connect directly with {displayName}.
           </p>
-          <a
-            href="https://apps.apple.com/us/app/sssion/id6763607808"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
-          >
-            Download Sssion
-          </a>
+          <div className="flex justify-center">
+            <AppStoreBadge size="lg" />
+          </div>
         </div>
       </section>
+
+      {/* Floating mobile download banner */}
+      <MobileDownloadBanner />
 
       {/* Discover More */}
       <section className="py-12 px-6 bg-[#16162a]">

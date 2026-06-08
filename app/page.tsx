@@ -1,4 +1,5 @@
 import AppStoreBadge from '@/components/AppStoreBadge'
+import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 
 export default function Home() {
   return (
@@ -61,6 +62,11 @@ export default function Home() {
           >
             I&apos;m a Student
           </a>
+        </div>
+
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <p className="text-white/40 text-sm uppercase tracking-widest">Available on iOS</p>
+          <AppStoreBadge size="lg" />
         </div>
 
         {/* Scroll indicator */}
@@ -133,21 +139,14 @@ export default function Home() {
           <p className="text-white/60 mb-8 max-w-xl mx-auto">
             Join creators who are building thriving movement instruction businesses on Sssion.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
             <a
               href="/join"
               className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
             >
               Join as Creator
             </a>
-            <a
-              href="https://apps.apple.com/us/app/sssion/id6763607808"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-10 py-4 border-2 border-white/20 text-white/80 font-semibold rounded-full hover:bg-white/5 transition-colors"
-            >
-              Download App
-            </a>
+            <AppStoreBadge size="lg" />
           </div>
         </div>
       </section>
@@ -173,6 +172,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Floating mobile download banner */}
+      <MobileDownloadBanner />
+
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
@@ -180,7 +182,7 @@ export default function Home() {
             <p className="text-white/40 text-sm">
               &copy; 2026 Sssion
             </p>
-            <AppStoreBadge className="scale-90 origin-left" />
+            <AppStoreBadge />
           </div>
           <div className="flex gap-6">
             <a href="/discover" className="text-white/40 hover:text-white/60 text-sm transition-colors">
