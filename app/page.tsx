@@ -1,36 +1,27 @@
 import AppStoreBadge from '@/components/AppStoreBadge'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 
+const APP_STORE_URL = 'https://apps.apple.com/us/app/sssion/id6763607808'
+
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
+
       {/* Navigation */}
       <nav className="absolute top-0 left-0 right-0 z-10 py-6 px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <span className="text-2xl font-bold text-[#B76E79]">Sssion</span>
-          <div className="flex items-center gap-6">
-            <a
-              href="/features"
-              className="text-white/70 hover:text-white transition-colors hidden sm:block"
-            >
+          <div className="flex items-center gap-5">
+            <a href="/features" className="text-white/60 hover:text-white transition-colors text-sm hidden md:block">
               Features &amp; Pricing
             </a>
-            <a
-              href="/discover"
-              className="text-white/70 hover:text-white transition-colors hidden sm:block"
-            >
+            <a href="/discover" className="text-white/60 hover:text-white transition-colors text-sm hidden md:block">
               Discover Creators
             </a>
-            <a
-              href="/signin"
-              className="text-white/70 hover:text-white transition-colors hidden sm:block"
-            >
+            <a href="/signin" className="text-white/60 hover:text-white transition-colors text-sm hidden md:block">
               Creator Sign In
             </a>
-            <a
-              href="/founding"
-              className="text-white/70 hover:text-white transition-colors hidden sm:block"
-            >
+            <a href="/founding" className="text-white/60 hover:text-white transition-colors text-sm hidden md:block">
               Founding Studios
             </a>
             <a
@@ -43,175 +34,220 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center min-h-screen px-6 text-center">
-        <h1 className="text-6xl md:text-8xl font-bold text-[#B76E79] tracking-tight mb-6">
+      {/* 1. HERO */}
+      <section className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 55% at 50% 65%, rgba(183,110,121,0.11) 0%, transparent 70%)',
+          }}
+        />
+
+        <h1 className="text-[72px] sm:text-[96px] md:text-[120px] font-bold text-[#B76E79] tracking-tight leading-none mb-6">
           Sssion
         </h1>
-        <p className="text-2xl md:text-3xl font-light text-white/90 mb-4">
-          Movement. Mastered.
-        </p>
-        <p className="text-lg md:text-xl text-white/60 max-w-xl mb-12">
-          A private studio platform for movement creators and their students
+
+        <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6 max-w-2xl">
+          Own your movement.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4">
+        <p className="text-lg md:text-xl text-[#9999AA] max-w-xl leading-relaxed mb-12">
+          A private studio platform for movement creators and the students who train with them.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 mb-10">
           <a
             href="/join"
-            className="px-8 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+            className="px-8 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors text-lg"
           >
             I&apos;m a Creator
           </a>
           <a
-            href="/discover"
-            className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors"
+            href={APP_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors text-lg"
           >
             I&apos;m a Student
           </a>
         </div>
 
-        <div className="mt-10 flex flex-col items-center gap-3">
-          <p className="text-white/40 text-sm uppercase tracking-widest">Available on iOS</p>
-          <AppStoreBadge size="lg" />
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-white/35 text-xs uppercase tracking-[0.18em]">Available on iOS</p>
+          <AppStoreBadge size="md" />
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 animate-bounce">
-          <svg className="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        <div className="absolute bottom-9 left-1/2 -translate-x-1/2 animate-bounce">
+          <svg className="w-5 h-5 text-white/25" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </section>
 
-      {/* What is Sssion Section */}
-      <section id="features" className="py-24 px-6 bg-[#16162a]">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-            What is Sssion?
-          </h2>
-          <p className="text-white/60 text-center mb-16 max-w-2xl mx-auto">
-            Everything you need to build and grow your movement instruction business
+      {/* Divider */}
+      <div className="h-px bg-white/[0.06] mx-6" />
+
+      {/* 2. WHY SSSION EXISTS */}
+      <section className="py-28 px-6" style={{ background: '#16162a' }}>
+        <div className="max-w-2xl mx-auto">
+          <p className="text-[#B76E79] text-xs uppercase tracking-[0.22em] font-medium mb-8">
+            Why Sssion exists
           </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-[#1A1A2E] rounded-2xl p-8 border border-white/10">
-              <div className="w-14 h-14 bg-[#B76E79]/20 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-7 h-7 text-[#B76E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Your Private Studio</h3>
-              <p className="text-white/60 leading-relaxed">
-                Upload videos, build your library, set your terms. Create a beautiful space that&apos;s uniquely yours.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-[#1A1A2E] rounded-2xl p-8 border border-white/10">
-              <div className="w-14 h-14 bg-[#B76E79]/20 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-7 h-7 text-[#B76E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Your Community</h3>
-              <p className="text-white/60 leading-relaxed">
-                Post updates, interact with students, build relationships. Foster a supportive learning environment.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-[#1A1A2E] rounded-2xl p-8 border border-white/10">
-              <div className="w-14 h-14 bg-[#B76E79]/20 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-7 h-7 text-[#B76E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Your Business</h3>
-              <p className="text-white/60 leading-relaxed">
-                Accept payments your way, grow at your own pace. Keep 100% of what you earn through your preferred platforms.
-              </p>
-            </div>
-          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8">
+            Built because movement deserves better.
+          </h2>
+          <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed">
+            Pole, floor work, heels, contemporary, flexibility, yoga and flow — the disciplines
+            mainstream platforms shadowban, demonetize, and bury. Sssion is a home built for this
+            art, on creators&apos; terms.{' '}
+            <span className="text-white">No algorithm. No censorship. No cuts.</span>
+          </p>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to start your studio?
-          </h2>
-          <p className="text-white/60 mb-8 max-w-xl mx-auto">
-            Join creators who are building thriving movement instruction businesses on Sssion.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
-            <a
-              href="/join"
-              className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
-            >
-              Join as Creator
-            </a>
-            <AppStoreBadge size="lg" />
-          </div>
-        </div>
-      </section>
+      {/* Divider */}
+      <div className="h-px bg-white/[0.06] mx-6" />
 
-      {/* Browse Creators Section */}
-      <section className="py-16 px-6 bg-[#16162a]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Find Your Instructor
+      {/* 3. FOR STUDENTS */}
+      <section className="py-28 px-6">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-[#B76E79] text-xs uppercase tracking-[0.22em] font-medium mb-8">
+            For students
+          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8">
+            Find your teacher. Train anywhere.
           </h2>
-          <p className="text-white/60 mb-8 max-w-xl mx-auto">
-            Browse our growing community of talented movement creators
+          <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed mb-10">
+            Discover instructors whose style moves you, train on-demand at your own pace, join live
+            classes, and become part of a real studio community — not a feed.
           </p>
           <a
             href="/discover"
-            className="inline-flex items-center gap-2 px-10 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors"
+            className="inline-flex items-center gap-2 text-[#B76E79] font-semibold text-lg hover:text-[#c97f8a] transition-colors group"
           >
-            Browse Creators
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            Explore studios
+            <span className="group-hover:translate-x-1 transition-transform">→</span>
           </a>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="h-px bg-white/[0.06] mx-6" />
+
+      {/* 4. FOR CREATORS */}
+      <section className="py-28 px-6" style={{ background: '#16162a' }}>
+        <div className="max-w-2xl mx-auto">
+          <p className="text-[#B76E79] text-xs uppercase tracking-[0.22em] font-medium mb-8">
+            For creators
+          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-16">
+            Your studio. Your terms.
+          </h2>
+
+          <div className="flex flex-col divide-y divide-white/[0.07]">
+            <div className="pb-12">
+              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">Your private studio</h3>
+              <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed">
+                Upload your classes, build your library, set your own terms. A beautiful space
+                that&apos;s unmistakably yours.
+              </p>
+            </div>
+            <div className="py-12">
+              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">Your community</h3>
+              <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed">
+                Post updates, celebrate your students&apos; progress, build real relationships. Not
+                a one-way broadcast — a room full of people getting better together.
+              </p>
+            </div>
+            <div className="pt-12">
+              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">Your business</h3>
+              <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed">
+                Keep 100% of what you earn.{' '}
+                <span className="text-white">No platform cuts, no commissions, ever.</span> You
+                set your price and you own the relationship.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-14">
+            <a
+              href="/join"
+              className="inline-flex items-center gap-2 text-[#B76E79] font-semibold text-lg hover:text-[#c97f8a] transition-colors group"
+            >
+              Start your studio
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="h-px bg-white/[0.06] mx-6" />
+
+      {/* 5. CLOSING CTA */}
+      <section className="py-28 px-6 text-center">
+        <div className="max-w-xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#B76E79] leading-tight mb-12">
+            Your body. Your art.
+            <br />
+            Your studio.
+          </h2>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/join"
+              className="px-8 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors text-lg"
+            >
+              I&apos;m a Creator
+            </a>
+            <a
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors text-lg"
+            >
+              I&apos;m a Student
+            </a>
+          </div>
         </div>
       </section>
 
       {/* Floating mobile download banner */}
       <MobileDownloadBanner />
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <p className="text-white/40 text-sm">
-              &copy; 2026 Sssion
-            </p>
-            <AppStoreBadge />
+      {/* 6. FOOTER */}
+      <footer className="py-10 px-6 border-t border-white/[0.08]" style={{ background: '#16162a' }}>
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <span className="text-[#B76E79] font-bold text-lg">Sssion</span>
+            <span className="text-white/20 hidden sm:block">·</span>
+            <p className="text-white/30 text-sm hidden sm:block">&copy; 2026</p>
           </div>
-          <div className="flex gap-6">
-            <a href="/discover" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              Discover
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <a href="/founding" className="text-white/35 hover:text-white/60 text-sm transition-colors">
+              Founding Studios
             </a>
-            <a href="/signin" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+            <a href="/features" className="text-white/35 hover:text-white/60 text-sm transition-colors">
+              Features &amp; Pricing
+            </a>
+            <a href="/discover" className="text-white/35 hover:text-white/60 text-sm transition-colors">
+              Discover Creators
+            </a>
+            <a href="/signin" className="text-white/35 hover:text-white/60 text-sm transition-colors">
               Creator Sign In
             </a>
-            <a href="/join" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              Creator Signup
-            </a>
-            <a href="/privacy" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              Privacy Policy
-            </a>
-            <a href="/terms" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              Terms of Use
-            </a>
-            <a href="/polecon" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+            <a href="/polecon" className="text-white/35 hover:text-white/60 text-sm transition-colors">
               PoleCon Planner
+            </a>
+            <a href="/privacy" className="text-white/35 hover:text-white/60 text-sm transition-colors">
+              Privacy
+            </a>
+            <a href="/terms" className="text-white/35 hover:text-white/60 text-sm transition-colors">
+              Terms
             </a>
           </div>
         </div>
       </footer>
     </div>
-  );
+  )
 }
