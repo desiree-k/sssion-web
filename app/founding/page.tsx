@@ -1,11 +1,10 @@
 export const metadata = {
   title: 'Founding Studios | Sssion',
   description:
-    'The first 50 instructors building Sssion with us. Apply to become a Founding Studio — free for good, built together.',
+    'The first 50 creators building Sssion with us. Apply to become a Founding Studio — free for good, built together.',
 }
 
-const APPLY_HREF =
-  'mailto:desiree@sssion.com?subject=Founding%20Studio%20Application'
+const APPLY_HREF = 'https://tally.so/r/aQzpe2'
 
 const benefits = [
   {
@@ -102,6 +101,8 @@ export default function FoundingPage() {
             </a>
             <a
               href={APPLY_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
             >
               Apply Now
@@ -126,7 +127,7 @@ export default function FoundingPage() {
           Founding Studios
         </h1>
         <p className="text-xl md:text-2xl text-white/60 max-w-xl leading-relaxed">
-          The first 50 instructors building Sssion with us
+          The first 50 creators building Sssion with us
         </p>
       </section>
 
@@ -139,7 +140,7 @@ export default function FoundingPage() {
           <p className="text-xl md:text-2xl text-white leading-relaxed">
             We&apos;re opening the doors to our first 50 Founding Studios.{' '}
             <span className="text-[#B76E79]">Not a beta test — a founding class.</span>{' '}
-            The instructors who get in now will shape what this platform becomes.
+            The creators who get in now will shape what this platform becomes.
           </p>
         </div>
       </section>
@@ -151,7 +152,8 @@ export default function FoundingPage() {
             What a Founding Studio gets
           </p>
           <p className="text-2xl text-white/75 leading-relaxed mb-16">
-            Your own private studio — your content, your community, your rules, your pricing.
+            Your own private studio — a space to teach classes, gather your community, or both.
+            Your content, your people, your rules, your pricing.
             We&apos;re the infrastructure, not the landlord.
           </p>
 
@@ -180,7 +182,7 @@ export default function FoundingPage() {
             Why only 50?
           </p>
           <p className="text-xl md:text-2xl text-white/80 leading-relaxed">
-            Because we onboard every Founding Studio personally. We&apos;ll sit down with you, set up your studio together, and make sure you&apos;re live and ready before you share it with a single student. That kind of care doesn&apos;t scale past a small group — so we&apos;re keeping the first class small on purpose.
+            Because we onboard every Founding Studio personally. We&apos;ll sit down with you, set up your studio together, and make sure you&apos;re live and ready before you share it with a single member. That kind of care doesn&apos;t scale past a small group — so we&apos;re keeping the first class small on purpose.
           </p>
         </div>
       </section>
@@ -191,8 +193,14 @@ export default function FoundingPage() {
           <p className="text-[#B76E79] text-sm uppercase tracking-[0.2em] font-medium mb-6">
             What we&apos;re looking for
           </p>
-          <p className="text-xl md:text-2xl text-white/80 leading-relaxed">
-            Movement instructors who take their craft seriously and are tired of building on platforms that treat their art like a liability. Pole, flexibility, floor work, heels, contemporary, yoga and flow, strength — if you teach movement and you&apos;ve felt the censorship, this is for you.
+          <p className="text-xl md:text-2xl text-white/80 leading-relaxed mb-8">
+            Movement creators who take their craft and their community seriously, and who are tired of building on platforms that treat their art like a liability.
+          </p>
+          <p className="text-xl md:text-2xl text-white/80 leading-relaxed mb-8">
+            Whether you want to teach classes, bring your people together in one place, gather a local crew, or all of the above — if you move, and you&apos;ve felt the censorship, this is for you.
+          </p>
+          <p className="text-xl md:text-2xl text-white/60 leading-relaxed">
+            Pole, flexibility, floor work, heels, contemporary, yoga and flow, strength, and every movement in between.
           </p>
         </div>
       </section>
@@ -211,14 +219,16 @@ export default function FoundingPage() {
           </h2>
           <a
             href={APPLY_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block px-12 py-5 bg-[#B76E79] text-white font-semibold text-lg rounded-full hover:bg-[#a05f69] transition-colors"
           >
-            Apply to be a Founding Studio
+            Apply to be a Founding Studio →
           </a>
           <p className="text-white/35 text-sm mt-8 leading-relaxed">
             Applications reviewed personally.
             <br />
-            We&apos;ll be in touch within 48 hours.
+            We&apos;ll be in touch within 3 days.
           </p>
         </div>
       </section>
