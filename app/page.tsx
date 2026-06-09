@@ -28,6 +28,12 @@ export default function Home() {
               Creator Sign In
             </a>
             <a
+              href="/founding"
+              className="text-white/70 hover:text-white transition-colors hidden sm:block"
+            >
+              Founding Studios
+            </a>
+            <a
               href="/join"
               className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
             >
