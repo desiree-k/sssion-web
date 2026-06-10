@@ -237,7 +237,7 @@ export async function POST(req: NextRequest) {
         let query = serviceClient
           .from('creators')
           .select(`
-            id, display_name, created_at,
+            id, display_name, created_at, is_visible,
             profile:user_id(id, email, full_name, username, bio, profile_image_url)
           `, { count: 'exact' })
           .order('created_at', { ascending: false })
@@ -404,6 +404,16 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json({ sent, failures, total: emails.length })
+      }
+
+      case 'toggle_creator_visibility': {
+        const { creatorId, isVisible } = (payload ?? {}) as { creatorId: string; isVisible: boolean }
+        const { error } = await serviceClient
+          .from('creators')
+          .update({ is_visible: isVisible })
+          .eq('id', creatorId)
+        if (error) throw error
+        return NextResponse.json({ ok: true })
       }
 
       default:

@@ -18,6 +18,7 @@ interface Creator {
   id: string
   display_name: string
   created_at: string
+  is_visible: boolean
   studentCount: number
   videoCount: number
   profile: CreatorProfile | null
@@ -46,6 +47,7 @@ export default function CreatorsPage() {
   const [expanded, setExpanded] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<Creator | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [togglingId, setTogglingId] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const PAGE_SIZE = 50
@@ -73,6 +75,18 @@ export default function CreatorsPage() {
       setSearch(val)
       setPage(1)
     }, 400)
+  }
+
+  const handleToggleVisibility = async (creator: Creator) => {
+    setTogglingId(creator.id)
+    try {
+      await adminPost('toggle_creator_visibility', { creatorId: creator.id, isVisible: !creator.is_visible })
+      setCreators(prev => prev.map(c => c.id === creator.id ? { ...c, is_visible: !c.is_visible } : c))
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to update visibility')
+    } finally {
+      setTogglingId(null)
+    }
   }
 
   const handleDelete = async (creator: Creator) => {
@@ -163,6 +177,27 @@ export default function CreatorsPage() {
                       )}
                       <span className="text-white/30 text-xs">{creator.profile?.email ?? '—'}</span>
                     </div>
+                  </div>
+
+                  {/* Visibility badge + toggle */}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {!creator.is_visible && (
+                      <span className="px-2 py-0.5 rounded-full bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-xs font-medium">
+                        Hidden
+                      </span>
+                    )}
+                    <button
+                      onClick={() => handleToggleVisibility(creator)}
+                      disabled={togglingId === creator.id}
+                      title={creator.is_visible ? 'Hide studio' : 'Show studio'}
+                      className={`text-xs px-2.5 py-1 rounded-lg border transition-colors disabled:opacity-40 ${
+                        creator.is_visible
+                          ? 'border-white/10 text-white/40 hover:text-white hover:border-white/30'
+                          : 'border-[#B76E79]/30 text-[#B76E79] hover:bg-[#B76E79]/10'
+                      }`}
+                    >
+                      {togglingId === creator.id ? '…' : creator.is_visible ? 'Hide' : 'Show'}
+                    </button>
                   </div>
 
                   {/* Stats */}
