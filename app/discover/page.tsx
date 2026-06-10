@@ -40,6 +40,7 @@ async function getCreators() {
         bio
       )
     `)
+    .eq('is_visible', true)
     .order('created_at', { ascending: false })
 
   if (error) {

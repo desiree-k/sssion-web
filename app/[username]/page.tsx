@@ -40,6 +40,7 @@ interface Creator {
     custom_label?: string
     custom_url?: string
   } | null
+  is_visible?: boolean
 }
 
 interface ContentItem {
@@ -228,6 +229,27 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   }
 
   const { profile, creator, contentItems, reviews, studentCount, videoCount } = data
+
+  if (creator.is_visible === false) {
+    return (
+      <div className="min-h-screen bg-[#1A1A2E] flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h1 className="text-xl font-semibold text-white mb-3">This studio is currently unavailable</h1>
+          <p className="text-white/40 text-sm leading-relaxed">
+            The creator has temporarily paused their studio. Check back later.
+          </p>
+          <a href="/" className="inline-block mt-8 text-[#B76E79] text-sm hover:underline">
+            ← Back to Sssion
+          </a>
+        </div>
+      </div>
+    )
+  }
   const displayName = creator.display_name || profile.display_name || username
   const profileImageUrl = profile.profile_image_url
 
