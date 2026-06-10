@@ -1,8 +1,6 @@
 import AppStoreBadge from '@/components/AppStoreBadge'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 
-const APP_STORE_URL = 'https://apps.apple.com/us/app/sssion/id6763607808'
-
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -64,9 +62,7 @@ export default function Home() {
             I&apos;m a Creator
           </a>
           <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/student-signup"
             className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors text-lg"
           >
             I&apos;m a Student
@@ -76,6 +72,12 @@ export default function Home() {
         <div className="flex flex-col items-center gap-3">
           <p className="text-white/35 text-xs uppercase tracking-[0.18em]">Available on iOS</p>
           <AppStoreBadge size="md" />
+          <a
+            href="/student-signup"
+            className="text-[#B76E79] text-sm hover:underline"
+          >
+            or use Sssion on the web &rarr;
+          </a>
         </div>
 
         <div className="absolute bottom-9 left-1/2 -translate-x-1/2 animate-bounce">
@@ -201,9 +203,7 @@ export default function Home() {
               I&apos;m a Creator
             </a>
             <a
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/student-signup"
               className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors text-lg"
             >
               I&apos;m a Student
@@ -235,6 +235,9 @@ export default function Home() {
             </a>
             <a href="/signin" className="text-white/35 hover:text-white/60 text-sm transition-colors">
               Creator Sign In
+            </a>
+            <a href="/student-signin" className="text-white/35 hover:text-white/60 text-sm transition-colors">
+              Student Sign In
             </a>
             <a href="/polecon" className="text-white/35 hover:text-white/60 text-sm transition-colors">
               PoleCon Planner

@@ -53,7 +53,12 @@ export default function AuthCallback() {
             console.error('Username update error:', updateError)
           }
         }
-        router.push('/dashboard')
+        // Students get their own dashboard; creators keep the existing one
+        if (session.user.user_metadata?.role === 'student') {
+          router.push('/student/dashboard')
+        } else {
+          router.push('/dashboard')
+        }
       } else {
         // No session yet — supabase might still be processing
         // Listen for auth state change
@@ -69,7 +74,11 @@ export default function AuthCallback() {
                 localStorage.removeItem('pending_username')
               }
               subscription.unsubscribe()
-              router.push('/dashboard')
+              if (session.user.user_metadata?.role === 'student') {
+                router.push('/student/dashboard')
+              } else {
+                router.push('/dashboard')
+              }
             }
           }
         )

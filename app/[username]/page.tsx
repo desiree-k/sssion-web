@@ -7,6 +7,9 @@ import { Metadata } from 'next'
 import PreviewContentGrid from '@/components/PreviewContentGrid'
 import AppStoreBadge from '@/components/AppStoreBadge'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
+import StudentNav from '@/components/StudentNav'
+import StudioAccessCTA from '@/components/StudioAccessCTA'
+import FollowButton from '@/components/FollowButton'
 
 interface Profile {
   id: string
@@ -147,6 +150,18 @@ async function getCreatorByUsernameOrId(identifier: string) {
     .select('*', { count: 'exact', head: true })
     .eq('creator_id', creator.id)
 
+  // Get follower count
+  const { count: followerCount } = await supabase
+    .from('follows')
+    .select('*', { count: 'exact', head: true })
+    .eq('creator_id', creator.id)
+
+  // Get total review count
+  const { count: reviewCount } = await supabase
+    .from('reviews')
+    .select('*', { count: 'exact', head: true })
+    .eq('creator_id', creator.id)
+
   // Get reviews
   const { data: reviews } = await supabase
     .from('reviews')
@@ -173,6 +188,8 @@ async function getCreatorByUsernameOrId(identifier: string) {
     })) as Review[],
     studentCount: studentCount || 0,
     videoCount: videoCount || 0,
+    followerCount: followerCount || 0,
+    reviewCount: reviewCount || 0,
   }
 }
 
@@ -228,7 +245,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
     notFound()
   }
 
-  const { profile, creator, contentItems, reviews, studentCount, videoCount } = data
+  const { profile, creator, contentItems, reviews, studentCount, videoCount, followerCount, reviewCount } = data
 
   if (creator.is_visible === false) {
     return (
@@ -259,6 +276,9 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
 
   return (
     <div className="min-h-screen bg-[#1A1A2E]">
+      {/* Navigation */}
+      <StudentNav />
+
       {/* Hero Section */}
       <section className="relative pt-16 pb-24 px-6 bg-gradient-to-b from-[#B76E79]/30 to-[#1A1A2E]">
         <div className="max-w-4xl mx-auto text-center">
@@ -297,6 +317,14 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
               ))}
             </div>
           )}
+
+          {/* Studio access call to action (varies by auth/access state) */}
+          <StudioAccessCTA creatorId={creator.id} />
+
+          {/* Follow toggle */}
+          <div className="mt-4 flex justify-center">
+            <FollowButton creatorId={creator.id} />
+          </div>
         </div>
       </section>
 
@@ -345,14 +373,22 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
 
       {/* Stats Bar */}
       <section className="py-8 px-6 bg-[#16162a]">
-        <div className="max-w-3xl mx-auto flex justify-center gap-12">
+        <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-x-12 gap-y-6">
           <div className="text-center">
             <p className="text-3xl font-bold text-[#B76E79]">{studentCount}</p>
             <p className="text-white/60 text-sm">Students</p>
           </div>
           <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{followerCount}</p>
+            <p className="text-white/60 text-sm">Followers</p>
+          </div>
+          <div className="text-center">
             <p className="text-3xl font-bold text-[#B76E79]">{videoCount}</p>
             <p className="text-white/60 text-sm">Videos</p>
+          </div>
+          <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{reviewCount}</p>
+            <p className="text-white/60 text-sm">Reviews</p>
           </div>
         </div>
       </section>

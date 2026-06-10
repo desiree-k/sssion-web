@@ -1,7 +1,17 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
+import FollowButton from '@/components/FollowButton'
+
+// Viewer info loaded once so every card doesn't query follow state itself.
+// null = still loading; userId null = signed out; showFollow false = creator viewer
+interface Viewer {
+  userId: string | null
+  showFollow: boolean
+  followedCreatorIds: Set<string>
+}
 
 interface CreatorWithProfile {
   id: string
@@ -32,7 +42,7 @@ function getGradient(username: string): string {
   return gradients[index]
 }
 
-function CreatorCard({ creator }: { creator: CreatorWithProfile }) {
+function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer: Viewer | null }) {
   const username = creator.profile?.username || ''
   const displayName = creator.display_name || username
   const bio = creator.profile?.bio || ''
@@ -63,6 +73,18 @@ function CreatorCard({ creator }: { creator: CreatorWithProfile }) {
         )}
         {/* Gradient overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#16162a] via-transparent to-transparent" />
+
+        {/* Follow toggle */}
+        {viewer?.showFollow && (
+          <div className="absolute top-3 right-3">
+            <FollowButton
+              creatorId={creator.id}
+              size="sm"
+              userId={viewer.userId}
+              initialFollowing={viewer.followedCreatorIds.has(creator.id)}
+            />
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -113,12 +135,66 @@ function CreatorCard({ creator }: { creator: CreatorWithProfile }) {
 
 export default function CreatorGrid({ creators }: CreatorGridProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null)
+  const [viewer, setViewer] = useState<Viewer | null>(null)
+
+  useEffect(() => {
+    const loadViewer = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+
+        if (!session) {
+          setViewer({ userId: null, showFollow: true, followedCreatorIds: new Set() })
+          return
+        }
+        if (session.user.user_metadata?.role === 'creator') {
+          setViewer({ userId: session.user.id, showFollow: false, followedCreatorIds: new Set() })
+          return
+        }
+
+        const { data: follows } = await supabase
+          .from('follows')
+          .select('creator_id')
+          .eq('follower_id', session.user.id)
+
+        setViewer({
+          userId: session.user.id,
+          showFollow: true,
+          followedCreatorIds: new Set((follows || []).map((f) => f.creator_id as string)),
+        })
+      } catch (err) {
+        console.error('Error loading follow state:', err)
+        setViewer({ userId: null, showFollow: false, followedCreatorIds: new Set() })
+      }
+    }
+
+    loadViewer()
+  }, [])
+
+  const allSpecialties = useMemo(() => {
+    const unique = new Set<string>()
+    for (const creator of creators) {
+      for (const specialty of creator.specialties || []) {
+        if (specialty.trim()) unique.add(specialty.trim())
+      }
+    }
+    return Array.from(unique).sort((a, b) => a.localeCompare(b))
+  }, [creators])
 
   const filteredCreators = useMemo(() => {
-    if (!searchQuery.trim()) return creators
+    let result = creators
+
+    if (selectedSpecialty) {
+      const wanted = selectedSpecialty.toLowerCase()
+      result = result.filter(creator =>
+        (creator.specialties || []).some(s => s.trim().toLowerCase() === wanted)
+      )
+    }
+
+    if (!searchQuery.trim()) return result
 
     const query = searchQuery.toLowerCase()
-    return creators.filter(creator => {
+    return result.filter(creator => {
       const displayName = (creator.display_name || '').toLowerCase()
       const username = (creator.profile?.username || '').toLowerCase()
       const specialties = (creator.specialties || []).map(s => s.toLowerCase())
@@ -129,7 +205,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
         specialties.some(s => s.includes(query))
       )
     })
-  }, [creators, searchQuery])
+  }, [creators, searchQuery, selectedSpecialty])
 
   if (creators.length === 0) {
     return (
@@ -182,8 +258,39 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
         </div>
       </div>
 
+      {/* Specialty filter chips */}
+      {allSpecialties.length > 0 && (
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
+          <button
+            onClick={() => setSelectedSpecialty(null)}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              selectedSpecialty === null
+                ? 'bg-[#B76E79] text-white'
+                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            All
+          </button>
+          {allSpecialties.map(specialty => (
+            <button
+              key={specialty}
+              onClick={() =>
+                setSelectedSpecialty(selectedSpecialty === specialty ? null : specialty)
+              }
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                selectedSpecialty === specialty
+                  ? 'bg-[#B76E79] text-white'
+                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              {specialty}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Results count */}
-      {searchQuery && (
+      {(searchQuery || selectedSpecialty) && (
         <p className="text-white/40 text-sm mb-6">
           {filteredCreators.length} {filteredCreators.length === 1 ? 'creator' : 'creators'} found
         </p>
@@ -193,19 +300,22 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
       {filteredCreators.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCreators.map(creator => (
-            <CreatorCard key={creator.id} creator={creator} />
+            <CreatorCard key={creator.id} creator={creator} viewer={viewer} />
           ))}
         </div>
       ) : (
         <div className="text-center py-12">
           <p className="text-white/50">
-            No creators match &ldquo;{searchQuery}&rdquo;
+            No creators match {searchQuery ? `“${searchQuery}”` : 'this filter'}
           </p>
           <button
-            onClick={() => setSearchQuery('')}
+            onClick={() => {
+              setSearchQuery('')
+              setSelectedSpecialty(null)
+            }}
             className="mt-4 text-[#B76E79] hover:underline"
           >
-            Clear search
+            Clear filters
           </button>
         </div>
       )}

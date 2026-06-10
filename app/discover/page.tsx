@@ -4,6 +4,7 @@ export const revalidate = 0
 import { supabase } from '@/lib/supabase'
 import { Metadata } from 'next'
 import CreatorGrid from './CreatorGrid'
+import StudentNav from '@/components/StudentNav'
 
 export const metadata: Metadata = {
   title: 'Discover Creators | Sssion',
@@ -64,28 +65,8 @@ export default async function DiscoverPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="py-6 px-6 border-b border-white/10">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-2xl font-bold text-[#B76E79]">
-            Sssion
-          </a>
-          <div className="flex items-center gap-4">
-            <a
-              href="/signin"
-              className="text-white/70 hover:text-white text-sm transition-colors"
-            >
-              Creator Sign In
-            </a>
-            <a
-              href="/join"
-              className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
-            >
-              Join as Creator
-            </a>
-          </div>
-        </div>
-      </header>
+      {/* Navigation */}
+      <StudentNav />
 
       {/* Hero Section */}
       <section className="pt-16 pb-12 px-6 bg-gradient-to-b from-[#B76E79]/20 to-transparent">
