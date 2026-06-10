@@ -32,5 +32,6 @@ export default function HlsVideo({ src, videoRef, ...videoProps }: HlsVideoProps
     }
   }, [src, ref])
 
-  return <video ref={ref} playsInline {...videoProps} />
+  // x-webkit-airplay surfaces the AirPlay button in Safari's video controls
+  return <video ref={ref} playsInline x-webkit-airplay="allow" {...videoProps} />
 }

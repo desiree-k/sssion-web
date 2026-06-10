@@ -105,6 +105,7 @@ export default function VideoPlayerModal({
             className="w-full h-full"
             controls
             playsInline
+            x-webkit-airplay="allow"
             poster={`https://image.mux.com/${muxPlaybackId}/thumbnail.jpg`}
           />
         </div>
