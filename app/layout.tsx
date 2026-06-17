@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     apple: '/icon-192.png',
   },
   openGraph: {
-    title: "Sssion | Movement. Mastered.",
+    title: "Own your movement | Sssion",
     description: "A private studio platform for movement creators and their students.",
     siteName: "Sssion",
     type: "website",
