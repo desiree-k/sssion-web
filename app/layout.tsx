@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Sssion | Movement. Mastered.",
+  title: "Own your movement | Sssion",
   description: "A private studio platform for movement creators and their students. Build your dance instruction business with Sssion.",
   icons: {
     icon: '/favicon.ico',

@@ -15,6 +15,10 @@ export default function StudentProfilePage() {
   const [isSaving, setIsSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
 
+  // Weekly digest is opt-out: students receive it unless they turn it off
+  const [digestOptIn, setDigestOptIn] = useState(true)
+  const [digestError, setDigestError] = useState<string | null>(null)
+
   // Delete account state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -31,9 +35,11 @@ export default function StudentProfilePage() {
 
         const { data: profile } = await supabase
           .from('profiles')
-          .select('full_name')
+          .select('full_name, email_digest_opt_in')
           .eq('id', user.id)
           .maybeSingle()
+
+        setDigestOptIn((profile?.email_digest_opt_in as boolean | null) ?? true)
 
         const name =
           profile?.full_name || (user.user_metadata?.full_name as string | undefined) || ''
@@ -74,6 +80,24 @@ export default function StudentProfilePage() {
       setSaveMessage('Could not save your profile. Please try again.')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleToggleDigest = async () => {
+    if (!userId) return
+    const next = !digestOptIn
+    setDigestOptIn(next)
+    setDigestError(null)
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ email_digest_opt_in: next })
+        .eq('id', userId)
+      if (error) throw error
+    } catch (err) {
+      console.error('Error updating digest setting:', err)
+      setDigestOptIn(!next)
+      setDigestError('Could not update your digest setting. Please try again.')
     }
   }
 
@@ -194,6 +218,39 @@ export default function StudentProfilePage() {
 
           {saveMessage && (
             <p className="text-sm text-[#B76E79]">{saveMessage}</p>
+          )}
+        </div>
+
+        {/* Email preferences */}
+        <div className="bg-[#16162a] rounded-2xl border border-white/10 p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-1">
+                Weekly Training Digest
+              </h2>
+              <p className="text-white/50 text-sm">
+                Get a Friday email with updates from your studios and creators
+                you follow
+              </p>
+            </div>
+            <button
+              onClick={handleToggleDigest}
+              role="switch"
+              aria-checked={digestOptIn}
+              aria-label="Weekly Training Digest"
+              className={`relative w-11 h-6 rounded-full flex-shrink-0 mt-1 transition-colors ${
+                digestOptIn ? 'bg-[#B76E79]' : 'bg-white/15'
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                  digestOptIn ? 'translate-x-5' : ''
+                }`}
+              />
+            </button>
+          </div>
+          {digestError && (
+            <p className="text-red-400 text-sm mt-3">{digestError}</p>
           )}
         </div>
 
