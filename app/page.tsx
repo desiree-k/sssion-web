@@ -51,7 +51,8 @@ export default function Home() {
         </p>
 
         <p className="text-lg md:text-xl text-[#9999AA] max-w-xl leading-relaxed mb-12">
-          A private studio platform for movement creators and the students who train with them.
+          A private home where movement creators gather their people &mdash; off the algorithm,
+          somewhere they own.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 mb-10">
@@ -65,7 +66,7 @@ export default function Home() {
             href="/student-signup"
             className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors text-lg"
           >
-            I&apos;m a Student
+            I&apos;m a Member
           </a>
         </div>
 
@@ -103,7 +104,7 @@ export default function Home() {
             Pole, floor work, heels, contemporary, flexibility, yoga and flow — the disciplines
             mainstream platforms shadowban, demonetize, and bury. Sssion is a home built for this
             art, on creators&apos; terms.{' '}
-            <span className="text-white">No algorithm. No censorship. No cuts.</span>
+            <span className="text-white">No algorithm. No shadowbans. No cuts.</span>
           </p>
         </div>
       </section>
@@ -111,18 +112,19 @@ export default function Home() {
       {/* Divider */}
       <div className="h-px bg-white/[0.06] mx-6" />
 
-      {/* 3. FOR STUDENTS */}
+      {/* 3. FOR MEMBERS */}
       <section className="py-28 px-6">
         <div className="max-w-2xl mx-auto">
           <p className="text-[#B76E79] text-xs uppercase tracking-[0.22em] font-medium mb-8">
-            For students
+            For members
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8">
-            Find your teacher. Train anywhere.
+            Find your people. Train anywhere.
           </h2>
           <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed mb-10">
-            Discover instructors whose style moves you, train on-demand at your own pace, join live
-            classes, and become part of a real studio community — not a feed.
+            Find the teachers whose movement speaks to you, train on-demand or drop into live
+            classes at your own pace, and belong to a real studio community — people who know your
+            name, not a feed that forgets it.
           </p>
           <a
             href="/discover"
@@ -144,40 +146,38 @@ export default function Home() {
             For creators
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-16">
-            Your studio. Your terms.
+            Gather your people. On your terms.
           </h2>
 
           <div className="flex flex-col divide-y divide-white/[0.07]">
             <div className="pb-12">
-              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">Your private studio</h3>
+              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">Bring your people together</h3>
               <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed">
-                Upload your classes, build your library, set your own terms. A beautiful space
-                that&apos;s unmistakably yours.
-              </p>
-            </div>
-            <div className="py-12">
-              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">Your community</h3>
-              <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed">
-                Post updates, celebrate your students&apos; progress, build real relationships. Not
-                a one-way broadcast — a room full of people getting better together.
+                Post updates, go live, celebrate wins, start the conversation. Sssion is a room
+                full of people getting better together — not a one-way broadcast into a feed.
               </p>
             </div>
             <div className="pt-12">
-              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">Your business</h3>
+              <h3 className="text-[#B76E79] text-xl font-semibold mb-4">A studio that&apos;s yours</h3>
               <p className="text-lg md:text-xl text-[#9999AA] leading-relaxed">
-                Keep 100% of what you earn.{' '}
-                <span className="text-white">No platform cuts, no commissions, ever.</span> You
-                set your price and you own the relationship.
+                Upload your classes, build your library, set the tone. A beautiful private space
+                that&apos;s unmistakably yours — no algorithm deciding who sees it, no shadowbans,
+                no gatekeepers.
               </p>
             </div>
           </div>
+
+          <p className="text-base md:text-lg text-[#9999AA] leading-relaxed mt-12">
+            And when you&apos;re ready to earn from it, you keep 100% —{' '}
+            <span className="text-white">no platform cuts, no commissions, ever.</span>
+          </p>
 
           <div className="mt-14">
             <a
               href="/join"
               className="inline-flex items-center gap-2 text-[#B76E79] font-semibold text-lg hover:text-[#c97f8a] transition-colors group"
             >
-              Start your studio
+              Bring your people in
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </a>
           </div>
@@ -206,7 +206,7 @@ export default function Home() {
               href="/student-signup"
               className="px-8 py-4 border-2 border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors text-lg"
             >
-              I&apos;m a Student
+              I&apos;m a Member
             </a>
           </div>
         </div>
