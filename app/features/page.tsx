@@ -35,7 +35,7 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
   )
 }
 
-const STUDIO_MAILTO = 'mailto:desiree@sssion.com?subject=Studio%20Interest'
+const STUDIO_MAILTO = 'mailto:support@sssion.studio?subject=Studio%20Interest'
 
 // ─── "Grow when you're ready" cards (aspirational, no pricing) ────────────────
 const growCards = [
