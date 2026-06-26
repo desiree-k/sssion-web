@@ -44,37 +44,6 @@ interface Creator {
     custom_url?: string
   } | null
   is_visible?: boolean
-  studio_display_state?: string | null
-}
-
-type StudioState = 'landing' | 'community' | 'paid'
-
-// Progressive-disclosure state for the public studio page. Mirrors the app's
-// detectStudioState (lib/utils/studio_display_state.dart) — keep in sync.
-function detectStudioState(creator: Creator, hasGatedContent: boolean): StudioState {
-  // Manual override always wins (unless set to 'auto').
-  const override = creator.studio_display_state
-  if (override && override !== 'auto') {
-    if (override === 'landing' || override === 'community' || override === 'paid') {
-      return override
-    }
-  }
-
-  // Auto-detect: any configured payment method → paid.
-  const pl = creator.payment_links
-  const hasPayments = !!(
-    creator.cashapp_username ||
-    creator.paypal_username ||
-    creator.venmo_username ||
-    creator.zelle_info ||
-    (pl && Object.keys(pl).length > 0)
-  )
-  if (hasPayments) return 'paid'
-
-  // Members-only (gated) content → community.
-  if (hasGatedContent) return 'community'
-
-  return 'landing'
 }
 
 interface ContentItem {
@@ -181,13 +150,6 @@ async function getCreatorByUsernameOrId(identifier: string) {
     .select('*', { count: 'exact', head: true })
     .eq('creator_id', creator.id)
 
-  // Get members-only (gated) content count — drives the 'community' state
-  const { count: gatedCount } = await supabase
-    .from('content_items')
-    .select('*', { count: 'exact', head: true })
-    .eq('creator_id', creator.id)
-    .eq('is_preview', false)
-
   // Get follower count
   const { count: followerCount } = await supabase
     .from('follows')
@@ -226,7 +188,6 @@ async function getCreatorByUsernameOrId(identifier: string) {
     })) as Review[],
     studentCount: studentCount || 0,
     videoCount: videoCount || 0,
-    gatedCount: gatedCount || 0,
     followerCount: followerCount || 0,
     reviewCount: reviewCount || 0,
   }
@@ -284,7 +245,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
     notFound()
   }
 
-  const { profile, creator, contentItems, reviews, studentCount, videoCount, gatedCount, followerCount, reviewCount } = data
+  const { profile, creator, contentItems, reviews, studentCount, videoCount, followerCount, reviewCount } = data
 
   if (creator.is_visible === false) {
     return (
@@ -312,11 +273,6 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const pl = creator.payment_links
   const hasPaymentLinks = creator.cashapp_username || creator.paypal_username || creator.venmo_username || creator.zelle_info ||
     pl?.square || (pl?.custom_label && pl?.custom_url)
-
-  // Progressive disclosure: show only what matches the creator's setup state.
-  const studioState = detectStudioState(creator, gatedCount > 0)
-  const isPaid = studioState === 'paid'
-  const isLanding = studioState === 'landing'
 
   return (
     <div className="min-h-screen bg-[#1A1A2E]">
@@ -362,11 +318,10 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {/* Studio access call to action (varies by auth/access state).
-              Hidden on landing pages — Follow is the only action there. */}
-          {!isLanding && <StudioAccessCTA creatorId={creator.id} />}
+          {/* Studio access call to action (varies by auth/access state) */}
+          <StudioAccessCTA creatorId={creator.id} />
 
-          {/* Follow toggle — prominent action in every state */}
+          {/* Follow toggle */}
           <div className="mt-4 flex justify-center">
             <FollowButton creatorId={creator.id} />
           </div>
@@ -385,8 +340,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* What's Included Section — hidden on landing (members get this info) */}
-      {!isLanding && creator.whats_included && creator.whats_included.length > 0 && (
+      {/* What's Included Section */}
+      {creator.whats_included && creator.whats_included.length > 0 && (
         <section className="py-12 px-6 bg-[#16162a]">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">What&apos;s Included</h2>
@@ -404,8 +359,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Pricing Section — paid studios only */}
-      {creator.pricing_info && isPaid && (
+      {/* Pricing Section */}
+      {creator.pricing_info && (
         <section className="py-12 px-6">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Pricing</h2>
@@ -451,8 +406,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Reviews Section — paid studios only */}
-      {reviews.length > 0 && isPaid && (
+      {/* Reviews Section */}
+      {reviews.length > 0 && (
         <section className="py-12 px-6 bg-[#16162a]">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Student Reviews</h2>
@@ -475,8 +430,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Payment Links Section — paid studios only */}
-      {hasPaymentLinks && isPaid && (
+      {/* Payment Links Section */}
+      {hasPaymentLinks && (
         <section className="py-12 px-6">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">Payment Options</h2>
