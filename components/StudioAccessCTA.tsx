@@ -8,13 +8,9 @@ type AccessState = 'loading' | 'signedOut' | 'creator' | 'none' | 'pending' | 'a
 
 interface StudioAccessCTAProps {
   creatorId: string
-  studioState?: 'landing' | 'community' | 'paid'
 }
 
-export default function StudioAccessCTA({ creatorId, studioState }: StudioAccessCTAProps) {
-  const isCommunity = studioState === 'community'
-  // Community studios invite people to join; paid studios gate on access.
-  const actionLabel = isCommunity ? 'Join Community' : 'Request Access'
+export default function StudioAccessCTA({ creatorId }: StudioAccessCTAProps) {
   const [state, setState] = useState<AccessState>('loading')
   const [existingRequestId, setExistingRequestId] = useState<string | null>(null)
   const [studentId, setStudentId] = useState<string | null>(null)
@@ -104,7 +100,7 @@ export default function StudioAccessCTA({ creatorId, studioState }: StudioAccess
             href="/student-signup"
             className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
           >
-            {isCommunity ? 'Sign up to join the community' : 'Sign up to request access'}
+            Sign up to request access
           </Link>
           <p className="text-white/40 text-sm">
             Already have an account?{' '}
@@ -121,7 +117,7 @@ export default function StudioAccessCTA({ creatorId, studioState }: StudioAccess
           disabled={isSubmitting}
           className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-50"
         >
-          {isSubmitting ? 'Requesting...' : actionLabel}
+          {isSubmitting ? 'Requesting...' : 'Request Access'}
         </button>
       )}
 

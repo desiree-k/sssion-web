@@ -364,15 +364,11 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
 
           {/* Studio access call to action (varies by auth/access state).
               Hidden on landing pages — Follow is the only action there. */}
-          {!isLanding && <StudioAccessCTA creatorId={creator.id} studioState={studioState} />}
+          {!isLanding && <StudioAccessCTA creatorId={creator.id} />}
 
-          {/* Follow toggle — prominent action in every state, with follower
-              count kept beside it (the full stats bar is hidden on landing) */}
-          <div className="mt-4 flex justify-center items-center gap-4">
+          {/* Follow toggle — prominent action in every state */}
+          <div className="mt-4 flex justify-center">
             <FollowButton creatorId={creator.id} />
-            <span className="text-white/60 text-sm">
-              {followerCount} {followerCount === 1 ? 'follower' : 'followers'}
-            </span>
           </div>
         </div>
       </section>
@@ -420,29 +416,27 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Stats Bar — hidden on landing (follower count stays near Follow) */}
-      {!isLanding && (
-        <section className="py-8 px-6 bg-[#16162a]">
-          <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-x-12 gap-y-6">
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#B76E79]">{studentCount}</p>
-              <p className="text-white/60 text-sm">Students</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#B76E79]">{followerCount}</p>
-              <p className="text-white/60 text-sm">Followers</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#B76E79]">{videoCount}</p>
-              <p className="text-white/60 text-sm">Videos</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#B76E79]">{reviewCount}</p>
-              <p className="text-white/60 text-sm">Reviews</p>
-            </div>
+      {/* Stats Bar */}
+      <section className="py-8 px-6 bg-[#16162a]">
+        <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-x-12 gap-y-6">
+          <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{studentCount}</p>
+            <p className="text-white/60 text-sm">Students</p>
           </div>
-        </section>
-      )}
+          <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{followerCount}</p>
+            <p className="text-white/60 text-sm">Followers</p>
+          </div>
+          <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{videoCount}</p>
+            <p className="text-white/60 text-sm">Videos</p>
+          </div>
+          <div className="text-center">
+            <p className="text-3xl font-bold text-[#B76E79]">{reviewCount}</p>
+            <p className="text-white/60 text-sm">Reviews</p>
+          </div>
+        </div>
+      </section>
 
       {/* Preview Content Section */}
       {contentItems.length > 0 && (
