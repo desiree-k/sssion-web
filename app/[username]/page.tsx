@@ -323,7 +323,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
 
           {/* Follow toggle */}
           <div className="mt-4 flex justify-center">
-            <FollowButton creatorId={creator.id} />
+            <FollowButton creatorId={creator.id} creatorUserId={creator.user_id} />
           </div>
         </div>
       </section>

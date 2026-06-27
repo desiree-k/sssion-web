@@ -7,6 +7,12 @@ interface FollowButtonProps {
   creatorId: string
   size?: 'sm' | 'lg'
   /**
+   * The creator's auth user_id. Used to hide the button on the viewer's
+   * OWN studio page (you can't follow yourself). Everyone else — students
+   * AND other creators — sees the button.
+   */
+  creatorUserId?: string | null
+  /**
    * Pass these when the parent already knows the viewer (e.g. the discover
    * grid loads follows once for all cards). Leave undefined to self-load.
    * userId of null means signed out — clicking sends to student signup.
@@ -18,6 +24,7 @@ interface FollowButtonProps {
 export default function FollowButton({
   creatorId,
   size = 'lg',
+  creatorUserId,
   userId: userIdProp,
   initialFollowing,
 }: FollowButtonProps) {
@@ -47,8 +54,9 @@ export default function FollowButton({
           setIsReady(true)
           return
         }
-        // Creators don't follow studios
-        if (session.user.user_metadata?.role === 'creator') {
+        // Hide only on the viewer's OWN studio page — you can't follow
+        // yourself. Everyone else (students AND other creators) can follow.
+        if (creatorUserId && session.user.id === creatorUserId) {
           setIsHidden(true)
           return
         }
@@ -71,7 +79,7 @@ export default function FollowButton({
     }
 
     load()
-  }, [selfLoad, creatorId])
+  }, [selfLoad, creatorId, creatorUserId])
 
   const handleClick = async (e: React.MouseEvent) => {
     // Cards wrap this button in a Link — don't navigate
