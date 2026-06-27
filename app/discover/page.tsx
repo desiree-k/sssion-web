@@ -1,5 +1,7 @@
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// Cache the page for 60s — subsequent loads within the window are served
+// from cache (instant) instead of hitting Supabase on every request.
+// Data is at most 1 minute stale, which is fine for a discover page.
+export const revalidate = 60
 
 import { supabase } from '@/lib/supabase'
 import { Metadata } from 'next'
@@ -28,6 +30,7 @@ interface CreatorWithProfile {
 }
 
 async function getCreators() {
+  const start = Date.now()
   const { data, error } = await supabase
     .from('creators')
     .select(`
@@ -43,6 +46,8 @@ async function getCreators() {
     `)
     .eq('is_visible', true)
     .order('created_at', { ascending: false })
+    .limit(50)
+  console.log('Discover query took:', Date.now() - start, 'ms', '| rows:', data?.length ?? 0)
 
   if (error) {
     console.error('Error fetching creators:', error)
@@ -61,7 +66,9 @@ async function getCreators() {
 }
 
 export default async function DiscoverPage() {
+  const renderStart = Date.now()
   const creators = await getCreators()
+  console.log('Discover page render took:', Date.now() - renderStart, 'ms')
 
   return (
     <div className="min-h-screen">
