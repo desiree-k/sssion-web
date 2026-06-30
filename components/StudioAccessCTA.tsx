@@ -107,6 +107,9 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
           >
             Sign up to {joinLabel.toLowerCase()}
           </Link>
+          <p className="text-white/40 text-xs text-center max-w-xs">
+            Access more content and join the community
+          </p>
           <p className="text-white/40 text-sm">
             Already have an account?{' '}
             <Link href="/student-signin" className="text-[#B76E79] hover:underline">
@@ -117,13 +120,18 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
       )}
 
       {state === 'none' && (
-        <button
-          onClick={handleRequestAccess}
-          disabled={isSubmitting}
-          className="px-8 py-3 border border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors disabled:opacity-50"
-        >
-          {isSubmitting ? 'Requesting...' : joinLabel}
-        </button>
+        <>
+          <button
+            onClick={handleRequestAccess}
+            disabled={isSubmitting}
+            className="px-8 py-3 border border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors disabled:opacity-50"
+          >
+            {isSubmitting ? 'Requesting...' : joinLabel}
+          </button>
+          <p className="text-white/40 text-xs text-center max-w-xs">
+            Access more content and join the community
+          </p>
+        </>
       )}
 
       {state === 'pending' && (

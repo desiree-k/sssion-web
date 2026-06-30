@@ -281,7 +281,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const showGatheringFeatures = spaceMode === 'gathering' || spaceMode === 'studio'
   // Studio-only: pricing, what's included, payment links.
   const showStudioFeatures = spaceMode === 'studio'
-  const joinLabel = showStudioFeatures ? 'Request Access' : 'Request to Join'
+  const joinLabel = 'Request to Join Community'
 
   return (
     <div className="min-h-screen bg-[#1A1A2E]">
@@ -328,8 +328,11 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
           )}
 
           {/* Follow is the hero action in every mode */}
-          <div className="mt-8 flex justify-center">
-            <FollowButton creatorId={creator.id} creatorUserId={creator.user_id} hero />
+          <div className="mt-8 flex flex-col items-center gap-2">
+            <FollowButton creatorId={creator.id} creatorUserId={creator.user_id} hero label="Stay Updated" />
+            <p className="text-white/40 text-xs text-center max-w-xs">
+              Get important email updates and app notifications from this creator
+            </p>
           </div>
 
           {/* Join/access CTA — secondary, only in Gathering & Studio modes */}

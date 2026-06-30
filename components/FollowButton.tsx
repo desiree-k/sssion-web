@@ -24,6 +24,11 @@ interface FollowButtonProps {
    * Used on the studio page where Follow is the primary action.
    */
   hero?: boolean
+  /**
+   * Label for the not-yet-following state. Defaults to 'Follow' (used by the
+   * discover grid); the studio page overrides it to 'Stay Updated'.
+   */
+  label?: string
 }
 
 export default function FollowButton({
@@ -33,6 +38,7 @@ export default function FollowButton({
   userId: userIdProp,
   initialFollowing,
   hero = false,
+  label = 'Follow',
 }: FollowButtonProps) {
   const selfLoad = userIdProp === undefined
   const [userId, setUserId] = useState<string | null>(userIdProp ?? null)
@@ -139,7 +145,7 @@ export default function FollowButton({
       onClick={handleClick}
       className={`${sizeClasses} ${colorClasses} font-semibold rounded-full transition-colors`}
     >
-      {isFollowing ? 'Following ✓' : 'Follow'}
+      {isFollowing ? 'Following ✓' : label}
     </button>
   )
 }
