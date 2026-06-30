@@ -8,9 +8,14 @@ type AccessState = 'loading' | 'signedOut' | 'creator' | 'none' | 'pending' | 'a
 
 interface StudioAccessCTAProps {
   creatorId: string
+  /**
+   * Wording for the request button. 'Request Access' (studio mode) or
+   * 'Request to Join' (gathering mode).
+   */
+  joinLabel?: string
 }
 
-export default function StudioAccessCTA({ creatorId }: StudioAccessCTAProps) {
+export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access' }: StudioAccessCTAProps) {
   const [state, setState] = useState<AccessState>('loading')
   const [existingRequestId, setExistingRequestId] = useState<string | null>(null)
   const [studentId, setStudentId] = useState<string | null>(null)
@@ -98,9 +103,9 @@ export default function StudioAccessCTA({ creatorId }: StudioAccessCTAProps) {
         <>
           <Link
             href="/student-signup"
-            className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+            className="px-8 py-3 border border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors"
           >
-            Sign up to request access
+            Sign up to {joinLabel.toLowerCase()}
           </Link>
           <p className="text-white/40 text-sm">
             Already have an account?{' '}
@@ -115,9 +120,9 @@ export default function StudioAccessCTA({ creatorId }: StudioAccessCTAProps) {
         <button
           onClick={handleRequestAccess}
           disabled={isSubmitting}
-          className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-50"
+          className="px-8 py-3 border border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors disabled:opacity-50"
         >
-          {isSubmitting ? 'Requesting...' : 'Request Access'}
+          {isSubmitting ? 'Requesting...' : joinLabel}
         </button>
       )}
 

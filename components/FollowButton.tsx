@@ -19,6 +19,11 @@ interface FollowButtonProps {
    */
   userId?: string | null
   initialFollowing?: boolean
+  /**
+   * Hero treatment: a filled accent button instead of the default outline.
+   * Used on the studio page where Follow is the primary action.
+   */
+  hero?: boolean
 }
 
 export default function FollowButton({
@@ -27,6 +32,7 @@ export default function FollowButton({
   creatorUserId,
   userId: userIdProp,
   initialFollowing,
+  hero = false,
 }: FollowButtonProps) {
   const selfLoad = userIdProp === undefined
   const [userId, setUserId] = useState<string | null>(userIdProp ?? null)
@@ -116,17 +122,22 @@ export default function FollowButton({
 
   if (isHidden || !isReady) return null
 
-  const sizeClasses =
-    size === 'lg' ? 'px-8 py-2.5 text-sm' : 'px-3.5 py-1.5 text-xs'
+  const sizeClasses = hero
+    ? 'px-10 py-4 text-base'
+    : size === 'lg'
+      ? 'px-8 py-2.5 text-sm'
+      : 'px-3.5 py-1.5 text-xs'
+
+  const colorClasses = isFollowing
+    ? 'bg-white/10 text-white hover:bg-white/15'
+    : hero
+      ? 'bg-[#B76E79] text-white hover:bg-[#a05f69]'
+      : 'border border-[#B76E79] text-[#B76E79] hover:bg-[#B76E79]/10'
 
   return (
     <button
       onClick={handleClick}
-      className={`${sizeClasses} font-semibold rounded-full transition-colors ${
-        isFollowing
-          ? 'bg-white/10 text-white hover:bg-white/15'
-          : 'border border-[#B76E79] text-[#B76E79] hover:bg-[#B76E79]/10'
-      }`}
+      className={`${sizeClasses} ${colorClasses} font-semibold rounded-full transition-colors`}
     >
       {isFollowing ? 'Following ✓' : 'Follow'}
     </button>

@@ -44,6 +44,7 @@ interface Creator {
     custom_url?: string
   } | null
   is_visible?: boolean
+  space_mode?: string | null
 }
 
 interface ContentItem {
@@ -274,6 +275,14 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const hasPaymentLinks = creator.cashapp_username || creator.paypal_username || creator.venmo_username || creator.zelle_info ||
     pl?.square || (pl?.custom_label && pl?.custom_url)
 
+  // Space mode controls what the public page shows. Follow is always visible.
+  const spaceMode = creator.space_mode || 'home'
+  // Gathering & Studio share community features (member count, reviews, join CTA).
+  const showGatheringFeatures = spaceMode === 'gathering' || spaceMode === 'studio'
+  // Studio-only: pricing, what's included, payment links.
+  const showStudioFeatures = spaceMode === 'studio'
+  const joinLabel = showStudioFeatures ? 'Request Access' : 'Request to Join'
+
   return (
     <div className="min-h-screen bg-[#1A1A2E]">
       {/* Navigation */}
@@ -318,13 +327,15 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {/* Studio access call to action (varies by auth/access state) */}
-          <StudioAccessCTA creatorId={creator.id} />
-
-          {/* Follow toggle */}
-          <div className="mt-4 flex justify-center">
-            <FollowButton creatorId={creator.id} creatorUserId={creator.user_id} />
+          {/* Follow is the hero action in every mode */}
+          <div className="mt-8 flex justify-center">
+            <FollowButton creatorId={creator.id} creatorUserId={creator.user_id} hero />
           </div>
+
+          {/* Join/access CTA — secondary, only in Gathering & Studio modes */}
+          {showGatheringFeatures && (
+            <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} />
+          )}
         </div>
       </section>
 
@@ -340,8 +351,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* What's Included Section */}
-      {creator.whats_included && creator.whats_included.length > 0 && (
+      {/* What's Included Section (Studio mode only) */}
+      {showStudioFeatures && creator.whats_included && creator.whats_included.length > 0 && (
         <section className="py-12 px-6 bg-[#16162a]">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">What&apos;s Included</h2>
@@ -359,8 +370,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Pricing Section */}
-      {creator.pricing_info && (
+      {/* Pricing Section (Studio mode only) */}
+      {showStudioFeatures && creator.pricing_info && (
         <section className="py-12 px-6">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Pricing</h2>
@@ -374,10 +385,14 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       {/* Stats Bar */}
       <section className="py-8 px-6 bg-[#16162a]">
         <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-x-12 gap-y-6">
-          <div className="text-center">
-            <p className="text-3xl font-bold text-[#B76E79]">{studentCount}</p>
-            <p className="text-white/60 text-sm">Students</p>
-          </div>
+          {/* Member count — Gathering & Studio only */}
+          {showGatheringFeatures && (
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#B76E79]">{studentCount}</p>
+              <p className="text-white/60 text-sm">Students</p>
+            </div>
+          )}
+          {/* Follower count — all modes */}
           <div className="text-center">
             <p className="text-3xl font-bold text-[#B76E79]">{followerCount}</p>
             <p className="text-white/60 text-sm">Followers</p>
@@ -386,10 +401,13 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             <p className="text-3xl font-bold text-[#B76E79]">{videoCount}</p>
             <p className="text-white/60 text-sm">Videos</p>
           </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold text-[#B76E79]">{reviewCount}</p>
-            <p className="text-white/60 text-sm">Reviews</p>
-          </div>
+          {/* Review count — Gathering & Studio only */}
+          {showGatheringFeatures && (
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#B76E79]">{reviewCount}</p>
+              <p className="text-white/60 text-sm">Reviews</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -406,8 +424,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Reviews Section */}
-      {reviews.length > 0 && (
+      {/* Reviews Section (Gathering & Studio modes) */}
+      {showGatheringFeatures && reviews.length > 0 && (
         <section className="py-12 px-6 bg-[#16162a]">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Student Reviews</h2>
@@ -430,8 +448,8 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* Payment Links Section */}
-      {hasPaymentLinks && (
+      {/* Payment Links Section (Studio mode only) */}
+      {showStudioFeatures && hasPaymentLinks && (
         <section className="py-12 px-6">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">Payment Options</h2>
