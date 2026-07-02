@@ -101,7 +101,7 @@ export default function DashboardPage() {
       console.log('Setting userData with username:', finalUsername)
 
       setUserData({
-        displayName: creator.display_name || profile?.full_name || profile?.display_name || 'Creator',
+        displayName: creator.display_name || profile?.full_name || 'Creator',
         username: finalUsername,
         studentCount: studentCount || 0,
         videoCount: videoCount || 0,

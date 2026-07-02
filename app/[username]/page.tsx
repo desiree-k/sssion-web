@@ -14,7 +14,7 @@ import FollowButton from '@/components/FollowButton'
 interface Profile {
   id: string
   username: string | null
-  display_name: string | null
+  full_name: string | null
   profile_image_url: string | null
   bio: string | null
   role: string
@@ -61,9 +61,11 @@ interface Review {
   comment: string | null
   created_at: string
   profiles: {
-    display_name: string | null
+    full_name: string | null
   } | null
 }
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 async function getCreatorByUsernameOrId(identifier: string) {
   console.log('=== CREATOR LOOKUP DEBUG ===')
@@ -94,7 +96,7 @@ async function getCreatorByUsernameOrId(identifier: string) {
     console.log('Creator query result:', creatorData)
     console.log('Creator query error:', creatorError)
     creator = creatorData
-  } else {
+  } else if (UUID_PATTERN.test(identifier)) {
     // Try to find by creator ID (UUID)
     console.log('Username not found, trying ID lookup...')
     const { data: creatorById, error: creatorIdError } = await supabase
@@ -172,7 +174,7 @@ async function getCreatorByUsernameOrId(identifier: string) {
       comment,
       created_at,
       profiles!reviews_student_id_fkey (
-        display_name
+        full_name
       )
     `)
     .eq('creator_id', creator.id)
@@ -205,7 +207,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   }
 
   const { creator, profile } = data
-  const displayName = creator.display_name || profile.display_name || username
+  const displayName = creator.display_name || profile.full_name || username
 
   const profileImageUrl = profile.profile_image_url
 
@@ -268,7 +270,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       </div>
     )
   }
-  const displayName = creator.display_name || profile.display_name || username
+  const displayName = creator.display_name || profile.full_name || username
   const profileImageUrl = profile.profile_image_url
 
   const pl = creator.payment_links
@@ -437,7 +439,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                 <div key={review.id} className="bg-[#1A1A2E] rounded-xl p-6 border border-white/10">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-white font-medium">
-                      {review.profiles?.display_name || 'Student'}
+                      {review.profiles?.full_name || 'Student'}
                     </span>
                     <StarRating rating={review.rating} />
                   </div>
