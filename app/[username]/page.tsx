@@ -33,6 +33,7 @@ interface Creator {
   paypal_username: string | null
   venmo_username: string | null
   zelle_info: string | null
+  accent_color: string | null
   payment_links: {
     cashapp?: string
     paypal?: string
@@ -331,7 +332,14 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
 
           {/* Follow is the hero action in every mode */}
           <div className="mt-8 flex flex-col items-center gap-2">
-            <FollowButton creatorId={creator.id} creatorUserId={creator.user_id} hero label="Stay Updated" />
+            <FollowButton
+              creatorId={creator.id}
+              creatorUserId={creator.user_id}
+              hero
+              label="Stay Updated"
+              emailFollowName={displayName}
+              accentColor={creator.accent_color}
+            />
             <p className="text-white/40 text-xs text-center max-w-xs">
               Get important email updates and app notifications from this creator
             </p>
