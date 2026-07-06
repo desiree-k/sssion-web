@@ -35,6 +35,11 @@ interface FollowButtonProps {
    * The value is the creator's display name, used in the form copy.
    */
   emailFollowName?: string
+  /**
+   * Recorded as email_followers.consent_source so we can prove where the
+   * opt-in happened (e.g. "web_studio_page_<username>").
+   */
+  consentSource?: string
   /** Creator's chosen accent color (hex). Falls back to rose gold. */
   accentColor?: string | null
 }
@@ -50,6 +55,7 @@ export default function FollowButton({
   hero = false,
   label = 'Follow',
   emailFollowName,
+  consentSource,
   accentColor,
 }: FollowButtonProps) {
   const selfLoad = userIdProp === undefined
@@ -150,6 +156,8 @@ export default function FollowButton({
     }
   }
 
+  const consentText = `Get updates from ${emailFollowName} — new sessions, community news, and important announcements. You can unsubscribe anytime.`
+
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const normalized = email.trim().toLowerCase()
@@ -161,7 +169,12 @@ export default function FollowButton({
     setIsSubmitting(true)
     const { error } = await supabase
       .from('email_followers')
-      .insert({ email: normalized, creator_id: creatorId })
+      .insert({
+        email: normalized,
+        creator_id: creatorId,
+        consent_text: consentText,
+        consent_source: consentSource,
+      })
     setIsSubmitting(false)
     if (!error) {
       setEmailMode('connected')
@@ -217,7 +230,10 @@ export default function FollowButton({
           <p className="text-red-300/90 text-xs mt-2 text-center">{formError}</p>
         )}
         <p className="text-white/40 text-xs mt-3 text-center">
-          Get updates from {emailFollowName}. No account needed.
+          {consentText}{' '}
+          <a href="/privacy" className="underline hover:text-white/60 transition-colors">
+            Privacy Policy
+          </a>
         </p>
       </form>
     )

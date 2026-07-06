@@ -338,6 +338,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
               hero
               label="Stay Updated"
               emailFollowName={displayName}
+              consentSource={`web_studio_page_${username}`}
               accentColor={creator.accent_color}
             />
             <p className="text-white/40 text-xs text-center max-w-xs">
