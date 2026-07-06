@@ -26,6 +26,33 @@ export default function AuthCallback() {
       return
     }
 
+    // Password recovery: the token signs the user in, then they set a new
+    // password on /reset-password. type=recovery arrives in the hash (from
+    // GoTrue's redirect) or as a query param.
+    const isRecovery =
+      new URLSearchParams(hash).get('type') === 'recovery' ||
+      new URLSearchParams(search).get('type') === 'recovery'
+    if (isRecovery) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session) {
+          subscription.unsubscribe()
+          router.replace('/reset-password')
+        }
+      })
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          subscription.unsubscribe()
+          router.replace('/reset-password')
+        }
+      })
+      // Fallback: /reset-password shows its own expired-link message
+      setTimeout(() => {
+        subscription.unsubscribe()
+        router.replace('/reset-password')
+      }, 3000)
+      return
+    }
+
     const handleCallback = async () => {
       // supabase-js automatically detects tokens in the URL hash
       // and establishes the session. We just need to wait for it.
