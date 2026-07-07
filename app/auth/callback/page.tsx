@@ -10,6 +10,25 @@ export default function AuthCallback() {
   const [showExpiredLink, setShowExpiredLink] = useState(false)
 
   useEffect(() => {
+    let recoveryHandled = false
+    const goToReset = () => {
+      if (recoveryHandled) return
+      recoveryHandled = true
+      router.replace('/reset-password')
+    }
+
+    // Primary recovery signal: supabase-js fires PASSWORD_RECOVERY when it
+    // processes a recovery token from the URL. getSession() below awaits that
+    // same init, so this fires before the dashboard routing — reliable even
+    // after the URL hash has been cleared (which the hash check can race).
+    // New reset emails point straight at /reset-password; this only has to
+    // catch links already sent to /auth/callback.
+    const { data: { subscription: recoverySub } } = supabase.auth.onAuthStateChange(
+      (event) => {
+        if (event === 'PASSWORD_RECOVERY') goToReset()
+      }
+    )
+
     // Check URL hash and query params for Supabase error codes
     // Supabase puts expired-link errors in the hash fragment:
     // #error=access_denied&error_code=otp_expired&error_description=...
@@ -23,40 +42,26 @@ export default function AuthCallback() {
       (error === 'access_denied' && (hash.includes('otp_expired') || search.includes('otp_expired')))
     ) {
       setShowExpiredLink(true)
-      return
+      return () => recoverySub.unsubscribe()
     }
 
-    // Password recovery: the token signs the user in, then they set a new
-    // password on /reset-password. type=recovery arrives in the hash (from
-    // GoTrue's redirect) or as a query param.
-    const isRecovery =
+    // Fast path: if the recovery hash is still intact, route immediately.
+    if (
       new URLSearchParams(hash).get('type') === 'recovery' ||
       new URLSearchParams(search).get('type') === 'recovery'
-    if (isRecovery) {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (session) {
-          subscription.unsubscribe()
-          router.replace('/reset-password')
-        }
-      })
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-          subscription.unsubscribe()
-          router.replace('/reset-password')
-        }
-      })
-      // Fallback: /reset-password shows its own expired-link message
-      setTimeout(() => {
-        subscription.unsubscribe()
-        router.replace('/reset-password')
-      }, 3000)
-      return
+    ) {
+      goToReset()
+      return () => recoverySub.unsubscribe()
     }
 
     const handleCallback = async () => {
       // supabase-js automatically detects tokens in the URL hash
       // and establishes the session. We just need to wait for it.
       const { data: { session }, error } = await supabase.auth.getSession()
+
+      // A recovery session was handled above (PASSWORD_RECOVERY / hash) — don't
+      // fall through and route it to a dashboard.
+      if (recoveryHandled) return
 
       if (error) {
         console.error('Auth callback error:', error)
@@ -120,6 +125,8 @@ export default function AuthCallback() {
     }
 
     handleCallback()
+
+    return () => recoverySub.unsubscribe()
   }, [router])
 
   // Expired / invalid link
