@@ -3,15 +3,15 @@
 import { useEffect } from 'react'
 
 /**
- * Imperative scroll/motion behaviors for the homepage design:
+ * Imperative scroll/motion behaviors shared by the redesigned pages:
  *  - hero background video autoplay (some browsers ignore the muted attribute)
  *  - scroll-triggered reveals on [data-reveal] elements
  *  - the fixed header fading in a blurred background once scrolled
- *  - subtle hero parallax
+ *  - subtle hero parallax on #ss-hero-media
  * Renders nothing; operates on the markup rendered by the server component.
  * Honors prefers-reduced-motion by showing everything up front and skipping parallax.
  */
-export default function HomeInteractions() {
+export default function RedesignInteractions() {
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 

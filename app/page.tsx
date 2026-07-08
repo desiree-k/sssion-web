@@ -1,6 +1,6 @@
 import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
-import HomeInteractions from './HomeInteractions'
+import RedesignInteractions from './RedesignInteractions'
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -355,7 +355,7 @@ export default function Home() {
         </section>
       </div>
 
-      <HomeInteractions />
+      <RedesignInteractions />
 
       {/* Floating mobile download banner */}
       <MobileDownloadBanner />
