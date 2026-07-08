@@ -129,12 +129,13 @@ async function getCreatorByUsernameOrId(identifier: string) {
 
   console.log('=== LOOKUP SUCCESS ===')
 
-  // Get preview content items
+  // Get publicly visible content — these show on the creator page in every
+  // space mode. (The legacy is_preview flag is no longer set by the app.)
   const { data: contentItems, error: contentError } = await supabase
     .from('content_items')
     .select('id, title, mux_playback_id, is_preview, difficulty_level')
     .eq('creator_id', creator.id)
-    .eq('is_preview', true)
+    .in('visibility', ['discovery', 'both', 'free'])
     .not('mux_playback_id', 'is', null)
     .order('created_at', { ascending: false })
 

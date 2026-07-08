@@ -4,13 +4,15 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
+type View = 'form' | 'studentMessage' | 'forgotPassword' | 'resetSent'
+
 export default function SignInPage() {
   const router = useRouter()
+  const [view, setView] = useState<View>('form')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [showStudentMessage, setShowStudentMessage] = useState(false)
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,6 +53,36 @@ export default function SignInPage() {
     }
   }
 
+  const handleSendReset = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!email.trim()) {
+      setError('Please enter your email')
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: 'https://sssion.studio/reset-password',
+      })
+
+      if (resetError) {
+        setError(resetError.message)
+        return
+      }
+
+      setView('resetSent')
+    } catch (err) {
+      console.error('Password reset error:', err)
+      setError('An error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -71,7 +103,7 @@ export default function SignInPage() {
       {/* Main Content */}
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {!showStudentMessage ? (
+          {view === 'form' && (
             <div className="space-y-8">
               <div className="text-center">
                 <h1 className="text-3xl md:text-4xl font-bold mb-3">
@@ -98,9 +130,21 @@ export default function SignInPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
-                    Password
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-white/70">
+                      Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setError(null)
+                        setView('forgotPassword')
+                      }}
+                      className="text-sm text-[#B76E79] hover:underline"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
                   <input
                     type="password"
                     value={password}
@@ -135,7 +179,7 @@ export default function SignInPage() {
 
                 <div className="border-t border-white/10 pt-4">
                   <button
-                    onClick={() => setShowStudentMessage(true)}
+                    onClick={() => setView('studentMessage')}
                     className="w-full text-center text-white/40 text-sm hover:text-white/60 transition-colors"
                   >
                     I&apos;m a student &rarr;
@@ -143,7 +187,9 @@ export default function SignInPage() {
                 </div>
               </div>
             </div>
-          ) : (
+          )}
+
+          {view === 'studentMessage' && (
             <div className="space-y-8 text-center">
               <div className="w-20 h-20 bg-[#B76E79]/20 rounded-full flex items-center justify-center mx-auto">
                 <svg className="w-10 h-10 text-[#B76E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,10 +231,86 @@ export default function SignInPage() {
               </a>
 
               <button
-                onClick={() => setShowStudentMessage(false)}
+                onClick={() => setView('form')}
                 className="text-white/40 text-sm hover:text-white/60 transition-colors"
               >
                 &larr; Back to creator sign in
+              </button>
+            </div>
+          )}
+
+          {view === 'forgotPassword' && (
+            <div className="space-y-8">
+              <div className="text-center">
+                <h1 className="text-3xl font-bold mb-3">Reset Password</h1>
+                <p className="text-white/60">
+                  Enter your email and we&apos;ll send you a reset link
+                </p>
+              </div>
+
+              <form onSubmit={handleSendReset} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-white/70 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                    autoFocus
+                  />
+                </div>
+
+                {error && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                    <p className="text-red-400 text-sm text-center">{error}</p>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-4 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Sending...' : 'Send Reset Link'}
+                </button>
+              </form>
+
+              <button
+                onClick={() => {
+                  setError(null)
+                  setView('form')
+                }}
+                className="block mx-auto text-white/40 text-sm hover:text-white/60 transition-colors"
+              >
+                &larr; Back to sign in
+              </button>
+            </div>
+          )}
+
+          {view === 'resetSent' && (
+            <div className="space-y-8 text-center">
+              <div className="w-20 h-20 bg-[#B76E79]/20 rounded-full flex items-center justify-center mx-auto">
+                <svg className="w-10 h-10 text-[#B76E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-bold mb-3">Reset link sent</h2>
+                <p className="text-white/60">
+                  Check your inbox at <span className="text-white">{email.trim()}</span>{' '}
+                  for a link to reset your password.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setView('form')}
+                className="text-white/40 text-sm hover:text-white/60 transition-colors"
+              >
+                &larr; Back to sign in
               </button>
             </div>
           )}

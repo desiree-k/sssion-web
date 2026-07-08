@@ -93,7 +93,7 @@ export default function StudentSignInPage() {
 
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: 'https://sssion.studio/auth/callback',
+        redirectTo: 'https://sssion.studio/reset-password',
       })
 
       if (resetError) {
