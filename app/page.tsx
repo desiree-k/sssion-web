@@ -380,7 +380,6 @@ export default function Home() {
               <a href="/founding" className="ss-footer-link">Founding Studios</a>
               <a href="/features" className="ss-footer-link">Features &amp; Pricing</a>
               <a href="/discover" className="ss-footer-link">Discover Creators</a>
-              <a href="/polecon" className="ss-footer-link">PoleCon Planner</a>
             </div>
             <div className="ss-footer-col">
               <span className="ss-footer-label">Account</span>
