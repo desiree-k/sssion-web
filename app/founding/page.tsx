@@ -1,266 +1,342 @@
-export const metadata = {
+import type { Metadata } from 'next'
+import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google'
+import MobileDownloadBanner from '@/components/MobileDownloadBanner'
+import RedesignInteractions from '../RedesignInteractions'
+
+const bricolage = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bricolage' })
+const hanken = Hanken_Grotesk({ subsets: ['latin'], variable: '--font-hanken' })
+
+const APP_STORE = 'https://apps.apple.com/us/app/sssion/id6763607808'
+const APPLY_HREF = 'https://tally.so/r/aQzpe2'
+
+export const metadata: Metadata = {
   title: 'Founding Studios | Sssion',
   description:
     'The first 50 creators building Sssion with us. Apply to become a Founding Studio — free for good, built together.',
 }
 
-const APPLY_HREF = 'https://tally.so/r/aQzpe2'
-
-const benefits = [
-  {
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    ),
-    headline: 'Free for good.',
-    body: 'Your studio stays free, permanently. When we launch premium tools, you keep a founding tier far more generous than the standard plan.',
-  },
-  {
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-      />
-    ),
-    headline: 'A founding badge.',
-    body: 'Marks you as day-one — and means more as we grow.',
-  },
-  {
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M13 10V3L4 14h7v7l9-11h-7z"
-      />
-    ),
-    headline: 'First access to everything.',
-    body: 'Native payments, live streaming, analytics, multiple studios — Founding Studios get it first.',
-  },
-  {
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-      />
-    ),
-    headline: 'A real say.',
-    body: 'Tell us what to build. We actually listen, and we\'ll tell you when your idea ships.',
-  },
-  {
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-      />
-    ),
-    headline: 'A direct line to the founder.',
-    body: 'Personal onboarding, and a real human you can reach — not a support ticket.',
-  },
-  {
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M12 4v16m8-8H4"
-      />
-    ),
-    headline: 'First dibs on referral rewards.',
-    body: 'When we open them up, Founding Studios are first in line.',
-  },
+const DISCIPLINES = [
+  'Pole', 'Flexibility', 'Floor work', 'Heels', 'Contemporary', 'Yoga & flow', 'Strength',
 ]
+
+const BENEFITS = [
+  { n: '01', d: 40, h: 'Free for good', p: 'Your space stays free — no fees, no expiry date.' },
+  { n: '02', d: 100, h: 'A founding badge', p: 'A permanent mark that you were here first.' },
+  { n: '03', d: 160, h: 'First access to everything', p: 'New tools reach you before anyone else.' },
+  { n: '04', d: 40, h: 'A real say', p: 'Shape the roadmap — we build with your input.' },
+  { n: '05', d: 100, h: 'A direct line to the founder', p: 'Talk to the person building this, directly.' },
+  { n: '06', d: 160, h: 'First dibs on referral rewards', p: 'Be first in line as referral rewards roll out.' },
+]
+
+const css = `
+@keyframes ss-kb{0%{transform:scale(1.04) translate(0,0)}100%{transform:scale(1.18) translate(-2%,-3%)}}
+@keyframes ss-grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-4%)}60%{transform:translate(-3%,-2%)}80%{transform:translate(4%,2%)}100%{transform:translate(0,0)}}
+@keyframes ss-marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes ss-scroll{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(7px);opacity:1}}
+@keyframes ss-pulse{0%,100%{box-shadow:0 0 0 0 rgba(183,110,121,.5)}50%{box-shadow:0 0 0 6px rgba(183,110,121,0)}}
+
+.ss-home{position:relative;width:100%;overflow-x:hidden;background:#1A1A2E;color:#fff;font-family:var(--font-hanken),system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.ss-home *{box-sizing:border-box}
+.ss-accent{font-style:italic;color:#C88793}
+.ss-img{width:100%;height:100%;object-fit:cover;display:block}
+.ss-grain{position:absolute;inset:-40%;z-index:6;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:ss-grain 5s steps(6) infinite}
+
+/* Header */
+.ss-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:clamp(16px,3vw,24px) clamp(20px,5vw,64px);transition:background .4s ease,backdrop-filter .4s ease,border-color .4s ease;border-bottom:1px solid transparent}
+.ss-logo{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(20px,2.4vw,24px);letter-spacing:.02em;color:#fff}
+.ss-nav{display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)}
+.ss-navlink{color:#C9C9D6;font-size:14px;font-weight:500;display:none}
+.ss-navlink:hover{color:#fff}
+@media(min-width:760px){.ss-navlink{display:inline-flex}}
+.ss-navpill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:14px;font-weight:600;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .25s ease}
+.ss-navpill:hover{background:rgba(255,255,255,.16)}
+
+/* Hero */
+.ss-hero{position:relative;min-height:100svh;display:flex;flex-direction:column;overflow:hidden}
+.ss-hero-media{position:absolute;inset:-6% 0;z-index:0;will-change:transform}
+.ss-hero-kb{position:absolute;inset:0;animation:ss-kb 22s ease-in-out infinite alternate}
+.ss-hero-scrim{position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(180deg,rgba(26,26,46,.66) 0%,rgba(26,26,46,.15) 26%,rgba(26,26,46,.2) 50%,rgba(26,26,46,.85) 80%,#1A1A2E 100%)}
+.ss-hero-inner{position:relative;z-index:10;width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,64px) clamp(72px,11vw,120px)}
+.ss-hero-copy{max-width:820px}
+.ss-badge{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:clamp(11px,1.4vw,13px);letter-spacing:.28em;text-transform:uppercase;color:#D89AA3;margin-bottom:clamp(18px,2.6vw,24px);padding:8px 15px;border:1px solid rgba(183,110,121,.45);border-radius:999px}
+.ss-badge-dot{width:7px;height:7px;border-radius:50%;background:#B76E79;box-shadow:0 0 12px #B76E79}
+.ss-h1{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(52px,11vw,124px);line-height:.9;letter-spacing:-.035em;margin:0 0 clamp(18px,2.6vw,26px);text-wrap:balance}
+.ss-hero-sub{font-size:clamp(18px,2.6vw,26px);line-height:1.4;color:#D3D3DE;margin:0 0 clamp(28px,3.6vw,38px);max-width:560px}
+.ss-scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:7px;pointer-events:none}
+.ss-scrollcue span{font-weight:600;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#9999AA}
+
+/* Sections */
+.ss-section{position:relative;padding:clamp(80px,13vw,168px) clamp(20px,5vw,64px)}
+.ss-wrap{max-width:1180px;margin:0 auto}
+.ss-eyebrow2{font-weight:600;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#B76E79;margin-bottom:22px}
+.ss-h2{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(30px,5.4vw,58px);line-height:1.05;letter-spacing:-.03em;margin:0;text-wrap:balance}
+
+/* Buttons */
+.ss-btn-primary{display:inline-flex;align-items:center;gap:11px;padding:17px 34px;border-radius:14px;background:linear-gradient(135deg,#C98693,#B76E79);color:#1A1A2E;font-weight:700;font-size:clamp(16px,2vw,18px);box-shadow:0 14px 34px -10px rgba(183,110,121,.6);transition:transform .25s ease,box-shadow .25s ease}
+.ss-btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 44px -10px rgba(183,110,121,.78)}
+
+/* Intro */
+.ss-intro{max-width:900px;margin:0 auto}
+.ss-intro-lead{font-size:clamp(19px,2.6vw,27px);line-height:1.5;color:#D3D3DE;margin:0 0 clamp(28px,3.6vw,40px);text-wrap:pretty}
+.ss-intro-big{font-family:var(--font-bricolage),sans-serif;font-weight:500;font-size:clamp(24px,4vw,44px);line-height:1.2;letter-spacing:-.02em;color:#fff;margin:0;text-wrap:balance}
+
+/* What you get */
+.ss-fs-head{max-width:680px;margin-bottom:clamp(44px,6vw,68px)}
+.ss-fs-lead{font-size:clamp(18px,2.4vw,24px);line-height:1.5;color:#D3D3DE;margin:0;text-wrap:pretty}
+.ss-fs-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(16px,2vw,22px)}
+.ss-fs-card{padding:clamp(28px,3vw,36px);border-radius:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);transition:transform .3s ease,border-color .3s ease}
+.ss-fs-card:hover{transform:translateY(-6px);border-color:rgba(183,110,121,.45)}
+.ss-fs-card .num{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:14px;color:#B76E79;margin-bottom:20px}
+.ss-fs-card h3{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(22px,2.6vw,27px);line-height:1.05;letter-spacing:-.02em;margin:0 0 10px}
+.ss-fs-card p{font-size:15.5px;line-height:1.6;color:#9999AA;margin:0}
+
+/* Why only 50 */
+.ss-fifty{position:relative;padding:clamp(96px,16vw,200px) clamp(20px,5vw,64px);background:#1A1A2E;overflow:hidden;text-align:center}
+.ss-fifty-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-bricolage),sans-serif;font-weight:800;font-size:clamp(240px,44vw,540px);line-height:1;color:rgba(183,110,121,.06);z-index:0;pointer-events:none;user-select:none}
+.ss-fifty-inner{position:relative;z-index:10;max-width:820px;margin:0 auto}
+.ss-fifty-h{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(30px,6vw,64px);line-height:1.05;letter-spacing:-.03em;color:#fff;margin:0;text-wrap:balance}
+
+/* Looking for + marquee */
+.ss-look{position:relative;padding:clamp(80px,13vw,168px) 0;background:#2A2A3E}
+.ss-look-head{max-width:900px;margin:0 auto;padding:0 clamp(20px,5vw,64px);text-align:center}
+.ss-look-h{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(30px,5.4vw,58px);line-height:1.05;letter-spacing:-.03em;margin:0 0 40px;text-wrap:balance}
+.ss-marquee-wrap{overflow:hidden;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);padding:20px 0;margin-top:8px}
+.ss-marquee{display:flex;width:max-content;animation:ss-marquee 30s linear infinite;font-family:var(--font-bricolage),sans-serif;font-weight:600;font-size:clamp(20px,3vw,34px);color:#9999AA;white-space:nowrap}
+.ss-marquee-group{display:flex;gap:34px;padding-right:34px;align-items:center}
+.ss-marquee .sep{color:#B76E79}
+
+/* Closing CTA */
+.ss-closing{position:relative;min-height:80svh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:clamp(80px,12vw,140px) clamp(20px,5vw,64px)}
+.ss-closing-bg{position:absolute;inset:0;z-index:0;animation:ss-kb 26s ease-in-out infinite alternate}
+.ss-closing-scrim{position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(180deg,#2A2A3E 0%,rgba(26,26,46,.74) 34%,rgba(26,26,46,.76) 66%,#1A1A2E 100%)}
+.ss-closing-inner{position:relative;z-index:10;text-align:center;max-width:820px}
+.ss-closing-h{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(36px,7vw,80px);line-height:1;letter-spacing:-.035em;margin:0 0 clamp(30px,4vw,42px);text-wrap:balance}
+.ss-closing-note{font-size:15px;line-height:1.6;color:#9999AA;margin:24px 0 0}
+
+/* Footer */
+.ss-footer{background:#14141f;padding:clamp(56px,8vw,88px) clamp(20px,5vw,64px) clamp(36px,5vw,48px);border-top:1px solid rgba(255,255,255,.06);font-family:var(--font-hanken),system-ui,sans-serif;color:#fff}
+.ss-footer-top{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between}
+.ss-footer-brand{flex:1 1 260px;min-width:240px}
+.ss-footer-logo{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:26px;letter-spacing:.02em;margin-bottom:12px}
+.ss-footer-tagline{font-family:var(--font-bricolage),sans-serif;font-style:italic;font-size:18px;color:#B76E79;margin:0 0 24px}
+.ss-footer-cols{display:flex;flex-wrap:wrap;gap:clamp(40px,6vw,72px)}
+.ss-footer-col{display:flex;flex-direction:column;gap:14px}
+.ss-footer-label{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#6d6d80;margin-bottom:4px}
+.ss-footer-link{color:#C9C9D6;font-size:15px;font-weight:500;transition:color .2s ease}
+.ss-footer-link:hover{color:#fff}
+.ss-footer-bottom{max-width:1180px;margin:48px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-size:13px;color:#6d6d80}
+.ss-appstore{display:inline-flex;align-items:center;gap:11px;padding:11px 18px;border-radius:13px;background:#000;border:1px solid rgba(255,255,255,.18);transition:border-color .25s ease}
+.ss-appstore:hover{border-color:rgba(255,255,255,.4)}
+.ss-appstore .l1{font-size:9px;color:#c9c9d6;letter-spacing:.05em}
+.ss-appstore .l2{font-size:15px;color:#fff;font-weight:600}
+
+@media(prefers-reduced-motion:reduce){.ss-marquee,.ss-hero-kb,.ss-closing-bg,.ss-grain,.ss-badge-dot{animation:none}}
+`
+
+const AppleLogo = () => (
+  <svg width="18" height="18" viewBox="0 0 384 512" fill="#fff" aria-hidden="true">
+    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+  </svg>
+)
+
+const MarqueeGroup = ({ hidden = false }: { hidden?: boolean }) => (
+  <span className="ss-marquee-group" aria-hidden={hidden || undefined}>
+    {DISCIPLINES.map((d) => (
+      <span key={d} style={{ display: 'contents' }}>
+        <span>{d}</span>
+        <span className="sep">·</span>
+      </span>
+    ))}
+    <span className="ss-accent">every movement in between</span>
+    <span className="sep">·</span>
+  </span>
+)
 
 export default function FoundingPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className={`${bricolage.variable} ${hanken.variable}`}>
+      <style dangerouslySetInnerHTML={{ __html: css }} />
 
-      {/* Navigation */}
-      <nav className="absolute top-0 left-0 right-0 z-10 py-6 px-6">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-2xl font-bold text-[#B76E79]">Sssion</a>
-          <div className="flex items-center gap-5">
-            <a href="/features" className="text-white/60 hover:text-white transition-colors text-sm hidden sm:block">
-              Features &amp; Pricing
-            </a>
-            <a href="/discover" className="text-white/60 hover:text-white transition-colors text-sm hidden sm:block">
-              Discover Creators
-            </a>
-            <a href="/signin" className="text-white/60 hover:text-white transition-colors text-sm hidden sm:block">
-              Creator Sign In
-            </a>
-            <a
-              href={APPLY_HREF}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
-            >
-              Apply Now
-            </a>
+      <div className="ss-home" id="top">
+        {/* ================= HEADER ================= */}
+        <header id="ss-header" className="ss-header">
+          <a href="/" className="ss-logo">sssion</a>
+          <nav className="ss-nav">
+            <a href="/features" className="ss-navlink">Features &amp; Pricing</a>
+            <a href="/discover" className="ss-navlink">Discover</a>
+            <a href={APPLY_HREF} target="_blank" rel="noopener" className="ss-navpill">Apply now</a>
+          </nav>
+        </header>
+
+        {/* ================= HERO ================= */}
+        <section className="ss-hero">
+          <div id="ss-hero-media" className="ss-hero-media">
+            <div className="ss-hero-kb">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="ss-img" src="/redesign/ss-fs-hero.webp" alt="" aria-hidden="true" />
+            </div>
           </div>
-        </div>
-      </nav>
+          <div id="ss-hero-scrim" className="ss-hero-scrim" />
+          <div className="ss-grain" />
 
-      {/* 1. HERO */}
-      <section className="relative flex flex-col items-center justify-center min-h-[70vh] px-6 text-center overflow-hidden pt-24">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(183,110,121,0.13) 0%, transparent 70%)',
-          }}
-        />
-        <p className="text-[#B76E79] text-sm uppercase tracking-[0.2em] font-medium mb-6">
-          50 spots · First class only
-        </p>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6">
-          Founding Studios
-        </h1>
-        <p className="text-xl md:text-2xl text-white/60 max-w-xl leading-relaxed">
-          The first 50 creators building Sssion with us
-        </p>
-      </section>
-
-      {/* 2. INTRO */}
-      <section className="py-24 px-6" style={{ background: '#16162a' }}>
-        <div className="max-w-2xl mx-auto">
-          <p className="text-xl md:text-2xl text-white/80 leading-relaxed mb-8">
-            Sssion is a private studio platform built for movement and dance creators — the people mainstream platforms shadowban, demonetize, and slap content warnings on for doing their art.
-          </p>
-          <p className="text-xl md:text-2xl text-white leading-relaxed">
-            We&apos;re opening the doors to our first 50 Founding Studios.{' '}
-            <span className="text-[#B76E79]">Not a beta test — a founding class.</span>{' '}
-            The creators who get in now will shape what this platform becomes.
-          </p>
-        </div>
-      </section>
-
-      {/* 3. WHAT A FOUNDING STUDIO GETS */}
-      <section className="py-24 px-6">
-        <div className="max-w-2xl mx-auto">
-          <p className="text-[#B76E79] text-sm uppercase tracking-[0.2em] font-medium mb-4">
-            What a Founding Studio gets
-          </p>
-          <p className="text-2xl text-white/75 leading-relaxed mb-16">
-            Your own private studio — a space to teach classes, gather your community, or both.
-            Your content, your people, your rules, your pricing.
-            We&apos;re the infrastructure, not the landlord.
-          </p>
-
-          <div className="flex flex-col divide-y divide-white/[0.07]">
-            {benefits.map(({ icon, headline, body }, i) => (
-              <div key={i} className="flex items-start gap-5 py-8">
-                <div className="shrink-0 w-11 h-11 rounded-xl bg-[#B76E79]/15 flex items-center justify-center mt-0.5">
-                  <svg className="w-5 h-5 text-[#B76E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    {icon}
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-lg mb-1">{headline}</p>
-                  <p className="text-white/60 leading-relaxed">{body}</p>
-                </div>
+          <div style={{ flex: 1 }} />
+          <div className="ss-hero-inner">
+            <div className="ss-hero-copy">
+              <div data-reveal className="ss-badge">
+                <span className="ss-badge-dot" />50 spaces · by application
               </div>
-            ))}
+              <h1 data-reveal data-reveal-delay="80" className="ss-h1">
+                Founding<br />
+                <span className="ss-accent">Studios</span>
+              </h1>
+              <p data-reveal data-reveal-delay="180" className="ss-hero-sub">
+                The first 50 creators building Sssion with us.
+              </p>
+              <a data-reveal data-reveal-delay="280" href={APPLY_HREF} target="_blank" rel="noopener" className="ss-btn-primary">
+                Apply to be a Founding Studio <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="ss-scrollcue">
+            <span>Scroll</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9999AA" strokeWidth="2" style={{ animation: 'ss-scroll 1.8s ease-in-out infinite' }} aria-hidden="true">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </div>
+        </section>
+
+        {/* ================= INTRO ================= */}
+        <section className="ss-section" style={{ background: '#1A1A2E' }}>
+          <div className="ss-intro">
+            <p data-reveal className="ss-intro-lead">
+              Sssion is a private space platform built for movement and dance creators — the people
+              mainstream platforms shadowban, demonetize, and slap content warnings on for doing their art.
+            </p>
+            <p data-reveal data-reveal-delay="120" className="ss-intro-big">
+              We&apos;re opening the doors to our first 50 Founding Studios.{' '}
+              <span className="ss-accent">Not a beta test — a founding class.</span>{' '}
+              The creators who get in now will shape what this platform becomes.
+            </p>
+          </div>
+        </section>
+
+        {/* ================= WHAT YOU GET ================= */}
+        <section className="ss-section" style={{ background: '#2A2A3E' }}>
+          <div className="ss-wrap">
+            <div className="ss-fs-head">
+              <div data-reveal className="ss-eyebrow2">What you get</div>
+              <p data-reveal data-reveal-delay="80" className="ss-fs-lead">
+                Your own private space — a place to teach sessions, gather your community, or both.
+                Your content, your people, your rules, your pricing.{' '}
+                <span style={{ color: '#fff', fontWeight: 600 }}>We&apos;re the infrastructure, not the landlord.</span>
+              </p>
+            </div>
+            <div className="ss-fs-cards">
+              {BENEFITS.map((b) => (
+                <div key={b.n} data-reveal data-reveal-delay={b.d} className="ss-fs-card">
+                  <div className="num">{b.n}</div>
+                  <h3>{b.h}</h3>
+                  <p>{b.p}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ================= WHY ONLY 50 ================= */}
+        <section className="ss-fifty">
+          <div aria-hidden="true" className="ss-fifty-watermark">50</div>
+          <div className="ss-fifty-inner">
+            <div data-reveal className="ss-eyebrow2" style={{ marginBottom: 26 }}>Why only 50</div>
+            <p data-reveal data-reveal-delay="100" className="ss-fifty-h">
+              Because we onboard every Founding Studio <span className="ss-accent">personally.</span>
+            </p>
+          </div>
+        </section>
+
+        {/* ================= WHAT WE'RE LOOKING FOR ================= */}
+        <section className="ss-look">
+          <div className="ss-look-head">
+            <div data-reveal className="ss-eyebrow2">What we&apos;re looking for</div>
+            <h2 data-reveal data-reveal-delay="80" className="ss-look-h">
+              Movement creators who take their craft and their community seriously.
+            </h2>
+          </div>
+          <div data-reveal data-reveal-delay="140" className="ss-marquee-wrap">
+            <div className="ss-marquee">
+              <MarqueeGroup />
+              <MarqueeGroup hidden />
+            </div>
+          </div>
+        </section>
+
+        {/* ================= CLOSING CTA ================= */}
+        <section className="ss-closing">
+          {/* No dedicated CTA image was provided in the design; reusing the hero shot. */}
+          <div className="ss-closing-bg">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="ss-img" src="/redesign/ss-fs-hero.webp" alt="" aria-hidden="true" />
+          </div>
+          <div className="ss-closing-scrim" />
+          <div className="ss-grain" />
+          <div className="ss-closing-inner">
+            <h2 data-reveal className="ss-closing-h">
+              Your body. Your art.<br />
+              <span className="ss-accent">Your space.</span>
+            </h2>
+            <a data-reveal data-reveal-delay="120" href={APPLY_HREF} target="_blank" rel="noopener" className="ss-btn-primary" style={{ padding: '18px 40px', fontSize: 'clamp(16px,2vw,19px)' }}>
+              Apply to be a Founding Studio <span>→</span>
+            </a>
+            <p data-reveal data-reveal-delay="200" className="ss-closing-note">
+              Applications reviewed personally. We&apos;ll be in touch within 3 days.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <RedesignInteractions />
+
+      {/* Floating mobile download banner */}
+      <MobileDownloadBanner />
+
+      {/* Footer (matches homepage; all links preserved) */}
+      <footer className="ss-footer">
+        <div className="ss-footer-top">
+          <div className="ss-footer-brand">
+            <div className="ss-footer-logo">sssion</div>
+            <p className="ss-footer-tagline">Own your movement.</p>
+            <a href={APP_STORE} target="_blank" rel="noopener" className="ss-appstore">
+              <AppleLogo />
+              <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
+                <span className="l1">Download on the</span>
+                <span className="l2">App Store</span>
+              </span>
+            </a>
+          </div>
+          <div className="ss-footer-cols">
+            <div className="ss-footer-col">
+              <span className="ss-footer-label">Platform</span>
+              <a href="/founding" className="ss-footer-link">Founding Studios</a>
+              <a href="/features" className="ss-footer-link">Features &amp; Pricing</a>
+              <a href="/discover" className="ss-footer-link">Discover Creators</a>
+              <a href="/polecon" className="ss-footer-link">PoleCon Planner</a>
+            </div>
+            <div className="ss-footer-col">
+              <span className="ss-footer-label">Account</span>
+              <a href="/signin" className="ss-footer-link">Creator Sign In</a>
+              <a href="/student-signin" className="ss-footer-link">Student Sign In</a>
+            </div>
+            <div className="ss-footer-col">
+              <span className="ss-footer-label">Legal</span>
+              <a href="/privacy" className="ss-footer-link">Privacy</a>
+              <a href="/terms" className="ss-footer-link">Terms</a>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* 4. WHY ONLY 50 */}
-      <section className="py-24 px-6" style={{ background: '#16162a' }}>
-        <div className="max-w-2xl mx-auto">
-          <p className="text-[#B76E79] text-sm uppercase tracking-[0.2em] font-medium mb-6">
-            Why only 50?
-          </p>
-          <p className="text-xl md:text-2xl text-white/80 leading-relaxed">
-            Because we onboard every Founding Studio personally. We&apos;ll sit down with you, set up your studio together, and make sure you&apos;re live and ready before you share it with a single member. That kind of care doesn&apos;t scale past a small group — so we&apos;re keeping the first class small on purpose.
-          </p>
-        </div>
-      </section>
-
-      {/* 5. WHAT WE'RE LOOKING FOR */}
-      <section className="py-24 px-6">
-        <div className="max-w-2xl mx-auto">
-          <p className="text-[#B76E79] text-sm uppercase tracking-[0.2em] font-medium mb-6">
-            What we&apos;re looking for
-          </p>
-          <p className="text-xl md:text-2xl text-white/80 leading-relaxed mb-8">
-            Movement creators who take their craft and their community seriously, and who are tired of building on platforms that treat their art like a liability.
-          </p>
-          <p className="text-xl md:text-2xl text-white/80 leading-relaxed mb-8">
-            Whether you want to teach classes, bring your people together in one place, gather a local crew, or all of the above — if you move, and you&apos;ve felt the censorship, this is for you.
-          </p>
-          <p className="text-xl md:text-2xl text-white/60 leading-relaxed">
-            Pole, flexibility, floor work, heels, contemporary, yoga and flow, strength, and every movement in between.
-          </p>
-        </div>
-      </section>
-
-      {/* 6. BOTTOM CTA */}
-      <section
-        className="py-28 px-6"
-        style={{ background: 'linear-gradient(135deg, #2a1520 0%, #1e1230 100%)' }}
-      >
-        <div className="max-w-xl mx-auto text-center">
-          <p className="text-white/50 text-sm uppercase tracking-[0.2em] font-medium mb-6">
-            50 spots · First come, first considered
-          </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 leading-tight">
-            Your body. Your art. Your studio.
-          </h2>
-          <a
-            href={APPLY_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-12 py-5 bg-[#B76E79] text-white font-semibold text-lg rounded-full hover:bg-[#a05f69] transition-colors"
-          >
-            Apply to be a Founding Studio →
-          </a>
-          <p className="text-white/35 text-sm mt-8 leading-relaxed">
-            Applications reviewed personally.
-            <br />
-            We&apos;ll be in touch within 3 days.
-          </p>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="py-10 px-6 border-t border-white/10">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <a href="/" className="text-[#B76E79] font-bold text-lg">Sssion</a>
-            <span className="text-white/20 hidden sm:block">·</span>
-            <p className="text-white/30 text-sm hidden sm:block">&copy; 2026</p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            <a href="/features" className="text-white/35 hover:text-white/60 text-sm transition-colors">
-              Features &amp; Pricing
-            </a>
-            <a href="/discover" className="text-white/35 hover:text-white/60 text-sm transition-colors">
-              Discover Creators
-            </a>
-            <a href="/signin" className="text-white/35 hover:text-white/60 text-sm transition-colors">
-              Creator Sign In
-            </a>
-            <a href="/polecon" className="text-white/35 hover:text-white/60 text-sm transition-colors">
-              PoleCon Planner
-            </a>
-            <a href="/privacy" className="text-white/35 hover:text-white/60 text-sm transition-colors">
-              Privacy
-            </a>
-            <a href="/terms" className="text-white/35 hover:text-white/60 text-sm transition-colors">
-              Terms
-            </a>
-          </div>
+        <div className="ss-footer-bottom">
+          <span>&copy; 2026 Sssion. Your body. Your art. Your space.</span>
+          <span>Made for movement.</span>
         </div>
       </footer>
     </div>
