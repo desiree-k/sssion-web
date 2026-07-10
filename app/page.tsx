@@ -174,7 +174,7 @@ export default function Home() {
               </p>
               <div data-reveal data-reveal-delay="280" className="ss-cta-row">
                 <a href="/join" className="ss-btn-primary">I&apos;m a Creator</a>
-                <a href={APP_STORE} target="_blank" rel="noopener" className="ss-btn-glass">
+                <a href="/student-signup" className="ss-btn-glass">
                   I&apos;m a Member
                 </a>
               </div>
@@ -347,7 +347,7 @@ export default function Home() {
             </h2>
             <div data-reveal data-reveal-delay="140" className="ss-closing-cta">
               <a href="/join" className="ss-btn-primary" style={{ padding: '16px 32px' }}>I&apos;m a Creator</a>
-              <a href={APP_STORE} target="_blank" rel="noopener" className="ss-btn-glass" style={{ padding: '16px 32px', background: 'rgba(255,255,255,.09)', borderColor: 'rgba(255,255,255,.26)' }}>
+              <a href="/student-signup" className="ss-btn-glass" style={{ padding: '16px 32px', background: 'rgba(255,255,255,.09)', borderColor: 'rgba(255,255,255,.26)' }}>
                 I&apos;m a Member
               </a>
             </div>
