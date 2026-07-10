@@ -10,6 +10,7 @@ import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 import StudentNav from '@/components/StudentNav'
 import StudioAccessCTA from '@/components/StudioAccessCTA'
 import FollowButton from '@/components/FollowButton'
+import OfferingCards, { Offering } from '@/components/OfferingCards'
 
 interface Profile {
   id: string
@@ -167,6 +168,15 @@ async function getCreatorByUsernameOrId(identifier: string) {
     .select('*', { count: 'exact', head: true })
     .eq('creator_id', creator.id)
 
+  // Get active offerings (RLS only exposes is_active = true to visitors)
+  const { data: offerings } = await supabase
+    .from('offerings')
+    .select('id, name, description, price, currency, is_free, payment_url, access_duration_days, access_scope, includes_community, auto_approve')
+    .eq('creator_id', creator.id)
+    .eq('is_active', true)
+    .order('sort_order')
+    .order('created_at')
+
   // Get reviews
   const { data: reviews } = await supabase
     .from('reviews')
@@ -186,6 +196,7 @@ async function getCreatorByUsernameOrId(identifier: string) {
   return {
     profile: profile as Profile,
     creator: creator as Creator,
+    offerings: (offerings || []) as Offering[],
     contentItems: (contentItems || []) as ContentItem[],
     reviews: (reviews || []).map(r => ({
       ...r,
@@ -250,7 +261,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
     notFound()
   }
 
-  const { profile, creator, contentItems, reviews, studentCount, videoCount, followerCount, reviewCount } = data
+  const { profile, creator, offerings, contentItems, reviews, studentCount, videoCount, followerCount, reviewCount } = data
 
   if (creator.is_visible === false) {
     return (
@@ -275,16 +286,12 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const displayName = creator.display_name || profile.full_name || username
   const profileImageUrl = profile.profile_image_url
 
-  const pl = creator.payment_links
-  const hasPaymentLinks = creator.cashapp_username || creator.paypal_username || creator.venmo_username || creator.zelle_info ||
-    pl?.square || (pl?.custom_label && pl?.custom_url)
-
   // Space mode controls what the public page shows. Follow is always visible.
-  const spaceMode = creator.space_mode || 'home'
-  // Gathering & Studio share community features (member count, reviews, join CTA).
-  const showGatheringFeatures = spaceMode === 'gathering' || spaceMode === 'studio'
-  // Studio-only: pricing, what's included, payment links.
-  const showStudioFeatures = spaceMode === 'studio'
+  const spaceMode = creator.space_mode || 'page'
+  // Community-only: community features (member count, reviews, join CTA).
+  // 'gathering'/'studio' are legacy values from before the Page/Community rename.
+  const showCommunityFeatures =
+    spaceMode === 'community' || spaceMode === 'gathering' || spaceMode === 'studio'
   const joinLabel = 'Request to Join Community'
 
   return (
@@ -347,8 +354,9 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             </p>
           </div>
 
-          {/* Join/access CTA — secondary, only in Gathering & Studio modes */}
-          {showGatheringFeatures && (
+          {/* Join/access CTA — Gathering mode only. When offerings exist,
+              their cards below carry the join/request CTAs instead. */}
+          {showCommunityFeatures && offerings.length === 0 && (
             <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} />
           )}
         </div>
@@ -366,42 +374,18 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* What's Included Section (Studio mode only) */}
-      {showStudioFeatures && creator.whats_included && creator.whats_included.length > 0 && (
-        <section className="py-12 px-6 bg-[#16162a]">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-6">What&apos;s Included</h2>
-            <ul className="space-y-3">
-              {creator.whats_included.map((item, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#B76E79] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-white/80">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-
-      {/* Pricing Section (Studio mode only) */}
-      {showStudioFeatures && creator.pricing_info && (
-        <section className="py-12 px-6">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-6">Pricing</h2>
-            <div className="bg-gradient-to-br from-[#B76E79]/20 to-[#B76E79]/5 rounded-2xl p-8 border border-[#B76E79]/30">
-              <p className="text-white/90 text-lg whitespace-pre-wrap">{creator.pricing_info}</p>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Offerings — the ways to get access (free or paid) */}
+      <OfferingCards
+        creatorId={creator.id}
+        offerings={offerings}
+        accentColor={creator.accent_color}
+      />
 
       {/* Stats Bar */}
       <section className="py-8 px-6 bg-[#16162a]">
         <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-x-12 gap-y-6">
           {/* Member count — Gathering & Studio only */}
-          {showGatheringFeatures && (
+          {showCommunityFeatures && (
             <div className="text-center">
               <p className="text-3xl font-bold text-[#B76E79]">{studentCount}</p>
               <p className="text-white/60 text-sm">Students</p>
@@ -417,7 +401,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             <p className="text-white/60 text-sm">Videos</p>
           </div>
           {/* Review count — Gathering & Studio only */}
-          {showGatheringFeatures && (
+          {showCommunityFeatures && (
             <div className="text-center">
               <p className="text-3xl font-bold text-[#B76E79]">{reviewCount}</p>
               <p className="text-white/60 text-sm">Reviews</p>
@@ -440,7 +424,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       )}
 
       {/* Reviews Section (Gathering & Studio modes) */}
-      {showGatheringFeatures && reviews.length > 0 && (
+      {showCommunityFeatures && reviews.length > 0 && (
         <section className="py-12 px-6 bg-[#16162a]">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Student Reviews</h2>
@@ -458,72 +442,6 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                   )}
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Payment Links Section (Studio mode only) */}
-      {showStudioFeatures && hasPaymentLinks && (
-        <section className="py-12 px-6">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">Payment Options</h2>
-            <div className="flex flex-wrap justify-center gap-4">
-              {creator.cashapp_username && (
-                <a
-                  href={`https://cash.app/$${creator.cashapp_username}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-[#00D632] text-black font-semibold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2"
-                >
-                  <span className="font-bold">$</span> Cash App
-                </a>
-              )}
-              {creator.paypal_username && (
-                <a
-                  href={`https://paypal.me/${creator.paypal_username}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-[#0070ba] text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
-                >
-                  PayPal
-                </a>
-              )}
-              {creator.venmo_username && (
-                <a
-                  href={`https://venmo.com/${creator.venmo_username}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-[#008CFF] text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
-                >
-                  Venmo
-                </a>
-              )}
-              {creator.zelle_info && (
-                <div className="px-6 py-3 bg-[#6D1ED4] text-white font-semibold rounded-full">
-                  Zelle: {creator.zelle_info}
-                </div>
-              )}
-              {pl?.square && (
-                <a
-                  href={pl.square.startsWith('http') ? pl.square : `https://${pl.square}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-black text-white font-semibold rounded-full hover:opacity-80 transition-opacity flex items-center gap-2"
-                >
-                  <span className="inline-block w-4 h-4 border-2 border-white rounded-sm" /> Square
-                </a>
-              )}
-              {pl?.custom_label && pl?.custom_url && (
-                <a
-                  href={pl.custom_url.startsWith('http') ? pl.custom_url : `https://${pl.custom_url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-[#B76E79] text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
-                >
-                  {pl.custom_label}
-                </a>
-              )}
             </div>
           </div>
         </section>
