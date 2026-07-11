@@ -10,6 +10,7 @@ import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 import StudentNav from '@/components/StudentNav'
 import StudioAccessCTA from '@/components/StudioAccessCTA'
 import FollowButton from '@/components/FollowButton'
+import EnterSpaceButton from '@/components/EnterSpaceButton'
 import OfferingCards, { Offering } from '@/components/OfferingCards'
 
 interface Profile {
@@ -338,8 +339,10 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {/* Follow is the hero action in every mode */}
-          <div className="mt-8 flex flex-col items-center gap-2">
+          {/* Members with access enter directly; "Stay Updated" (follow) is the
+              secondary action in every mode. Both self-gate on the viewer. */}
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <EnterSpaceButton creatorId={creator.id} />
             <FollowButton
               creatorId={creator.id}
               creatorUserId={creator.user_id}

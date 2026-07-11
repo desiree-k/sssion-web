@@ -38,14 +38,26 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
 
         setStudentId(session.user.id)
 
-        const { data: access } = await supabase
-          .from('studio_access')
-          .select('id, status')
-          .eq('student_id', session.user.id)
-          .eq('creator_id', creatorId)
-          .maybeSingle()
+        // Access can come from a legacy studio_access grant OR an active
+        // offering purchase (member_offerings) — check both.
+        const [{ data: access }, { data: offeringAccess }] = await Promise.all([
+          supabase
+            .from('studio_access')
+            .select('id, status')
+            .eq('student_id', session.user.id)
+            .eq('creator_id', creatorId)
+            .maybeSingle(),
+          supabase
+            .from('member_offerings')
+            .select('status')
+            .eq('user_id', session.user.id)
+            .eq('creator_id', creatorId)
+            .eq('status', 'active')
+            .maybeSingle(),
+        ])
 
-        if (access?.status === 'approved') {
+        if (access?.status === 'approved' || offeringAccess) {
+          // Already a member — the hero "Enter Space" button handles entry.
           setState('approved')
         } else if (access?.status === 'pending') {
           setState('pending')
@@ -94,8 +106,10 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
     }
   }
 
-  // Creators viewing a studio page don't need an access CTA
-  if (state === 'loading' || state === 'creator') return null
+  // Creators viewing a studio page don't need an access CTA. Members who
+  // already have access see the hero "Enter Space" button instead, so this
+  // request CTA hides for the 'approved' state too.
+  if (state === 'loading' || state === 'creator' || state === 'approved') return null
 
   return (
     <div className="mt-8 flex flex-col items-center gap-3">
@@ -138,15 +152,6 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
         <div className="px-10 py-4 bg-amber-500/15 text-amber-400 font-semibold rounded-full cursor-default">
           Request Pending
         </div>
-      )}
-
-      {state === 'approved' && (
-        <Link
-          href={`/student/studio/${creatorId}`}
-          className="px-10 py-4 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
-        >
-          Enter Studio
-        </Link>
       )}
 
       {error && <p className="text-red-400 text-sm">{error}</p>}
