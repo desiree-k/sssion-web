@@ -40,6 +40,8 @@ export function getBlogPosts(): BlogPost[] {
     .readdirSync(BLOG_DIR)
     .filter((f) => /\.mdx?$/.test(f))
     .map(parsePost)
+    // Skip empty placeholder files (no frontmatter, no body)
+    .filter((p) => p.date !== '' || p.content.trim() !== '')
     .sort((a, b) => (a.date < b.date ? 1 : -1))
 }
 
