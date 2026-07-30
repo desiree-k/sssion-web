@@ -8,6 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.sssion.studio"),
   title: "Own your movement | Sssion",
   description: "A private studio platform for movement creators and their students. Build your dance instruction business with Sssion.",
   icons: {

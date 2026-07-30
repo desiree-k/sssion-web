@@ -138,6 +138,7 @@ export default function FeaturesPage() {
           <nav className="ss-nav">
             <a href="/founding" className="ss-navlink">Founding Studios</a>
             <a href="/discover" className="ss-navlink">Discover</a>
+            <a href="/blog" className="ss-navlink">Blog</a>
             <a href={APP_STORE} target="_blank" rel="noopener" className="ss-navpill">Get the app</a>
           </nav>
         </header>
@@ -339,6 +340,7 @@ export default function FeaturesPage() {
               <a href="/founding" className="ss-footer-link">Founding Studios</a>
               <a href="/features" className="ss-footer-link">Features &amp; Pricing</a>
               <a href="/discover" className="ss-footer-link">Discover Creators</a>
+              <a href="/blog" className="ss-footer-link">Blog</a>
             </div>
             <div className="ss-footer-col">
               <span className="ss-footer-label">Account</span>

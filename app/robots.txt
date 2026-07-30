@@ -3,3 +3,5 @@ Allow: /
 Disallow: /api/
 Disallow: /admin
 Disallow: /dashboard
+
+Sitemap: https://www.sssion.studio/sitemap.xml

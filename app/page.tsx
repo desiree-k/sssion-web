@@ -139,6 +139,7 @@ export default function Home() {
           <a href="#top" className="ss-logo">sssion</a>
           <nav className="ss-nav">
             <a href="/discover" className="ss-navlink">Discover</a>
+            <a href="/blog" className="ss-navlink">Blog</a>
             <a href="#creators" className="ss-navlink">For creators</a>
             <a
               href={APP_STORE}
@@ -380,6 +381,7 @@ export default function Home() {
               <a href="/founding" className="ss-footer-link">Founding Studios</a>
               <a href="/features" className="ss-footer-link">Features &amp; Pricing</a>
               <a href="/discover" className="ss-footer-link">Discover Creators</a>
+              <a href="/blog" className="ss-footer-link">Blog</a>
             </div>
             <div className="ss-footer-col">
               <span className="ss-footer-label">Account</span>
