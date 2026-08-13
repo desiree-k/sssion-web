@@ -177,7 +177,7 @@ export default function StudiosPage() {
           <div id="ss-hero-media" className="ss-hero-media">
             <div className="ss-hero-kb">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="ss-img" src="/redesign/ss-fp-studio.webp" alt="" aria-hidden="true" />
+              <img className="ss-img" src="/redesign/ss-st-hero.webp" alt="" aria-hidden="true" />
             </div>
           </div>
           <div id="ss-hero-scrim" className="ss-hero-scrim" />
