@@ -307,7 +307,7 @@ export default function StudiosPage() {
           {/* No dedicated CTA image was provided; reusing the hero shot (same pattern as /founding). */}
           <div className="ss-closing-bg">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="ss-img" src="/redesign/ss-fp-studio.webp" alt="" aria-hidden="true" />
+            <img className="ss-img" src="/redesign/ss-st-hero.webp" alt="" aria-hidden="true" />
           </div>
           <div className="ss-closing-scrim" />
           <div className="ss-grain" />
