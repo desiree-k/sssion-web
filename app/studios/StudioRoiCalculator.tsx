@@ -4,23 +4,18 @@ import { useEffect, useRef, useState } from 'react'
 
 /**
  * Studio retention ROI calculator, ported from the standalone
- * sssion_studio_roi_calculator.html handoff. Same two modes and the same
- * transparent math; restyled to the redesign tokens (Bricolage/Hanken,
- * #1A1A2E palette) instead of the handoff's Fraunces/Inter theme.
+ * sssion_studio_roi_public.html handoff (single projection flow, adjustable
+ * re-engaged lifetime, built-in CTA + disclosure). Same math and copy;
+ * restyled to the redesign tokens (Bricolage/Hanken, #1A1A2E palette)
+ * instead of the handoff's Fraunces/Inter theme. The handoff's [YOUR_LINK]
+ * CTA placeholder points at the studio-interest mailto used site-wide.
  */
 
-type Mode = 'project' | 'measure'
+const STUDIO_MAILTO = 'mailto:support@sssion.studio?subject=Studio%20Interest'
 
 const css = `
 .roi{font-family:var(--font-hanken),system-ui,sans-serif;color:#fff}
 .roi *{box-sizing:border-box}
-
-.roi-modes{display:flex;gap:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-  border-radius:999px;padding:5px;margin:0 0 10px;width:fit-content;max-width:100%}
-.roi-modes button{font-family:inherit;font-size:14px;font-weight:600;color:#9999AA;
-  background:none;border:none;padding:10px 20px;border-radius:999px;cursor:pointer;transition:.25s}
-.roi-modes button.on{background:#B76E79;color:#fff}
-.roi-mode-note{color:#9999AA;font-size:13.5px;line-height:1.55;margin:0 0 28px;max-width:60ch}
 
 .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 @media(max-width:820px){.roi-grid{grid-template-columns:1fr}}
@@ -31,10 +26,12 @@ const css = `
   letter-spacing:-.01em;margin:0 0 4px}
 .roi-hint{color:#9999AA;font-size:13px;line-height:1.55;margin:0 0 22px}
 
-.roi-field{margin-bottom:20px}
+.roi-field{margin-bottom:22px}
 .roi-field:last-child{margin-bottom:0}
 .roi-field label{display:block;font-size:13.5px;font-weight:500;color:#D3D3DE;margin-bottom:8px}
 .roi-field .lab-val{float:right;color:#D89AA3;font-weight:600;font-variant-numeric:tabular-nums}
+.roi-sublabel{color:#9999AA;font-size:12px;line-height:1.6;margin:8px 0 0}
+.roi-sublabel .lab-val{float:none;color:#D89AA3;font-weight:600}
 .roi-money{position:relative}
 .roi-money span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#9999AA;font-size:15px}
 .roi input[type=number]{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
@@ -58,8 +55,7 @@ const css = `
 .roi-result{margin-top:24px;background:
     radial-gradient(90% 120% at 85% 0%, rgba(183,110,121,.14), transparent 60%),
     rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:clamp(26px,4vw,38px);
-  text-align:center;position:relative;overflow:hidden}
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:clamp(26px,4vw,36px);text-align:center}
 .roi-rlabel{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#9999AA;font-weight:600}
 .roi-bignum{font-family:var(--font-bricolage),sans-serif;font-weight:700;
   font-size:clamp(44px,9vw,80px);line-height:1;letter-spacing:-.02em;color:#D89AA3;
@@ -69,51 +65,53 @@ const css = `
 .roi-breakdown{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:26px;
   border-top:1px solid rgba(255,255,255,.1);padding-top:22px}
 .roi-stat{min-width:120px}
-.roi-stat .v{font-family:var(--font-bricolage),sans-serif;font-weight:600;font-size:24px;color:#fff;font-variant-numeric:tabular-nums}
+.roi-stat .v{font-family:var(--font-bricolage),sans-serif;font-weight:600;font-size:23px;color:#fff;font-variant-numeric:tabular-nums}
 .roi-stat .k{font-size:12px;color:#9999AA;margin-top:2px}
-.roi-foot{margin-top:22px;color:#9999AA;font-size:12.5px;line-height:1.6;text-align:center;max-width:64ch;margin-left:auto;margin-right:auto}
-.roi .hide{display:none}
+
+.roi-cta{margin-top:26px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:clamp(24px,3vw,32px);text-align:center}
+.roi-cta h3{font-family:var(--font-bricolage),sans-serif;font-weight:700;font-size:clamp(20px,3vw,26px);
+  letter-spacing:-.01em;margin:0 0 10px}
+.roi-cta p{color:#D3D3DE;font-size:15px;line-height:1.6;max-width:52ch;margin:0 auto 20px}
+.roi-btn{display:inline-block;background:#B76E79;color:#fff;font-family:inherit;font-weight:600;font-size:15px;
+  text-decoration:none;padding:14px 30px;border-radius:999px;transition:.2s;border:none;cursor:pointer}
+.roi-btn:hover{background:#C88793;transform:translateY(-1px)}
+
+.roi-disclosure{margin-top:20px;color:#9999AA;font-size:12px;text-align:center;max-width:64ch;
+  margin-left:auto;margin-right:auto;line-height:1.6}
 `
 
 const fmt = (n: number) => '$' + Math.round(n).toLocaleString()
 
 function Range({
-  id, min, max, step, value, onChange,
+  id, min, max, step, value, onChange, style,
 }: {
   id: string; min: number; max: number; step: number; value: number
-  onChange: (v: number) => void
+  onChange: (v: number) => void; style?: React.CSSProperties
 }) {
   const pct = ((value - min) / (max - min)) * 100
   return (
     <input
       type="range" id={id} min={min} max={max} step={step} value={value}
-      style={{ backgroundSize: `${pct}% 100%` }}
+      style={{ backgroundSize: `${pct}% 100%`, ...style }}
       onChange={(e) => onChange(+e.target.value)}
     />
   )
 }
 
 export default function StudioRoiCalculator() {
-  const [mode, setMode] = useState<Mode>('project')
   const [students, setStudents] = useState(150)
   const [fee, setFee] = useState(120)
   const [churn, setChurn] = useState(8)
+  const [life, setLife] = useState(6)
   const [reduce, setReduce] = useState(25)
-  const [churnHub, setChurnHub] = useState(5)
-  const [churnNon, setChurnNon] = useState(9)
 
-  // Same model as the handoff calculator: students kept per year × ~6 more
-  // months of fees per kept student.
-  let keptPerYear = 0
-  if (mode === 'project') {
-    const lostNow = students * (churn / 100) * 12
-    const lostHub = students * (churn / 100) * (1 - reduce / 100) * 12
-    keptPerYear = lostNow - lostHub
-  } else {
-    keptPerYear = students * Math.max(0, (churnNon - churnHub) / 100) * 12
-  }
-  const perStudentYear = fee * 6
-  const retained = keptPerYear * perStudentYear
+  // Same model as the handoff: students lost/yr × the share a community
+  // keeps, each worth `life` more months of fees.
+  const lostNow = students * (churn / 100) * 12
+  const keptPerYear = lostNow * (reduce / 100)
+  const perStudent = fee * life
+  const retained = keptPerYear * perStudent
 
   const [flash, setFlash] = useState(false)
   const firstRender = useRef(true)
@@ -128,24 +126,10 @@ export default function StudioRoiCalculator() {
     <div className="roi">
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
-      <div className="roi-modes" role="tablist">
-        <button className={mode === 'project' ? 'on' : ''} onClick={() => setMode('project')}>
-          Project the opportunity
-        </button>
-        <button className={mode === 'measure' ? 'on' : ''} onClick={() => setMode('measure')}>
-          Measure real results
-        </button>
-      </div>
-      <p className="roi-mode-note">
-        {mode === 'project'
-          ? 'Projection mode: estimate the revenue a community hub could protect, based on a churn improvement you choose. A what-if, until your beta gives you real numbers.'
-          : 'Measurement mode: enter the churn you actually observed for hub members vs. non-members. This turns your beta into a real ROI story.'}
-      </p>
-
       <div className="roi-grid">
         <div className="roi-card">
           <h3>Your studio</h3>
-          <p className="roi-hint">The basics we need either way.</p>
+          <p className="roi-hint">Rough numbers are fine — this is an estimate.</p>
 
           <div className="roi-field">
             <label htmlFor="roi-students">
@@ -165,72 +149,55 @@ export default function StudioRoiCalculator() {
             </div>
           </div>
 
-          {mode === 'project' ? (
-            <>
-              <div className="roi-field">
-                <label htmlFor="roi-churn">
-                  Current monthly churn <span className="lab-val">{churn}%</span>
-                </label>
-                <Range id="roi-churn" min={1} max={25} step={0.5} value={churn} onChange={setChurn} />
-                <p className="roi-hint" style={{ margin: '8px 0 0' }}>
-                  The share of students who leave each month. Don&apos;t know it? 5–10% is typical for studios.
-                </p>
-              </div>
-              <div className="roi-field">
-                <label htmlFor="roi-reduce">
-                  Churn reduction from the hub <span className="lab-val">{reduce}%</span>
-                </label>
-                <Range id="roi-reduce" min={5} max={50} step={1} value={reduce} onChange={setReduce} />
-                <div className="roi-scenarios">
-                  {[
-                    { r: 10, l: 'Conservative' },
-                    { r: 25, l: 'Moderate' },
-                    { r: 40, l: 'Optimistic' },
-                  ].map((s) => (
-                    <button key={s.r} className={reduce === s.r ? 'on' : ''} onClick={() => setReduce(s.r)}>
-                      {s.l}
-                    </button>
-                  ))}
-                </div>
-                <p className="roi-hint" style={{ margin: '12px 0 0' }}>
-                  A hub keeps students engaged between classes. This is the estimated cut in churn —
-                  your beta will replace this with a real number.
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="roi-field">
-                <label htmlFor="roi-churn-hub">
-                  Churn among hub members <span className="lab-val">{churnHub}%</span>
-                </label>
-                <Range id="roi-churn-hub" min={0} max={25} step={0.5} value={churnHub} onChange={setChurnHub} />
-              </div>
-              <div className="roi-field">
-                <label htmlFor="roi-churn-non">
-                  Churn among non-members <span className="lab-val">{churnNon}%</span>
-                </label>
-                <Range id="roi-churn-non" min={0} max={25} step={0.5} value={churnNon} onChange={setChurnNon} />
-                <p className="roi-hint" style={{ margin: '8px 0 0' }}>
-                  The observed gap between joiners and non-joiners is your real, honest ROI signal.
-                </p>
-              </div>
-            </>
-          )}
+          <div className="roi-field">
+            <label htmlFor="roi-churn">
+              How many students do you lose each month? <span className="lab-val">{churn}%</span>
+            </label>
+            <Range id="roi-churn" min={1} max={25} step={0.5} value={churn} onChange={setChurn} />
+            <p className="roi-sublabel">
+              Not sure? Most studios lose somewhere between 5% and 10% of students a month.
+            </p>
+          </div>
+
+          <div className="roi-field">
+            <label htmlFor="roi-life">
+              How long does a student usually stay once re-engaged? <span className="lab-val">{life} mo</span>
+            </label>
+            <Range id="roi-life" min={2} max={18} step={1} value={life} onChange={setLife} />
+            <p className="roi-sublabel">
+              A student you keep from leaving stays, on average, this many more months.
+            </p>
+          </div>
+
+          <div className="roi-field">
+            <label style={{ marginBottom: 2 }}>How much could a community keep them?</label>
+            <div className="roi-scenarios">
+              {[
+                { r: 10, l: 'Modest' },
+                { r: 25, l: 'Realistic' },
+                { r: 40, l: 'Strong' },
+              ].map((s) => (
+                <button key={s.r} className={reduce === s.r ? 'on' : ''} onClick={() => setReduce(s.r)}>
+                  {s.l}
+                </button>
+              ))}
+            </div>
+            <Range id="roi-reduce" min={5} max={50} step={1} value={reduce} onChange={setReduce} style={{ marginTop: 14 }} />
+            <p className="roi-sublabel">
+              <span className="lab-val">{reduce}%</span> fewer students lost — because a community keeps
+              them engaged between classes, so they keep the habit and keep coming back.
+            </p>
+          </div>
         </div>
 
         <div className="roi-card">
-          <h3>{mode === 'project' ? 'What the hub protects' : 'What the hub actually protected'}</h3>
-          <p className="roi-hint">
-            {mode === 'project'
-              ? 'Estimated revenue retained per year.'
-              : 'Revenue retained per year, from observed results.'}
-          </p>
+          <h3>What it could be worth</h3>
+          <p className="roi-hint">Retained revenue, per year — from students you already have.</p>
 
           <div className="roi-result">
-            <div className="roi-rlabel">Retained revenue / year</div>
+            <div className="roi-rlabel">Revenue kept / year</div>
             <div className={`roi-bignum${flash ? ' flash' : ''}`}>{fmt(retained)}</div>
-            <div className="roi-bignum-sub">from students you already have</div>
+            <div className="roi-bignum-sub">from students who stay instead of drifting away</div>
 
             <div className="roi-breakdown">
               <div className="roi-stat">
@@ -239,22 +206,32 @@ export default function StudioRoiCalculator() {
               </div>
               <div className="roi-stat">
                 <div className="v">{fmt(retained / 12)}</div>
-                <div className="k">retained / month</div>
+                <div className="k">kept / month</div>
               </div>
               <div className="roi-stat">
-                <div className="v">{fmt(perStudentYear)}</div>
+                <div className="v">{fmt(perStudent)}</div>
                 <div className="k">value of one kept student</div>
               </div>
             </div>
           </div>
-
-          <p className="roi-foot">
-            {mode === 'project'
-              ? `This is an estimate, not a guarantee. It assumes a kept student stays, on average, another 6 months at ${fmt(fee)}/mo. Adjust the churn-reduction estimate once your beta gives you a real figure.`
-              : 'Based on the churn gap you observed between hub members and non-members, valuing a kept student at ~6 months of fees. Honest and directional — your real case study.'}
-          </p>
         </div>
       </div>
+
+      <div className="roi-cta">
+        <h3>Want this for your studio?</h3>
+        <p>
+          We&apos;re building Sssion with a small group of founding studios — giving your students a
+          place to connect, train, and stay engaged between classes, so they keep coming back.
+          Let&apos;s talk about whether it&apos;s a fit for yours.
+        </p>
+        <a className="roi-btn" href={STUDIO_MAILTO}>Talk to us about your studio →</a>
+      </div>
+
+      <p className="roi-disclosure">
+        This is an estimate based on the numbers you entered, to help you think through the value of
+        student retention — not a guarantee. Every studio is different. The best way to know what a
+        community could do for your studio is to try it.
+      </p>
     </div>
   )
 }

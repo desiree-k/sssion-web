@@ -263,11 +263,12 @@ export default function StudiosPage() {
             <div className="ss-calc-head">
               <div data-reveal className="ss-eyebrow2">Run your numbers</div>
               <h2 data-reveal data-reveal-delay="60" className="ss-h2" style={{ marginBottom: 18 }}>
-                See what retention is <span className="ss-accent">worth</span> to your studio.
+                What is student churn <span className="ss-accent">costing</span> your studio?
               </h2>
               <p data-reveal data-reveal-delay="120" className="ss-fs-lead">
-                Plug in your own numbers. The students you lose each month are revenue you
-                already paid for — here&apos;s what keeping them a little longer looks like.
+                You spend real time and money getting students through the door. Keeping them is
+                cheaper — and worth more — than replacing them. See what a community that keeps
+                students engaged between classes could be worth to your studio.
               </p>
             </div>
             <div data-reveal data-reveal-delay="160">
