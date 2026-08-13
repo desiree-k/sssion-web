@@ -220,7 +220,7 @@ export default function StudioRoiCalculator() {
       <div className="roi-cta">
         <h3>Want this for your studio?</h3>
         <p>
-          We&apos;re building Sssion with a small group of founding studios — giving your students a
+          We&apos;re building Sssion with a small group of founding studio partners — giving your students a
           place to connect, train, and stay engaged between classes, so they keep coming back.
           Let&apos;s talk about whether it&apos;s a fit for yours.
         </p>

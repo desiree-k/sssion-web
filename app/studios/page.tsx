@@ -315,7 +315,7 @@ export default function StudiosPage() {
             <div data-reveal className="ss-eyebrow2" style={{ marginBottom: 26 }}>Early days, honestly</div>
             <h2 data-reveal data-reveal-delay="80" className="ss-closing-h">
               We&apos;re building this with a small group of{' '}
-              <span className="ss-accent">founding studios.</span>
+              <span className="ss-accent">founding studio partners.</span>
             </h2>
             <p data-reveal data-reveal-delay="160" className="ss-closing-sub">
               The studio side of Sssion is in early beta — we&apos;re not selling you a finished
