@@ -136,7 +136,7 @@ export default function FeaturesPage() {
         <header id="ss-header" className="ss-header">
           <a href="/" className="ss-logo">sssion</a>
           <nav className="ss-nav">
-            <a href="/founding" className="ss-navlink">Founding Studios</a>
+            <a href="/studios" className="ss-navlink">For Studios</a>
             <a href="/discover" className="ss-navlink">Discover</a>
             <a href="/blog" className="ss-navlink">Blog</a>
             <a href={APP_STORE} target="_blank" rel="noopener" className="ss-navpill">Get the app</a>
@@ -337,7 +337,7 @@ export default function FeaturesPage() {
           <div className="ss-footer-cols">
             <div className="ss-footer-col">
               <span className="ss-footer-label">Platform</span>
-              <a href="/founding" className="ss-footer-link">Founding Studios</a>
+              <a href="/studios" className="ss-footer-link">For Studios</a>
               <a href="/features" className="ss-footer-link">Features &amp; Pricing</a>
               <a href="/discover" className="ss-footer-link">Discover Creators</a>
               <a href="/blog" className="ss-footer-link">Blog</a>

@@ -354,7 +354,6 @@ export default function StudiosPage() {
           <div className="ss-footer-cols">
             <div className="ss-footer-col">
               <span className="ss-footer-label">Platform</span>
-              <a href="/founding" className="ss-footer-link">Founding Studios</a>
               <a href="/studios" className="ss-footer-link">For Studios</a>
               <a href="/features" className="ss-footer-link">Features &amp; Pricing</a>
               <a href="/discover" className="ss-footer-link">Discover Creators</a>
