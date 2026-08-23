@@ -322,6 +322,11 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const profileImageUrl = profile.profile_image_url
   const coverImageUrl = creator.cover_image_url
 
+  // Magazine-cover masthead: first name on its own line, the rest below.
+  const nameParts = displayName.trim().split(/\s+/)
+  const nameTop = nameParts[0]
+  const nameRest = nameParts.slice(1).join(' ')
+
   // Space mode controls what the public page shows. Follow is always visible.
   const spaceMode = creator.space_mode || 'page'
   // Community-only: community features (member count, reviews, join CTA).
@@ -339,7 +344,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       <StudentNav />
 
       {/* Cover band — always present; dark placeholder when no image */}
-      <div className="relative w-full h-56 md:h-[340px] bg-black border-b border-[var(--pt-border)] overflow-hidden">
+      <div className="relative w-full h-72 md:h-[440px] bg-black border-b border-[var(--pt-border)] overflow-hidden">
         {coverImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={coverImageUrl} alt="" className="w-full h-full object-cover" />
@@ -351,23 +356,24 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
         )}
       </div>
 
-      {/* Masthead — photo overlapping the cover, tags above the oversized name */}
+      {/* Masthead — only the portrait overlaps the cover (the name stays in
+          normal flow so its top line can never ride up and clip) */}
       <header className="px-6 md:px-16">
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-8 -mt-9 md:-mt-10">
-            <div className="w-28 h-28 md:w-[132px] md:h-[132px] rounded-full flex-none overflow-hidden bg-black border-4 border-[var(--pt-page)]">
+          <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-10">
+            <div className="w-[120px] h-[120px] md:w-[200px] md:h-[200px] -mt-16 md:-mt-24 rounded-full flex-none overflow-hidden bg-black border-4 border-[var(--pt-page)]">
               {profileImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={profileImageUrl} alt={displayName} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-4xl text-white/60" style={{ fontFamily: 'var(--font-display), serif' }}>
+                  <span className="text-6xl text-white/60" style={{ fontFamily: 'var(--font-display), serif' }}>
                     {displayName.charAt(0).toUpperCase()}
                   </span>
                 </div>
               )}
             </div>
-            <div className="flex flex-col gap-3 md:pb-1.5">
+            <div className="flex flex-col gap-4 pt-1 md:pt-0 md:pb-2 min-w-0">
               {creator.specialties && creator.specialties.length > 0 && (
                 <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2">
                   {creator.specialties.map((specialty, index) => (
@@ -384,10 +390,21 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                 </div>
               )}
               <h1
-                className="text-5xl md:text-[80px] leading-[0.95] tracking-[-0.02em] text-balance"
-                style={{ fontFamily: 'var(--font-display), serif', fontWeight: 400 }}
+                className="m-0 tracking-[-0.02em] break-words"
+                style={{
+                  fontFamily: 'var(--font-display), serif',
+                  fontWeight: 400,
+                  fontSize: 'clamp(3.5rem, 14vw, 9rem)',
+                  lineHeight: 0.95,
+                }}
               >
-                {displayName}
+                {nameTop}
+                {nameRest && (
+                  <>
+                    <br />
+                    {nameRest}
+                  </>
+                )}
               </h1>
             </div>
           </div>
