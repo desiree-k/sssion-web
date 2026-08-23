@@ -361,7 +361,9 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       <header className="px-6 md:px-16">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-10">
-            <div className="w-[120px] h-[120px] md:w-[200px] md:h-[200px] -mt-16 md:-mt-24 rounded-full flex-none overflow-hidden bg-black border-4 border-[var(--pt-page)]">
+            {/* Mobile: light ~22% overlap of the cover's bottom edge; the
+                deeper editorial overlap is desktop-only. */}
+            <div className="relative z-10 w-[120px] h-[120px] md:w-[200px] md:h-[200px] -mt-[26px] md:-mt-24 rounded-full flex-none overflow-hidden bg-black border-4 border-[var(--pt-page)]">
               {profileImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={profileImageUrl} alt={displayName} className="w-full h-full object-cover" />
