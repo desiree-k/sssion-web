@@ -373,22 +373,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                 </div>
               )}
             </div>
-            <div className="flex flex-col gap-4 pt-1 md:pt-0 md:pb-2 min-w-0">
-              {creator.specialties && creator.specialties.length > 0 && (
-                <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2">
-                  {creator.specialties.map((specialty, index) => (
-                    <span key={index} className="contents">
-                      {index > 0 && <span className="w-4 h-px bg-[var(--pt-border)]" />}
-                      <span
-                        className="text-[10px] font-semibold uppercase tracking-[0.22em]"
-                        style={{ color: 'var(--pt-accent)' }}
-                      >
-                        {specialty}
-                      </span>
-                    </span>
-                  ))}
-                </div>
-              )}
+            <div className="flex flex-col pt-1 md:pt-0 md:pb-2 min-w-0">
               <h1
                 className="m-0 tracking-[-0.02em] break-words"
                 style={{
@@ -406,11 +391,26 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                   </>
                 )}
               </h1>
+              {creator.specialties && creator.specialties.length > 0 && (
+                <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2 mt-5">
+                  {creator.specialties.map((specialty, index) => (
+                    <span key={index} className="contents">
+                      {index > 0 && <span className="w-4 h-px bg-[var(--pt-border)]" />}
+                      <span
+                        className="text-[10px] font-semibold uppercase tracking-[0.22em]"
+                        style={{ color: 'var(--pt-accent)' }}
+                      >
+                        {specialty}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* About + Stay Updated, side by side */}
-          <div className="grid md:grid-cols-[1.35fr_1fr] gap-10 md:gap-14 items-start mt-14 md:mt-16">
+          <div className="grid md:grid-cols-[1.35fr_1fr] gap-10 md:gap-14 items-start mt-8 md:mt-10">
             {(creator.studio_description || creator.bio) ? (
               <p className="text-[17px] leading-[1.68] whitespace-pre-wrap text-pretty m-0">
                 {creator.studio_description || creator.bio}
