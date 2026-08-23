@@ -354,7 +354,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
       {/* Masthead — photo overlapping the cover, tags above the oversized name */}
       <header className="px-6 md:px-16">
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-8 -mt-14 md:-mt-16">
+          <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-8 -mt-9 md:-mt-10">
             <div className="w-28 h-28 md:w-[132px] md:h-[132px] rounded-full flex-none overflow-hidden bg-black border-4 border-[var(--pt-page)]">
               {profileImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
