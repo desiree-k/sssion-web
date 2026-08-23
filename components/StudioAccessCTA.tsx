@@ -117,7 +117,7 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
         <>
           <Link
             href="/student-signup"
-            className="px-8 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
+            className="px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] rounded-[var(--pt-radius,9999px)] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
           >
             Sign up to {joinLabel.toLowerCase()}
           </Link>
@@ -141,7 +141,7 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
           <button
             onClick={handleRequestAccess}
             disabled={isSubmitting}
-            className="px-8 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 disabled:opacity-50 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
+            className="px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] rounded-[var(--pt-radius,9999px)] transition-opacity hover:opacity-85 disabled:opacity-50 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
           >
             {isSubmitting ? 'Requesting...' : joinLabel}
           </button>

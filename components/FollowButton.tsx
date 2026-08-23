@@ -218,7 +218,7 @@ export default function FollowButton({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your email"
             autoFocus
-            className="flex-1 min-w-0 px-4 py-3 rounded-full bg-[var(--pt-surface,#ffffff0d)] border border-[var(--pt-border,#ffffff26)] text-[var(--pt-text,#ffffff)] text-sm placeholder:text-[var(--pt-text2,#ffffff59)] focus:outline-none focus:border-[var(--pt-text2,#ffffff66)] transition-colors"
+            className="flex-1 min-w-0 px-4 py-3 rounded-[var(--pt-radius,9999px)] bg-[var(--pt-surface,#ffffff0d)] border border-[var(--pt-border,#ffffff26)] text-[var(--pt-text,#ffffff)] text-sm placeholder:text-[var(--pt-text2,#ffffff59)] focus:outline-none focus:border-[var(--pt-text2,#ffffff66)] transition-colors"
           />
           <button
             type="submit"
@@ -227,7 +227,7 @@ export default function FollowButton({
               backgroundColor: `var(--pt-btn-bg, ${accent})`,
               color: 'var(--pt-btn-text, #ffffff)',
             }}
-            className="px-6 py-3 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+            className="px-6 py-3 rounded-[var(--pt-radius,9999px)] text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
           >
             {isSubmitting ? '…' : 'Follow'}
           </button>
@@ -268,7 +268,7 @@ export default function FollowButton({
             }
           : undefined
       }
-      className={`${sizeClasses} ${colorClasses} font-semibold rounded-full transition-all`}
+      className={`${sizeClasses} ${colorClasses} font-semibold rounded-[var(--pt-radius,9999px)] transition-all`}
     >
       {isFollowing ? 'Following ✓' : label}
     </button>

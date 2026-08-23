@@ -65,7 +65,7 @@ export default function EnterSpaceButton({ creatorId }: { creatorId: string }) {
   return (
     <Link
       href={`/student/studio/${creatorId}`}
-      className="px-10 py-4 font-semibold rounded-full transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
+      className="px-10 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] rounded-[var(--pt-radius,9999px)] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
     >
       Enter Space
     </Link>

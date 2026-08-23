@@ -20,12 +20,12 @@ export default function PreviewContentGrid({ contentItems, creatorName }: Previe
 
   return (
     <>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
         {contentItems.map((item) => (
           <button
             key={item.id}
             onClick={() => item.mux_playback_id && setSelectedVideo(item)}
-            className="relative aspect-video rounded-2xl overflow-hidden bg-black border border-[var(--pt-border,#ffffff1a)] text-left group cursor-pointer"
+            className="relative aspect-[9/16] rounded-md overflow-hidden bg-black border border-[var(--pt-border,#ffffff1a)] text-left group cursor-pointer"
           >
             {item.mux_playback_id ? (
               // True-black well: contain (not cover) so vertical clips keep

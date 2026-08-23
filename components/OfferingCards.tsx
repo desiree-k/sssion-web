@@ -192,12 +192,15 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
   if (offerings.length === 0) return null
 
   return (
-    <section className="py-14 px-6 border-t border-[var(--pt-border,#ffffff1a)]">
-      <div className="max-w-3xl mx-auto">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--pt-text2,#ffffff99)] mb-5">
+    <section>
+      <div>
+        <h2
+          className="text-3xl md:text-[34px] m-0 border-b border-[var(--pt-border,#ffffff1a)] pb-3 mb-6 text-[var(--pt-text,#ffffff)]"
+          style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+        >
           Offerings
-        </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+        </h2>
+        <div className="grid gap-5 sm:grid-cols-2">
           {offerings.map((offering) => {
             const mineRow = mine[offering.id]
             const have = mineRow ? isLive(mineRow) : false
@@ -220,16 +223,37 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
             return (
               <div
                 key={offering.id}
-                className="rounded-2xl p-6 bg-[var(--pt-surface,#1A1A2E)] border flex flex-col"
-                style={{ borderColor: have ? 'var(--pt-accent,#B76E79)' : 'var(--pt-border,#ffffff1a)' }}
+                className="p-8 bg-[var(--pt-surface,#1A1A2E)] border border-[var(--pt-border,#ffffff1a)] flex flex-col gap-4"
               >
-                <h3 className="text-[var(--pt-text,#ffffff)] font-semibold text-lg">{offering.name}</h3>
+                <div className="flex justify-between items-baseline gap-5">
+                  <h3
+                    className="text-[var(--pt-text,#ffffff)] text-2xl leading-[1.15] m-0"
+                    style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+                  >
+                    {offering.name}
+                  </h3>
+                  {have ? (
+                    <span className="flex items-center gap-1.5 flex-none">
+                      <span
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: 'var(--pt-accent,#B76E79)' }}
+                      />
+                      <span
+                        className="text-[10px] uppercase tracking-[0.2em]"
+                        style={{ color: 'var(--pt-accent,#B76E79)' }}
+                      >
+                        Member
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-[13px] tracking-[0.1em] text-[var(--pt-text,#ffffff)] flex-none">
+                      {priceLine}
+                    </span>
+                  )}
+                </div>
                 {offering.description && (
-                  <p className="text-[var(--pt-text2,#ffffff99)] text-sm mt-1.5 leading-relaxed">{offering.description}</p>
+                  <p className="text-[var(--pt-text2,#ffffff99)] text-sm m-0 leading-relaxed">{offering.description}</p>
                 )}
-                <p className="font-semibold text-lg mt-3" style={{ color: 'var(--pt-accent,#B76E79)' }}>
-                  {priceLine}
-                </p>
 
                 {/* What's included preview */}
                 <WhatsIncluded
@@ -240,11 +264,11 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
                   hasLiveClasses={hasLiveClasses}
                 />
 
-                <div className="mt-4 flex-1 flex flex-col justify-end">
+                <div className="mt-1 flex-1 flex flex-col justify-end">
                   {signedOut ? (
                     <Link
                       href="/student-signup"
-                      className="block text-center px-6 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
+                      className="block text-center px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
                     >
                       {offering.is_free ? 'Sign up to join' : 'Sign up to get access'}
                     </Link>
@@ -253,8 +277,8 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
                       onClick={() => onCtaClick(offering)}
                       disabled={have || pending || processing || !signedInStudentId}
                       className={have
-                        ? 'px-6 py-3 font-semibold rounded-full cursor-default border border-[var(--pt-accent,#B76E79)] text-[var(--pt-accent,#B76E79)] bg-transparent'
-                        : 'px-6 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 disabled:opacity-50 disabled:cursor-default bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]'}
+                        ? 'px-6 py-3 text-xs font-semibold uppercase tracking-[0.16em] cursor-default border border-[var(--pt-text,#ffffff)] text-[var(--pt-text,#ffffff)] bg-transparent'
+                        : 'px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-85 disabled:opacity-50 disabled:cursor-default bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]'}
                     >
                       {processing ? 'One moment…' : label}
                     </button>
@@ -315,18 +339,16 @@ function WhatsIncluded({ offering, sessions, liveClasses, sessionCount, hasLiveC
     ]
     if (chips.length === 0) return null
     return (
-      <div className="mt-3 pt-3 border-t border-[var(--pt-border,#ffffff1a)]">
+      <div className="mt-3 pt-4 border-t border-[var(--pt-border,#ffffff1a)]">
         <p className="text-[10px] font-semibold tracking-[0.22em] text-[var(--pt-text2,#ffffff66)] uppercase mb-2">
           What&apos;s included
         </p>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-col gap-2">
           {chips.map((chip) => (
-            <span
-              key={chip}
-              className="text-[11px] text-[var(--pt-text2,#ffffff80)] border border-[var(--pt-border,#ffffff1a)] rounded-full px-2.5 py-1"
-            >
+            <div key={chip} className="flex gap-2.5 text-sm text-[var(--pt-text,#ffffffcc)]">
+              <span style={{ color: 'var(--pt-accent,#B76E79)' }}>—</span>
               {chip}
-            </span>
+            </div>
           ))}
         </div>
       </div>

@@ -325,222 +325,208 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const joinLabel = 'Request to Join Community'
 
   return (
-    <div className={`${fraunces.variable} min-h-screen`} style={themeStyle}>
+    <div
+      className={`${fraunces.variable} min-h-screen`}
+      style={{ ...themeStyle, ['--pt-radius' as string]: '0px' } as React.CSSProperties}
+    >
       {/* Navigation */}
       <StudentNav />
 
-      {/* Cover banner */}
-      {coverImageUrl && (
-        <div className="w-full h-52 md:h-72 border-b border-[var(--pt-border)]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* Cover band — always present; dark placeholder when no image */}
+      <div className="relative w-full h-56 md:h-[340px] bg-black border-b border-[var(--pt-border)] overflow-hidden">
+        {coverImageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img src={coverImageUrl} alt="" className="w-full h-full object-cover" />
-        </div>
-      )}
+        ) : (
+          <div
+            className="absolute inset-0"
+            style={{ background: 'radial-gradient(120% 90% at 22% 15%, #2C2A2E 0%, #131316 46%, #000 100%)' }}
+          />
+        )}
+      </div>
 
-      {/* Masthead */}
-      <header className={`px-6 ${coverImageUrl ? 'pt-0' : 'pt-20'} pb-14`}>
-        <div className="max-w-4xl mx-auto text-center">
-          <div className={`relative w-28 h-28 mx-auto mb-8 ${coverImageUrl ? '-mt-14' : ''}`}>
-            {profileImageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={profileImageUrl}
-                alt={displayName}
-                className="w-full h-full rounded-full object-cover border border-[var(--pt-border)] bg-[var(--pt-surface)]"
-              />
-            ) : (
-              <div className="w-full h-full rounded-full border border-[var(--pt-border)] bg-[var(--pt-surface)] flex items-center justify-center">
-                <span className="text-4xl" style={{ fontFamily: 'var(--font-fraunces), serif' }}>
-                  {displayName.charAt(0).toUpperCase()}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Masthead name — oversized editorial serif */}
-          <h1
-            className="text-5xl md:text-7xl leading-[1.02] tracking-[-0.015em] mb-6 text-balance"
-            style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 500 }}
-          >
-            {displayName}
-          </h1>
-
-          {/* Specialties — letterspaced caps tags */}
-          {creator.specialties && creator.specialties.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 mb-8">
-              {creator.specialties.map((specialty, index) => (
-                <span
-                  key={index}
-                  className="text-[11px] font-semibold uppercase tracking-[0.28em]"
-                  style={{ color: 'var(--pt-accent)' }}
-                >
-                  {specialty}
-                </span>
-              ))}
+      {/* Masthead — photo overlapping the cover, tags above the oversized name */}
+      <header className="px-6 md:px-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-8 -mt-14 md:-mt-16">
+            <div className="w-28 h-28 md:w-[132px] md:h-[132px] rounded-full flex-none overflow-hidden bg-black border-4 border-[var(--pt-page)]">
+              {profileImageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={profileImageUrl} alt={displayName} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-4xl text-white/60" style={{ fontFamily: 'var(--font-fraunces), serif' }}>
+                    {displayName.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Members with access enter directly; "Stay Updated" (follow) is the
-              secondary action in every mode. Both self-gate on the viewer. */}
-          <div className="mt-8 flex flex-col items-center gap-3">
-            <EnterSpaceButton creatorId={creator.id} />
-            <FollowButton
-              creatorId={creator.id}
-              creatorUserId={creator.user_id}
-              hero
-              label="Stay Updated"
-              emailFollowName={displayName}
-              consentSource={`web_studio_page_${username}`}
-            />
-            <p className="text-[var(--pt-text2)] text-xs text-center max-w-xs">
-              Get important email updates and app notifications from this creator
-            </p>
+            <div className="flex flex-col gap-3 md:pb-1.5">
+              {creator.specialties && creator.specialties.length > 0 && (
+                <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2">
+                  {creator.specialties.map((specialty, index) => (
+                    <span key={index} className="contents">
+                      {index > 0 && <span className="w-4 h-px bg-[var(--pt-border)]" />}
+                      <span
+                        className="text-[10px] font-semibold uppercase tracking-[0.22em]"
+                        style={{ color: 'var(--pt-accent)' }}
+                      >
+                        {specialty}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <h1
+                className="text-5xl md:text-[80px] leading-[0.95] tracking-[-0.02em] text-balance"
+                style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+              >
+                {displayName}
+              </h1>
+            </div>
           </div>
 
-          {/* Join/access CTA — Gathering mode only. When offerings exist,
-              their cards below carry the join/request CTAs instead. */}
-          {showCommunityFeatures && offerings.length === 0 && (
-            <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} />
-          )}
+          {/* About + Stay Updated, side by side */}
+          <div className="grid md:grid-cols-[1.35fr_1fr] gap-10 md:gap-14 items-start mt-14 md:mt-16">
+            {(creator.studio_description || creator.bio) ? (
+              <p className="text-[17px] leading-[1.68] whitespace-pre-wrap text-pretty m-0">
+                {creator.studio_description || creator.bio}
+              </p>
+            ) : (
+              <div className="hidden md:block" />
+            )}
+            <div className="border border-[var(--pt-border)] bg-[var(--pt-surface)] p-7">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--pt-text2)] m-0">
+                Stay updated
+              </p>
+              <p className="text-sm leading-[1.55] text-[var(--pt-text2)] mt-2.5 mb-4">
+                Get important email updates and app notifications from this creator.
+              </p>
+              <div className="flex flex-col items-stretch gap-2.5 [&_a]:text-center">
+                <EnterSpaceButton creatorId={creator.id} />
+                <FollowButton
+                  creatorId={creator.id}
+                  creatorUserId={creator.user_id}
+                  hero
+                  label="Stay Updated"
+                  emailFollowName={displayName}
+                  consentSource={`web_studio_page_${username}`}
+                />
+              </div>
+              {followerCount > 0 && (
+                <p className="text-xs text-[var(--pt-text2)] mt-4 mb-0">
+                  {followerCount.toLocaleString()} following
+                </p>
+              )}
+              {/* Join/access CTA — community modes with no offerings; the
+                  offering cards carry the CTAs otherwise. */}
+              {showCommunityFeatures && offerings.length === 0 && (
+                <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} />
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* About */}
-      {(creator.studio_description || creator.bio) && (
-        <section className="py-14 px-6 border-t border-[var(--pt-border)]">
-          <div className="max-w-3xl mx-auto">
-            <SectionLabel>About</SectionLabel>
-            <p className="leading-[1.8] whitespace-pre-wrap text-[17px]">
-              {creator.studio_description || creator.bio}
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* Offerings — the ways to get access (free or paid) */}
-      <OfferingCards creatorId={creator.id} offerings={offerings} />
-
-      {/* Stats */}
-      <section className="py-12 px-6 border-t border-[var(--pt-border)]">
-        <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-x-16 gap-y-8">
-          {/* Member count — Gathering & Studio only */}
-          {showCommunityFeatures && (
-            <div className="text-center">
-              <p className="text-4xl" style={{ fontFamily: 'var(--font-fraunces), serif' }}>{studentCount}</p>
-              <p className="text-[var(--pt-text2)] text-[11px] uppercase tracking-[0.24em] mt-2">Students</p>
-            </div>
+      <main className="px-6 md:px-16 pb-8">
+        <div className="max-w-5xl mx-auto flex flex-col gap-16 md:gap-20 mt-16 md:mt-20">
+          {/* Preview moments — vertical wells */}
+          {contentItems.length > 0 && (
+            <section>
+              <div className="flex justify-between items-baseline border-b border-[var(--pt-border)] pb-3 mb-5">
+                <h2
+                  className="text-3xl md:text-[34px] m-0"
+                  style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+                >
+                  Preview moments
+                </h2>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--pt-text2)]">
+                  Muted loops
+                </span>
+              </div>
+              <PreviewContentGrid contentItems={contentItems} creatorName={displayName} />
+            </section>
           )}
-          {/* Follower count — all modes */}
-          <div className="text-center">
-            <p className="text-4xl" style={{ fontFamily: 'var(--font-fraunces), serif' }}>{followerCount}</p>
-            <p className="text-[var(--pt-text2)] text-[11px] uppercase tracking-[0.24em] mt-2">Followers</p>
-          </div>
-          <div className="text-center">
-            <p className="text-4xl" style={{ fontFamily: 'var(--font-fraunces), serif' }}>{videoCount}</p>
-            <p className="text-[var(--pt-text2)] text-[11px] uppercase tracking-[0.24em] mt-2">Videos</p>
-          </div>
-          {/* Review count — Gathering & Studio only */}
-          {showCommunityFeatures && (
-            <div className="text-center">
-              <p className="text-4xl" style={{ fontFamily: 'var(--font-fraunces), serif' }}>{reviewCount}</p>
-              <p className="text-[var(--pt-text2)] text-[11px] uppercase tracking-[0.24em] mt-2">Reviews</p>
-            </div>
-          )}
-        </div>
-      </section>
 
-      {/* Preview Content Section */}
-      {contentItems.length > 0 && (
-        <section className="py-14 px-6 border-t border-[var(--pt-border)]">
-          <div className="max-w-5xl mx-auto">
-            <SectionLabel>Preview Content</SectionLabel>
-            <PreviewContentGrid
-              contentItems={contentItems}
-              creatorName={displayName}
-            />
-          </div>
-        </section>
-      )}
+          {/* Offerings — the ways to get access (free or paid) */}
+          <OfferingCards creatorId={creator.id} offerings={offerings} />
 
-      {/* Reviews Section (Gathering & Studio modes) */}
-      {showCommunityFeatures && reviews.length > 0 && (
-        <section className="py-14 px-6 border-t border-[var(--pt-border)]">
-          <div className="max-w-3xl mx-auto">
-            <SectionLabel>Student Reviews</SectionLabel>
-            <div className="space-y-4">
-              {reviews.map((review) => (
-                <div key={review.id} className="bg-[var(--pt-surface)] rounded-2xl p-6 border border-[var(--pt-border)]">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-medium">
-                      {review.profiles?.full_name || 'Student'}
-                    </span>
-                    <StarRating rating={review.rating} />
+          {/* Reviews — editorial quotes (Gathering & Studio modes) */}
+          {showCommunityFeatures && reviews.length > 0 && (
+            <section>
+              <h2
+                className="text-3xl md:text-[34px] m-0 mb-2"
+                style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+              >
+                Reviews
+              </h2>
+              <div>
+                {reviews.map((review, i) => (
+                  <div
+                    key={review.id}
+                    className={`border-t border-[var(--pt-border)] py-6 grid md:grid-cols-[1fr_auto] gap-4 md:gap-10 items-start ${i === reviews.length - 1 ? 'border-b' : ''}`}
+                  >
+                    <p
+                      className="text-xl md:text-[22px] leading-[1.45] italic text-pretty m-0"
+                      style={{ fontFamily: 'var(--font-fraunces), serif' }}
+                    >
+                      {review.comment || 'Loved it.'}
+                    </p>
+                    <div className="flex flex-col items-start md:items-end gap-1.5">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--pt-text2)] whitespace-nowrap">
+                        {review.profiles?.full_name || 'Student'}
+                      </span>
+                      <StarRating rating={review.rating} />
+                    </div>
                   </div>
-                  {review.comment && (
-                    <p className="text-[var(--pt-text2)] leading-relaxed">{review.comment}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+                ))}
+              </div>
+            </section>
+          )}
 
-      {/* Bottom CTA */}
-      <section className="py-20 px-6 border-t border-[var(--pt-border)]">
-        <div className="max-w-3xl mx-auto text-center">
-          <p
-            className="text-[11px] font-semibold uppercase tracking-[0.28em] mb-5"
-            style={{ color: 'var(--pt-accent)' }}
-          >
-            Available on iOS
-          </p>
-          <h2
-            className="text-3xl md:text-5xl mb-5 text-balance"
-            style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 500 }}
-          >
-            Join {displayName}&apos;s Studio
-          </h2>
-          <p className="text-[var(--pt-text2)] mb-10 max-w-md mx-auto leading-relaxed">
-            Download Sssion to access all content, join live classes, and connect directly with {displayName}.
-          </p>
-          <div className="flex justify-center">
-            <AppStoreBadge size="lg" />
-          </div>
+          {/* App CTA */}
+          <section className="border-t border-[var(--pt-border)] pt-14 pb-6 text-center">
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.28em] mb-5"
+              style={{ color: 'var(--pt-accent)' }}
+            >
+              Available on iOS
+            </p>
+            <h2
+              className="text-3xl md:text-5xl mb-5 text-balance"
+              style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+            >
+              Join {displayName}&apos;s Studio
+            </h2>
+            <p className="text-[var(--pt-text2)] mb-10 max-w-md mx-auto leading-relaxed">
+              Download Sssion to access all content, join live classes, and connect directly with {displayName}.
+            </p>
+            <div className="flex justify-center">
+              <AppStoreBadge size="lg" />
+            </div>
+          </section>
         </div>
-      </section>
+      </main>
 
       {/* Floating mobile download banner */}
       <MobileDownloadBanner />
 
-      {/* Discover More */}
-      <section className="py-12 px-6 border-t border-[var(--pt-border)]">
-        <div className="max-w-3xl mx-auto text-center">
-          <a
-            href="/discover"
-            className="inline-flex items-center gap-2 text-sm transition-opacity hover:opacity-75"
-            style={{ color: 'var(--pt-accent)' }}
-          >
-            Discover more creators
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-[var(--pt-border)]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[var(--pt-text2)] text-sm">
-            Powered by Sssion &copy; 2026
-          </p>
-          <div className="flex gap-6">
-            <a href="/" className="text-[var(--pt-text2)] hover:text-[var(--pt-text)] text-sm transition-colors">
-              Home
+      <footer className="border-t border-[var(--pt-border)] py-6 px-6 md:px-16">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+          <span className="text-[11px] uppercase tracking-[0.18em] text-[var(--pt-text2)]">
+            Powered by Sssion
+          </span>
+          <div className="flex gap-6 items-center">
+            <a
+              href="/discover"
+              className="text-[11px] hover:underline"
+              style={{ color: 'var(--pt-accent)' }}
+            >
+              Discover more creators
             </a>
-            <a href="/discover" className="text-[var(--pt-text2)] hover:text-[var(--pt-text)] text-sm transition-colors">
-              Discover
+            <a href="/" className="text-[11px] text-[var(--pt-text2)] hover:text-[var(--pt-text)] transition-colors">
+              Home
             </a>
           </div>
         </div>
