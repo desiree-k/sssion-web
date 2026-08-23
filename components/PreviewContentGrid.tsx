@@ -25,16 +25,18 @@ export default function PreviewContentGrid({ contentItems, creatorName }: Previe
           <button
             key={item.id}
             onClick={() => item.mux_playback_id && setSelectedVideo(item)}
-            className="relative aspect-video rounded-xl overflow-hidden bg-[#16162a] text-left group cursor-pointer"
+            className="relative aspect-video rounded-2xl overflow-hidden bg-black border border-[var(--pt-border,#ffffff1a)] text-left group cursor-pointer"
           >
             {item.mux_playback_id ? (
+              // True-black well: contain (not cover) so vertical clips keep
+              // their full frame against the dark poster ground.
               <img
                 src={`https://image.mux.com/${item.mux_playback_id}/thumbnail.jpg`}
                 alt={item.title}
-                className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                className="w-full h-full object-contain transition-transform group-hover:scale-[1.03]"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#B76E79]/20 to-[#1A1A2E]">
+              <div className="w-full h-full flex items-center justify-center">
                 <svg className="w-12 h-12 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>

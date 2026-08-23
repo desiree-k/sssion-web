@@ -42,7 +42,6 @@ interface LiveClass {
 interface OfferingCardsProps {
   creatorId: string
   offerings: Offering[]
-  accentColor?: string | null
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -65,8 +64,7 @@ function isLive(mo: MemberOffering): boolean {
   return new Date(mo.expires_at) > new Date()
 }
 
-export default function OfferingCards({ creatorId, offerings, accentColor }: OfferingCardsProps) {
-  const accent = accentColor || '#B76E79'
+export default function OfferingCards({ creatorId, offerings }: OfferingCardsProps) {
   const [signedInStudentId, setSignedInStudentId] = useState<string | null>(null)
   const [signedOut, setSignedOut] = useState(false)
   const [mine, setMine] = useState<Record<string, MemberOffering>>({})
@@ -194,9 +192,11 @@ export default function OfferingCards({ creatorId, offerings, accentColor }: Off
   if (offerings.length === 0) return null
 
   return (
-    <section className="py-12 px-6 bg-[#16162a]">
+    <section className="py-14 px-6 border-t border-[var(--pt-border,#ffffff1a)]">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">Offerings</h2>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--pt-text2,#ffffff99)] mb-5">
+          Offerings
+        </p>
         <div className="grid gap-4 sm:grid-cols-2">
           {offerings.map((offering) => {
             const mineRow = mine[offering.id]
@@ -220,14 +220,14 @@ export default function OfferingCards({ creatorId, offerings, accentColor }: Off
             return (
               <div
                 key={offering.id}
-                className="rounded-2xl p-6 bg-[#1A1A2E] border flex flex-col"
-                style={{ borderColor: have ? '#4CAF5080' : `${accent}59` }}
+                className="rounded-2xl p-6 bg-[var(--pt-surface,#1A1A2E)] border flex flex-col"
+                style={{ borderColor: have ? 'var(--pt-accent,#B76E79)' : 'var(--pt-border,#ffffff1a)' }}
               >
-                <h3 className="text-white font-bold text-lg">{offering.name}</h3>
+                <h3 className="text-[var(--pt-text,#ffffff)] font-semibold text-lg">{offering.name}</h3>
                 {offering.description && (
-                  <p className="text-white/60 text-sm mt-1.5 leading-relaxed">{offering.description}</p>
+                  <p className="text-[var(--pt-text2,#ffffff99)] text-sm mt-1.5 leading-relaxed">{offering.description}</p>
                 )}
-                <p className="font-bold text-lg mt-3" style={{ color: accent }}>
+                <p className="font-semibold text-lg mt-3" style={{ color: 'var(--pt-accent,#B76E79)' }}>
                   {priceLine}
                 </p>
 
@@ -244,8 +244,7 @@ export default function OfferingCards({ creatorId, offerings, accentColor }: Off
                   {signedOut ? (
                     <Link
                       href="/student-signup"
-                      className="block text-center px-6 py-3 font-semibold rounded-full text-white transition-opacity hover:opacity-90"
-                      style={{ backgroundColor: accent }}
+                      className="block text-center px-6 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
                     >
                       {offering.is_free ? 'Sign up to join' : 'Sign up to get access'}
                     </Link>
@@ -253,14 +252,15 @@ export default function OfferingCards({ creatorId, offerings, accentColor }: Off
                     <button
                       onClick={() => onCtaClick(offering)}
                       disabled={have || pending || processing || !signedInStudentId}
-                      className="px-6 py-3 font-semibold rounded-full text-white transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-default"
-                      style={{ backgroundColor: have ? '#4CAF50' : accent }}
+                      className={have
+                        ? 'px-6 py-3 font-semibold rounded-full cursor-default border border-[var(--pt-accent,#B76E79)] text-[var(--pt-accent,#B76E79)] bg-transparent'
+                        : 'px-6 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 disabled:opacity-50 disabled:cursor-default bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]'}
                     >
                       {processing ? 'One moment…' : label}
                     </button>
                   )}
                   {awaiting && !pending && !have && (
-                    <p className="text-white/40 text-xs mt-2 leading-relaxed">
+                    <p className="text-[var(--pt-text2,#ffffff66)] text-xs mt-2 leading-relaxed">
                       Paid on the linked page? Tap above to request access — the creator will confirm and let you in.
                     </p>
                   )}
@@ -315,15 +315,15 @@ function WhatsIncluded({ offering, sessions, liveClasses, sessionCount, hasLiveC
     ]
     if (chips.length === 0) return null
     return (
-      <div className="mt-3 pt-3 border-t border-white/10">
-        <p className="text-[10px] font-bold tracking-widest text-white/40 uppercase mb-2">
+      <div className="mt-3 pt-3 border-t border-[var(--pt-border,#ffffff1a)]">
+        <p className="text-[10px] font-semibold tracking-[0.22em] text-[var(--pt-text2,#ffffff66)] uppercase mb-2">
           What&apos;s included
         </p>
         <div className="flex flex-wrap gap-1.5">
           {chips.map((chip) => (
             <span
               key={chip}
-              className="text-[11px] text-white/50 bg-white/5 border border-white/10 rounded-full px-2.5 py-1"
+              className="text-[11px] text-[var(--pt-text2,#ffffff80)] border border-[var(--pt-border,#ffffff1a)] rounded-full px-2.5 py-1"
             >
               {chip}
             </span>
@@ -341,8 +341,8 @@ function WhatsIncluded({ offering, sessions, liveClasses, sessionCount, hasLiveC
   if (shownSessions.length === 0 && shownLive.length === 0) return null
 
   return (
-    <div className="mt-3 pt-3 border-t border-white/10">
-      <p className="text-[10px] font-bold tracking-widest text-white/40 uppercase mb-2">
+    <div className="mt-3 pt-3 border-t border-[var(--pt-border,#ffffff1a)]">
+      <p className="text-[10px] font-semibold tracking-[0.22em] text-[var(--pt-text2,#ffffff66)] uppercase mb-2">
         What&apos;s included
       </p>
       <div className="space-y-2">
@@ -356,7 +356,7 @@ function WhatsIncluded({ offering, sessions, liveClasses, sessionCount, hasLiveC
           ].filter(Boolean).join(' · ')
           return (
             <div key={s.id} className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-md overflow-hidden shrink-0 bg-white/5 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-md overflow-hidden shrink-0 bg-black border border-[var(--pt-border,#ffffff1a)] flex items-center justify-center">
                 {thumbUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -372,28 +372,28 @@ function WhatsIncluded({ offering, sessions, liveClasses, sessionCount, hasLiveC
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-white/80 text-[13px] font-medium truncate">{s.title}</p>
-                {meta && <p className="text-white/40 text-[11px]">{meta}</p>}
+                <p className="text-[var(--pt-text,#ffffffcc)] text-[13px] font-medium truncate">{s.title}</p>
+                {meta && <p className="text-[var(--pt-text2,#ffffff66)] text-[11px]">{meta}</p>}
               </div>
             </div>
           )
         })}
         {shownLive.map((lc) => (
           <div key={lc.id} className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-md shrink-0 bg-white/5 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-md shrink-0 bg-black border border-[var(--pt-border,#ffffff1a)] flex items-center justify-center">
               <svg className="w-4 h-4 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-white/80 text-[13px] font-medium truncate">{lc.title}</p>
-              <p className="text-white/40 text-[11px]">{formatLiveDate(lc.scheduled_at)}</p>
+              <p className="text-[var(--pt-text,#ffffffcc)] text-[13px] font-medium truncate">{lc.title}</p>
+              <p className="text-[var(--pt-text2,#ffffff66)] text-[11px]">{formatLiveDate(lc.scheduled_at)}</p>
             </div>
           </div>
         ))}
         {moreCount > 0 && (
-          <p className="text-white/40 text-[12px]">+{moreCount} more</p>
+          <p className="text-[var(--pt-text2,#ffffff66)] text-[12px]">+{moreCount} more</p>
         )}
       </div>
     </div>

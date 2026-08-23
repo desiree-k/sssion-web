@@ -190,15 +190,18 @@ export default function FollowButton({
 
   if (isHidden || !isReady) return null
 
+  // Colors read the profile-page theme vars when present (the [username]
+  // page sets them on its wrapper) and fall back to the app-dark palette
+  // used everywhere else (discover grid).
   if (emailMode === 'connected' || emailMode === 'already') {
     return (
       <div className="max-w-sm mx-auto text-center px-4">
-        <p className="text-white text-base font-medium">
+        <p className="text-[var(--pt-text,#ffffff)] text-base font-medium">
           {emailMode === 'already'
             ? `You're already following ${emailFollowName}`
             : `You're connected with ${emailFollowName} 🤍`}
         </p>
-        <p className="text-white/50 text-sm mt-2">
+        <p className="text-[var(--pt-text2,#ffffff80)] text-sm mt-2">
           You&apos;ll get email updates when it matters most.
         </p>
       </div>
@@ -215,23 +218,26 @@ export default function FollowButton({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your email"
             autoFocus
-            className="flex-1 min-w-0 px-4 py-3 rounded-full bg-white/5 border border-white/15 text-white text-sm placeholder:text-white/35 focus:outline-none focus:border-white/40 transition-colors"
+            className="flex-1 min-w-0 px-4 py-3 rounded-full bg-[var(--pt-surface,#ffffff0d)] border border-[var(--pt-border,#ffffff26)] text-[var(--pt-text,#ffffff)] text-sm placeholder:text-[var(--pt-text2,#ffffff59)] focus:outline-none focus:border-[var(--pt-text2,#ffffff66)] transition-colors"
           />
           <button
             type="submit"
             disabled={isSubmitting}
-            style={{ backgroundColor: accent }}
-            className="px-6 py-3 rounded-full text-white text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+            style={{
+              backgroundColor: `var(--pt-btn-bg, ${accent})`,
+              color: 'var(--pt-btn-text, #ffffff)',
+            }}
+            className="px-6 py-3 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
           >
             {isSubmitting ? '…' : 'Follow'}
           </button>
         </div>
         {formError && (
-          <p className="text-red-300/90 text-xs mt-2 text-center">{formError}</p>
+          <p className="text-red-400 text-xs mt-2 text-center">{formError}</p>
         )}
-        <p className="text-white/40 text-xs mt-3 text-center">
+        <p className="text-[var(--pt-text2,#ffffff66)] text-xs mt-3 text-center">
           {consentText}{' '}
-          <a href="/privacy" className="underline hover:text-white/60 transition-colors">
+          <a href="/privacy" className="underline hover:opacity-75 transition-opacity">
             Privacy Policy
           </a>
         </p>
@@ -246,15 +252,22 @@ export default function FollowButton({
       : 'px-3.5 py-1.5 text-xs'
 
   const colorClasses = isFollowing
-    ? 'bg-white/10 text-white hover:bg-white/15'
+    ? 'bg-[var(--pt-surface,#ffffff1a)] text-[var(--pt-text,#ffffff)] border border-[var(--pt-border,transparent)] hover:opacity-85'
     : hero
-      ? 'text-white hover:opacity-90'
+      ? 'hover:opacity-90'
       : 'border border-[#B76E79] text-[#B76E79] hover:bg-[#B76E79]/10'
 
   return (
     <button
       onClick={handleClick}
-      style={!isFollowing && hero ? { backgroundColor: accent } : undefined}
+      style={
+        !isFollowing && hero
+          ? {
+              backgroundColor: `var(--pt-btn-bg, ${accent})`,
+              color: 'var(--pt-btn-text, #ffffff)',
+            }
+          : undefined
+      }
       className={`${sizeClasses} ${colorClasses} font-semibold rounded-full transition-all`}
     >
       {isFollowing ? 'Following ✓' : label}

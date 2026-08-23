@@ -117,16 +117,19 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
         <>
           <Link
             href="/student-signup"
-            className="px-8 py-3 border border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors"
+            className="px-8 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
           >
             Sign up to {joinLabel.toLowerCase()}
           </Link>
-          <p className="text-white/40 text-xs text-center max-w-xs">
+          <p className="text-[var(--pt-text2,#ffffff66)] text-xs text-center max-w-xs">
             Access more content and join the community
           </p>
-          <p className="text-white/40 text-sm">
+          <p className="text-[var(--pt-text2,#ffffff66)] text-sm">
             Already have an account?{' '}
-            <Link href="/student-signin" className="text-[#B76E79] hover:underline">
+            <Link
+              href="/student-signin"
+              className="hover:underline text-[var(--pt-accent,#B76E79)]"
+            >
               Sign in
             </Link>
           </p>
@@ -138,11 +141,11 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
           <button
             onClick={handleRequestAccess}
             disabled={isSubmitting}
-            className="px-8 py-3 border border-[#B76E79] text-[#B76E79] font-semibold rounded-full hover:bg-[#B76E79]/10 transition-colors disabled:opacity-50"
+            className="px-8 py-3 font-semibold rounded-full transition-opacity hover:opacity-85 disabled:opacity-50 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
           >
             {isSubmitting ? 'Requesting...' : joinLabel}
           </button>
-          <p className="text-white/40 text-xs text-center max-w-xs">
+          <p className="text-[var(--pt-text2,#ffffff66)] text-xs text-center max-w-xs">
             Access more content and join the community
           </p>
         </>
