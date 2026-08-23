@@ -196,7 +196,7 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
       <div>
         <h2
           className="text-3xl md:text-[34px] m-0 border-b border-[var(--pt-border,#ffffff1a)] pb-3 mb-6 text-[var(--pt-text,#ffffff)]"
-          style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+          style={{ fontFamily: 'var(--font-display), serif', fontWeight: 400 }}
         >
           Offerings
         </h2>
@@ -228,7 +228,7 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
                 <div className="flex justify-between items-baseline gap-5">
                   <h3
                     className="text-[var(--pt-text,#ffffff)] text-2xl leading-[1.15] m-0"
-                    style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+                    style={{ fontFamily: 'var(--font-display), serif', fontWeight: 400 }}
                   >
                     {offering.name}
                   </h3>

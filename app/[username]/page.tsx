@@ -4,7 +4,7 @@ export const revalidate = 0
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { Fraunces } from 'next/font/google'
+import { Bodoni_Moda, Archivo } from 'next/font/google'
 import { resolveProfileTheme, profileThemeVars } from '@/lib/profileThemes'
 import PreviewContentGrid from '@/components/PreviewContentGrid'
 import AppStoreBadge from '@/components/AppStoreBadge'
@@ -15,7 +15,13 @@ import FollowButton from '@/components/FollowButton'
 import EnterSpaceButton from '@/components/EnterSpaceButton'
 import OfferingCards, { Offering } from '@/components/OfferingCards'
 
-const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' })
+// The approved design's type pairing: Bodoni Moda display, Archivo body.
+const bodoni = Bodoni_Moda({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+})
+const archivo = Archivo({ subsets: ['latin'], variable: '--font-body' })
 
 interface Profile {
   id: string
@@ -287,19 +293,19 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
     ...profileThemeVars(theme),
     backgroundColor: 'var(--pt-page)',
     color: 'var(--pt-text)',
-    fontFamily: 'var(--font-inter), system-ui, sans-serif',
+    fontFamily: 'var(--font-body), system-ui, sans-serif',
   } as React.CSSProperties
 
   if (creator.is_visible === false) {
     return (
-      <div className={`${fraunces.variable} min-h-screen flex items-center justify-center px-6`} style={themeStyle}>
+      <div className={`${bodoni.variable} ${archivo.variable} min-h-screen flex items-center justify-center px-6`} style={themeStyle}>
         <div className="text-center max-w-md">
           <div className="w-16 h-16 rounded-full border border-[var(--pt-border)] flex items-center justify-center mx-auto mb-6">
             <svg className="w-8 h-8 text-[var(--pt-text2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-2xl mb-3" style={{ fontFamily: 'var(--font-fraunces), serif' }}>
+          <h1 className="text-2xl mb-3" style={{ fontFamily: 'var(--font-display), serif' }}>
             This studio is currently unavailable
           </h1>
           <p className="text-[var(--pt-text2)] text-sm leading-relaxed">
@@ -326,7 +332,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
 
   return (
     <div
-      className={`${fraunces.variable} min-h-screen`}
+      className={`${bodoni.variable} ${archivo.variable} min-h-screen`}
       style={{ ...themeStyle, ['--pt-radius' as string]: '0px' } as React.CSSProperties}
     >
       {/* Navigation */}
@@ -355,7 +361,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                 <img src={profileImageUrl} alt={displayName} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-4xl text-white/60" style={{ fontFamily: 'var(--font-fraunces), serif' }}>
+                  <span className="text-4xl text-white/60" style={{ fontFamily: 'var(--font-display), serif' }}>
                     {displayName.charAt(0).toUpperCase()}
                   </span>
                 </div>
@@ -379,7 +385,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
               )}
               <h1
                 className="text-5xl md:text-[80px] leading-[0.95] tracking-[-0.02em] text-balance"
-                style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+                style={{ fontFamily: 'var(--font-display), serif', fontWeight: 400 }}
               >
                 {displayName}
               </h1>
@@ -436,7 +442,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
               <div className="flex justify-between items-baseline border-b border-[var(--pt-border)] pb-3 mb-5">
                 <h2
                   className="text-3xl md:text-[34px] m-0"
-                  style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+                  style={{ fontFamily: 'var(--font-display), serif', fontWeight: 400 }}
                 >
                   Preview moments
                 </h2>
@@ -456,7 +462,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             <section>
               <h2
                 className="text-3xl md:text-[34px] m-0 mb-2"
-                style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+                style={{ fontFamily: 'var(--font-display), serif', fontWeight: 400 }}
               >
                 Reviews
               </h2>
@@ -468,7 +474,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                   >
                     <p
                       className="text-xl md:text-[22px] leading-[1.45] italic text-pretty m-0"
-                      style={{ fontFamily: 'var(--font-fraunces), serif' }}
+                      style={{ fontFamily: 'var(--font-display), serif' }}
                     >
                       {review.comment || 'Loved it.'}
                     </p>
@@ -494,7 +500,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             </p>
             <h2
               className="text-3xl md:text-5xl mb-5 text-balance"
-              style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 400 }}
+              style={{ fontFamily: 'var(--font-display), serif', fontWeight: 400 }}
             >
               Join {displayName}&apos;s Studio
             </h2>
