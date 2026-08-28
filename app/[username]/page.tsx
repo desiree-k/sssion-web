@@ -59,7 +59,7 @@ interface Creator {
     custom_url?: string
   } | null
   is_visible?: boolean
-  space_mode?: string | null
+  community_enabled?: boolean | null
 }
 
 interface ContentItem {
@@ -327,12 +327,14 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
   const nameTop = nameParts[0]
   const nameRest = nameParts.slice(1).join(' ')
 
-  // Space mode controls what the public page shows. Follow is always visible.
-  const spaceMode = creator.space_mode || 'page'
-  // Community-only: community features (member count, reviews, join CTA).
-  // 'gathering'/'studio' are legacy values from before the Page/Community rename.
-  const showCommunityFeatures =
-    spaceMode === 'community' || spaceMode === 'gathering' || spaceMode === 'studio'
+  // community_enabled (migrated from the retired space_mode) controls what the
+  // public page shows. When it's on, offerings/Join is the hero and Follow is
+  // demoted to a quiet "Stay Updated"; when off, there's no community, so Stay
+  // Updated is the primary action and no join/offering CTAs appear. Default to
+  // community when the flag is unset — the DB is migrated, this only guards a
+  // stray null. Follow is always available either way.
+  const communityEnabled = creator.community_enabled !== false
+  const showCommunityFeatures = communityEnabled
   const joinLabel = 'Request to Join Community'
 
   return (
@@ -420,41 +422,96 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             ) : (
               <div className="hidden md:block" />
             )}
-            <div className="border border-[var(--pt-border)] bg-[var(--pt-surface)] p-7">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--pt-text2)] m-0">
-                Stay updated
-              </p>
-              <p className="text-sm leading-[1.55] text-[var(--pt-text2)] mt-2.5 mb-4">
-                Get important email updates and app notifications from this creator.
-              </p>
-              <div className="flex flex-col items-stretch gap-2.5 [&_a]:text-center">
-                <EnterSpaceButton creatorId={creator.id} />
-                <FollowButton
-                  creatorId={creator.id}
-                  creatorUserId={creator.user_id}
-                  hero
-                  label="Stay Updated"
-                  emailFollowName={displayName}
-                  consentSource={`web_studio_page_${username}`}
-                />
+            {communityEnabled ? (
+              /* Community: Join is the hero; Stay Updated sits back as a quiet
+                 secondary beneath it (the offering cards below are the main
+                 way in). */
+              <div>
+                <div className="border border-[var(--pt-border)] bg-[var(--pt-surface)] p-7">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--pt-text2)] m-0">
+                    Join the community
+                  </p>
+                  <p className="text-sm leading-[1.55] text-[var(--pt-text2)] mt-2.5 mb-4">
+                    Get access to {displayName}&apos;s sessions, live classes, and community.
+                  </p>
+                  <div className="flex flex-col items-stretch gap-2.5 [&_a]:text-center">
+                    <EnterSpaceButton creatorId={creator.id} />
+                    {/* No offerings → the request-to-join CTA lives here; with
+                        offerings, the cards below carry each CTA. */}
+                    {offerings.length === 0 ? (
+                      <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} />
+                    ) : (
+                      <a
+                        href="#offerings"
+                        className="text-xs font-semibold uppercase tracking-[0.16em] text-center hover:underline"
+                        style={{ color: 'var(--pt-accent)' }}
+                      >
+                        See ways to join ↓
+                      </a>
+                    )}
+                  </div>
+                </div>
+                {/* Demoted Stay Updated — quiet outline follow, consent kept. */}
+                <div className="mt-4 flex flex-col items-start gap-2">
+                  <FollowButton
+                    creatorId={creator.id}
+                    creatorUserId={creator.user_id}
+                    label="Stay Updated"
+                    emailFollowName={displayName}
+                    consentSource={`web_studio_page_${username}`}
+                  />
+                  <p className="text-xs leading-[1.5] text-[var(--pt-text2)] m-0">
+                    Get important email updates and app notifications from this creator.
+                  </p>
+                  {followerCount > 0 && (
+                    <p className="text-xs text-[var(--pt-text2)] m-0">
+                      {followerCount.toLocaleString()} following
+                    </p>
+                  )}
+                </div>
               </div>
-              {followerCount > 0 && (
-                <p className="text-xs text-[var(--pt-text2)] mt-4 mb-0">
-                  {followerCount.toLocaleString()} following
+            ) : (
+              /* Page (community off): Stay Updated is the primary action and
+                 there's nothing to join — no offering/access CTAs. */
+              <div className="border border-[var(--pt-border)] bg-[var(--pt-surface)] p-7">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--pt-text2)] m-0">
+                  Stay updated
                 </p>
-              )}
-              {/* Join/access CTA — community modes with no offerings; the
-                  offering cards carry the CTAs otherwise. */}
-              {showCommunityFeatures && offerings.length === 0 && (
-                <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} />
-              )}
-            </div>
+                <p className="text-sm leading-[1.55] text-[var(--pt-text2)] mt-2.5 mb-4">
+                  Get important email updates and app notifications from this creator.
+                </p>
+                <div className="flex flex-col items-stretch gap-2.5 [&_a]:text-center">
+                  <FollowButton
+                    creatorId={creator.id}
+                    creatorUserId={creator.user_id}
+                    hero
+                    label="Stay Updated"
+                    emailFollowName={displayName}
+                    consentSource={`web_studio_page_${username}`}
+                  />
+                </div>
+                {followerCount > 0 && (
+                  <p className="text-xs text-[var(--pt-text2)] mt-4 mb-0">
+                    {followerCount.toLocaleString()} following
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </header>
 
       <main className="px-6 md:px-16 pb-8">
         <div className="max-w-5xl mx-auto flex flex-col gap-16 md:gap-20 mt-16 md:mt-20">
+          {/* Offerings — the hero way to get access (free or paid). Only shown
+              when the Space is community-enabled; a content-only page has no
+              join/offering CTAs. */}
+          {showCommunityFeatures && (
+            <div id="offerings">
+              <OfferingCards creatorId={creator.id} offerings={offerings} />
+            </div>
+          )}
+
           {/* Preview moments — vertical wells */}
           {contentItems.length > 0 && (
             <section>
@@ -473,10 +530,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             </section>
           )}
 
-          {/* Offerings — the ways to get access (free or paid) */}
-          <OfferingCards creatorId={creator.id} offerings={offerings} />
-
-          {/* Reviews — editorial quotes (Gathering & Studio modes) */}
+          {/* Reviews — editorial quotes (community-enabled Spaces) */}
           {showCommunityFeatures && reviews.length > 0 && (
             <section>
               <h2
