@@ -1,5 +1,6 @@
 import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
+import CreatorWaitlist from '@/components/CreatorWaitlist'
 import RedesignInteractions from './RedesignInteractions'
 
 const bricolage = Bricolage_Grotesque({
@@ -175,7 +176,7 @@ export default function Home() {
                 A private space platform for movement creators and the people who move with them.
               </p>
               <div data-reveal data-reveal-delay="280" className="ss-cta-row">
-                <a href="/join" className="ss-btn-primary">I&apos;m a Creator</a>
+                <a href="#waitlist" className="ss-btn-primary">I&apos;m a Creator</a>
                 <a href="/student-signup" className="ss-btn-glass">
                   I&apos;m a Member
                 </a>
@@ -326,12 +327,15 @@ export default function Home() {
             </div>
 
             <div data-reveal style={{ textAlign: 'center' }}>
-              <a href="/join" className="ss-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 11, padding: '17px 36px', fontSize: 'clamp(16px,2vw,18px)' }}>
+              <a href="#waitlist" className="ss-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 11, padding: '17px 36px', fontSize: 'clamp(16px,2vw,18px)' }}>
                 Start your space <span>→</span>
               </a>
             </div>
           </div>
         </section>
+
+        {/* ================= CREATOR WAITLIST ================= */}
+        <CreatorWaitlist />
 
         {/* ================= CLOSING ================= */}
         <section className="ss-closing">
@@ -348,7 +352,7 @@ export default function Home() {
               <span className="ss-accent">Your space.</span>
             </h2>
             <div data-reveal data-reveal-delay="140" className="ss-closing-cta">
-              <a href="/join" className="ss-btn-primary" style={{ padding: '16px 32px' }}>I&apos;m a Creator</a>
+              <a href="#waitlist" className="ss-btn-primary" style={{ padding: '16px 32px' }}>I&apos;m a Creator</a>
               <a href="/student-signup" className="ss-btn-glass" style={{ padding: '16px 32px', background: 'rgba(255,255,255,.09)', borderColor: 'rgba(255,255,255,.26)' }}>
                 I&apos;m a Member
               </a>

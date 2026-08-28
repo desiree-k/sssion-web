@@ -7,7 +7,8 @@ const bricolage = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-br
 const hanken = Hanken_Grotesk({ subsets: ['latin'], variable: '--font-hanken' })
 
 const APP_STORE = 'https://apps.apple.com/us/app/sssion/id6763607808'
-const APPLY_HREF = 'https://tally.so/r/aQzpe2'
+// Founding Studios are full — the founding CTAs now funnel to the homepage waitlist.
+const WAITLIST_HREF = '/#waitlist'
 
 export const metadata: Metadata = {
   title: 'Founding Studios | Sssion',
@@ -50,6 +51,14 @@ const css = `
 @media(min-width:760px){.ss-navlink{display:inline-flex}}
 .ss-navpill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:14px;font-weight:600;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .25s ease}
 .ss-navpill:hover{background:rgba(255,255,255,.16)}
+
+/* Founding-full announcement banner */
+.ss-fs-banner{position:absolute;top:clamp(78px,12vw,98px);left:50%;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;width:max-content;max-width:calc(100% - 32px);padding:11px 12px 11px 20px;border-radius:999px;background:rgba(26,26,46,.72);border:1px solid rgba(183,110,121,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 12px 40px -14px rgba(0,0,0,.6);text-align:center}
+.ss-fs-banner-dot{width:8px;height:8px;border-radius:50%;background:#B76E79;box-shadow:0 0 12px #B76E79;flex:none}
+.ss-fs-banner-text{font-size:clamp(13px,1.6vw,15px);color:#EAEAF2;font-weight:500}
+.ss-fs-banner-text strong{color:#fff;font-weight:700}
+.ss-fs-banner-cta{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:999px;background:linear-gradient(135deg,#C98693,#B76E79);color:#1A1A2E;font-weight:700;font-size:14px;white-space:nowrap;transition:transform .2s ease}
+.ss-fs-banner-cta:hover{transform:translateY(-1px)}
 
 /* Hero */
 .ss-hero{position:relative;min-height:100svh;display:flex;flex-direction:column;overflow:hidden}
@@ -166,7 +175,7 @@ export default function FoundingPage() {
             <a href="/studios" className="ss-navlink">For Studios</a>
             <a href="/discover" className="ss-navlink">Discover</a>
             <a href="/blog" className="ss-navlink">Blog</a>
-            <a href={APPLY_HREF} target="_blank" rel="noopener" className="ss-navpill">Apply now</a>
+            <a href={WAITLIST_HREF} className="ss-navpill">Join waitlist</a>
           </nav>
         </header>
 
@@ -181,6 +190,15 @@ export default function FoundingPage() {
           <div id="ss-hero-scrim" className="ss-hero-scrim" />
           <div className="ss-grain" />
 
+          {/* Founding Studios are full — funnel new interest to the homepage waitlist */}
+          <div className="ss-fs-banner">
+            <span className="ss-fs-banner-dot" aria-hidden="true" />
+            <span className="ss-fs-banner-text">
+              <strong>Founding Studios are full.</strong> The founding class is complete.
+            </span>
+            <a href={WAITLIST_HREF} className="ss-fs-banner-cta">Join the waitlist →</a>
+          </div>
+
           <div style={{ flex: 1 }} />
           <div className="ss-hero-inner">
             <div className="ss-hero-copy">
@@ -194,8 +212,8 @@ export default function FoundingPage() {
               <p data-reveal data-reveal-delay="180" className="ss-hero-sub">
                 The first 50 creators building Sssion with us.
               </p>
-              <a data-reveal data-reveal-delay="280" href={APPLY_HREF} target="_blank" rel="noopener" className="ss-btn-primary">
-                Apply to be a Founding Studio <span>→</span>
+              <a data-reveal data-reveal-delay="280" href={WAITLIST_HREF} className="ss-btn-primary">
+                Join the waitlist <span>→</span>
               </a>
             </div>
           </div>
@@ -287,11 +305,11 @@ export default function FoundingPage() {
               Your body. Your art.<br />
               <span className="ss-accent">Your space.</span>
             </h2>
-            <a data-reveal data-reveal-delay="120" href={APPLY_HREF} target="_blank" rel="noopener" className="ss-btn-primary" style={{ padding: '18px 40px', fontSize: 'clamp(16px,2vw,19px)' }}>
-              Apply to be a Founding Studio <span>→</span>
+            <a data-reveal data-reveal-delay="120" href={WAITLIST_HREF} className="ss-btn-primary" style={{ padding: '18px 40px', fontSize: 'clamp(16px,2vw,19px)' }}>
+              Join the waitlist <span>→</span>
             </a>
             <p data-reveal data-reveal-delay="200" className="ss-closing-note">
-              Applications reviewed personally. We&apos;ll be in touch within 3 days.
+              Founding Studios are full — join the waitlist and we&apos;ll open your door as spots open.
             </p>
           </div>
         </section>
