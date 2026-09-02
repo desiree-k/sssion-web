@@ -139,11 +139,11 @@ function CommentSection({ postId, userId, onCommentAdded }: {
   }
 
   return (
-    <div className="border-t border-white/10 pt-4 mt-4 space-y-4">
+    <div className="border-t border-[#2A2A30] pt-4 mt-4 space-y-4">
       {isLoading ? (
-        <p className="text-white/40 text-sm">Loading comments...</p>
+        <p className="text-[#F4F1EA]/40 text-sm">Loading comments...</p>
       ) : comments.length === 0 ? (
-        <p className="text-white/40 text-sm">No comments yet. Be the first!</p>
+        <p className="text-[#F4F1EA]/40 text-sm">No comments yet. Be the first!</p>
       ) : (
         <div className="space-y-3">
           {comments.map((comment) => (
@@ -151,14 +151,14 @@ function CommentSection({ postId, userId, onCommentAdded }: {
               <Avatar author={comment.author} size="sm" />
               <div className="flex-1 min-w-0 bg-white/5 rounded-xl px-3 py-2">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-medium text-white truncate">
+                  <span className="text-sm font-medium text-[#F4F1EA] truncate">
                     {comment.author?.full_name || 'Member'}
                   </span>
-                  <span className="text-xs text-white/30 flex-shrink-0">
+                  <span className="text-xs text-[#F4F1EA]/30 flex-shrink-0">
                     {timeAgo(comment.created_at)}
                   </span>
                 </div>
-                <p className="text-sm text-white/80 whitespace-pre-wrap break-words">
+                <p className="text-sm text-[#F4F1EA]/80 whitespace-pre-wrap break-words">
                   {comment.body}
                 </p>
               </div>
@@ -173,12 +173,12 @@ function CommentSection({ postId, userId, onCommentAdded }: {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
-          className="flex-1 px-4 py-2 bg-[#1A1A2E] border border-white/15 rounded-full text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+          className="flex-1 px-4 py-2 bg-[#0E0E12] border border-white/15 rounded-full text-sm text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
         />
         <button
           type="submit"
           disabled={isSubmitting || !newComment.trim()}
-          className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-40"
+          className="px-5 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-40"
         >
           Post
         </button>
@@ -198,26 +198,26 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
   const mediaUrls = post.media_urls || []
 
   return (
-    <article className="bg-[#16162a] rounded-2xl border border-white/10 p-5">
+    <article className="bg-[#1A1A20] rounded-2xl border border-[#2A2A30] p-5">
       {/* Author row */}
       <div className="flex items-center gap-3 mb-4">
         <Avatar author={post.author} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-white truncate">
+            <span className="font-semibold text-[#F4F1EA] truncate">
               {post.author?.full_name || 'Member'}
             </span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide ${
                 post.author_role === 'creator'
                   ? 'bg-[#B76E79]/20 text-[#B76E79]'
-                  : 'bg-white/10 text-white/50'
+                  : 'bg-white/10 text-[#F4F1EA]/50'
               }`}
             >
               {post.author_role === 'creator' ? 'Creator' : 'Student'}
             </span>
           </div>
-          <span className="text-xs text-white/40">{timeAgo(post.created_at)}</span>
+          <span className="text-xs text-[#F4F1EA]/40">{timeAgo(post.created_at)}</span>
         </div>
       </div>
 
@@ -227,10 +227,10 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
           <p className="text-[#B76E79] text-xs font-semibold uppercase tracking-widest mb-2">
             Live Class
           </p>
-          <h3 className="text-lg font-bold text-white mb-1">
+          <h3 className="text-lg font-bold text-[#F4F1EA] mb-1">
             {liveClass.title || 'Live Class'}
           </h3>
-          <p className="text-white/60 text-sm mb-3">
+          <p className="text-[#F4F1EA]/60 text-sm mb-3">
             {liveClass.date_display ||
               (liveClass.scheduled_at ? formatClassDate(liveClass.scheduled_at) : '')}
             {liveClass.platform ? ` · ${liveClass.platform}` : ''}
@@ -240,7 +240,7 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
               href={liveClass.meeting_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+              className="inline-block px-5 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
             >
               Join
             </a>
@@ -248,7 +248,7 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
         </div>
       ) : (
         post.body && (
-          <p className="text-white/85 whitespace-pre-wrap break-words mb-4">{post.body}</p>
+          <p className="text-[#F4F1EA]/85 whitespace-pre-wrap break-words mb-4">{post.body}</p>
         )
       )}
 
@@ -282,7 +282,7 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
         <button
           onClick={() => onLikeToggle(post.id)}
           className={`flex items-center gap-1.5 transition-colors ${
-            post.is_liked_by_user ? 'text-[#B76E79]' : 'text-white/50 hover:text-white'
+            post.is_liked_by_user ? 'text-[#B76E79]' : 'text-[#F4F1EA]/50 hover:text-[#F4F1EA]'
           }`}
         >
           <svg
@@ -298,7 +298,7 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
 
         <button
           onClick={() => setShowComments(!showComments)}
-          className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-[#F4F1EA]/50 hover:text-[#F4F1EA] transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -468,7 +468,7 @@ export default function CommunityTab({ creatorId, userId }: {
 
       {posts.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-white/50">No posts yet. Be the first to share something!</p>
+          <p className="text-[#F4F1EA]/50">No posts yet. Be the first to share something!</p>
         </div>
       ) : (
         posts.map((post) => (

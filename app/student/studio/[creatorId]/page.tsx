@@ -94,7 +94,7 @@ export default function StudentStudioPage() {
         <div className="max-w-4xl mx-auto">
           <Link
             href="/student/dashboard"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-white text-sm transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-[#F4F1EA]/50 hover:text-[#F4F1EA] text-sm transition-colors mb-6"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -122,7 +122,7 @@ export default function StudentStudioPage() {
       </div>
 
       {/* Tabs */}
-      <div className="px-6 border-b border-white/10 sticky top-[65px] bg-[#1A1A2E]/95 backdrop-blur z-30">
+      <div className="px-6 border-b border-[#2A2A30] sticky top-[65px] bg-[#0E0E12]/95 backdrop-blur z-30">
         <div className="max-w-4xl mx-auto flex gap-8">
           {(['community', 'studio'] as Tab[]).map((tab) => (
             <button
@@ -131,7 +131,7 @@ export default function StudentStudioPage() {
               className={`py-3 text-sm font-semibold border-b-2 -mb-px capitalize transition-colors ${
                 activeTab === tab
                   ? 'border-[#B76E79] text-[#B76E79]'
-                  : 'border-transparent text-white/50 hover:text-white'
+                  : 'border-transparent text-[#F4F1EA]/50 hover:text-[#F4F1EA]'
               }`}
             >
               {tab}

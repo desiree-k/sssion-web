@@ -177,7 +177,7 @@ export default function JoinPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#0E0E12] flex flex-col items-center justify-center px-4 py-12">
       {/* Progress Indicator */}
       <div className="flex items-center gap-3 mb-12">
         {['invite', 'account', 'welcome'].map((s, i) => (
@@ -185,10 +185,10 @@ export default function JoinPage() {
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
                 step === s
-                  ? 'bg-[#B76E79] text-white'
+                  ? 'bg-[#B76E79] text-[#F4F1EA]'
                   : ['invite', 'account', 'welcome'].indexOf(step) > i
                   ? 'bg-[#B76E79]/30 text-[#B76E79]'
-                  : 'bg-white/10 text-white/40'
+                  : 'bg-white/10 text-[#F4F1EA]/40'
               }`}
             >
               {i + 1}
@@ -214,7 +214,7 @@ export default function JoinPage() {
               <h1 className="text-3xl md:text-4xl font-bold mb-3">
                 Join Sssion as a Creator
               </h1>
-              <p className="text-white/60">
+              <p className="text-[#F4F1EA]/60">
                 Enter your invite code to get started
               </p>
             </div>
@@ -229,7 +229,7 @@ export default function JoinPage() {
                   value={inviteCode}
                   onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                   placeholder="ENTER CODE"
-                  className="w-full px-4 py-4 bg-[#16162a] border-2 border-[#B76E79]/50 rounded-xl text-white text-center text-xl font-semibold tracking-widest placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                  className="w-full px-4 py-4 bg-[#1A1A20] border-2 border-[#B76E79]/50 rounded-xl text-[#F4F1EA] text-center text-xl font-semibold tracking-widest placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                   autoFocus
                 />
               </div>
@@ -241,13 +241,13 @@ export default function JoinPage() {
               <button
                 onClick={handleValidateCode}
                 disabled={isLoading}
-                className="w-full py-4 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Validating...' : 'Continue'}
               </button>
             </div>
 
-            <div className="space-y-2 text-center text-white/40 text-sm">
+            <div className="space-y-2 text-center text-[#F4F1EA]/40 text-sm">
               <p>
                 Don&apos;t have a code?{' '}
                 <a href="mailto:hello@sssion.com" className="text-[#B76E79] hover:underline">
@@ -271,14 +271,14 @@ export default function JoinPage() {
               <h1 className="text-3xl md:text-4xl font-bold mb-3">
                 Create Your Account
               </h1>
-              <p className="text-white/60">
+              <p className="text-[#F4F1EA]/60">
                 Set up your creator profile
               </p>
             </div>
 
             <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
+                <label className="block text-sm font-medium text-[#F4F1EA]/70 mb-2">
                   Full Name
                 </label>
                 <input
@@ -286,13 +286,13 @@ export default function JoinPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                  className="w-full px-4 py-3 bg-[#1A1A20] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                   autoFocus
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
+                <label className="block text-sm font-medium text-[#F4F1EA]/70 mb-2">
                   Email
                 </label>
                 <input
@@ -300,12 +300,12 @@ export default function JoinPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                  className="w-full px-4 py-3 bg-[#1A1A20] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
+                <label className="block text-sm font-medium text-[#F4F1EA]/70 mb-2">
                   Password
                 </label>
                 <input
@@ -313,16 +313,16 @@ export default function JoinPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Minimum 8 characters"
-                  className="w-full px-4 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                  className="w-full px-4 py-3 bg-[#1A1A20] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
+                <label className="block text-sm font-medium text-[#F4F1EA]/70 mb-2">
                   Username
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#F4F1EA]/40">
                     sssion.studio/
                   </span>
                   <input
@@ -331,11 +331,11 @@ export default function JoinPage() {
                     onChange={(e) => handleUsernameChange(e.target.value)}
                     onBlur={() => checkUsername(username)}
                     placeholder="yourname"
-                    className="w-full pl-[120px] pr-12 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                    className="w-full pl-[120px] pr-12 py-3 bg-[#1A1A20] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2">
                     {usernameStatus === 'checking' && (
-                      <svg className="w-5 h-5 text-white/40 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-[#F4F1EA]/40 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
@@ -364,7 +364,7 @@ export default function JoinPage() {
               <button
                 onClick={handleCreateAccount}
                 disabled={isLoading || usernameStatus === 'taken'}
-                className="w-full py-4 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </button>
@@ -384,7 +384,7 @@ export default function JoinPage() {
               <h1 className="text-3xl md:text-4xl font-bold mb-3">
                 Welcome to Sssion, {fullName.split(' ')[0]}!
               </h1>
-              <p className="text-white/60">
+              <p className="text-[#F4F1EA]/60">
                 Your creator account is ready
               </p>
             </div>
@@ -397,8 +397,8 @@ export default function JoinPage() {
                 </svg>
                 <div>
                   <p className="font-semibold text-amber-400 mb-1">Check your email</p>
-                  <p className="text-white/60 text-sm">
-                    We sent a verification link to <span className="text-white">{email}</span>.
+                  <p className="text-[#F4F1EA]/60 text-sm">
+                    We sent a verification link to <span className="text-[#F4F1EA]">{email}</span>.
                     Please verify your email before signing in to your dashboard.
                   </p>
                 </div>
@@ -406,8 +406,8 @@ export default function JoinPage() {
             </div>
 
             {/* Studio Link */}
-            <div className="bg-[#16162a] rounded-xl p-5 border border-white/10">
-              <p className="text-sm text-white/60 mb-2">Your studio link</p>
+            <div className="bg-[#1A1A20] rounded-xl p-5 border border-[#2A2A30]">
+              <p className="text-sm text-[#F4F1EA]/60 mb-2">Your studio link</p>
               <div className="flex items-center gap-3">
                 <code className="flex-1 text-[#B76E79] font-mono">
                   sssion.studio/{createdUsername}
@@ -422,26 +422,26 @@ export default function JoinPage() {
             </div>
 
             {/* Download App */}
-            <div className="bg-[#16162a] rounded-xl p-5 border border-white/10">
-              <p className="text-sm text-white/60 mb-3">Download the app to start building your studio</p>
+            <div className="bg-[#1A1A20] rounded-xl p-5 border border-[#2A2A30]">
+              <p className="text-sm text-[#F4F1EA]/60 mb-3">Download the app to start building your studio</p>
               <a
                 href="https://apps.apple.com/us/app/sssion/id6763607808"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                 </svg>
                 Download on the App Store
               </a>
-              <p className="text-xs text-white/40 text-center mt-3">
+              <p className="text-xs text-[#F4F1EA]/40 text-center mt-3">
                 Now available on the App Store
               </p>
             </div>
 
             {/* Quick Start Checklist */}
-            <div className="bg-[#16162a] rounded-xl p-5 border border-white/10">
+            <div className="bg-[#1A1A20] rounded-xl p-5 border border-[#2A2A30]">
               <p className="text-sm font-medium mb-4">Quick start checklist</p>
               <div className="space-y-3">
                 {[
@@ -451,7 +451,7 @@ export default function JoinPage() {
                   'Upload your first video',
                   'Share your studio link',
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 text-white/60">
+                  <div key={i} className="flex items-center gap-3 text-[#F4F1EA]/60">
                     <div className="w-5 h-5 rounded-full border border-white/30 flex items-center justify-center">
                       <span className="text-xs">{i + 1}</span>
                     </div>
@@ -463,7 +463,7 @@ export default function JoinPage() {
 
             {/* Sign In Link */}
             <div className="text-center">
-              <p className="text-white/40 text-sm">
+              <p className="text-[#F4F1EA]/40 text-sm">
                 Verified your email?{' '}
                 <a href="/signin" className="text-[#B76E79] hover:underline font-medium">
                   Sign in to your dashboard
@@ -477,7 +477,7 @@ export default function JoinPage() {
       {/* Back to home link */}
       <a
         href="/"
-        className="mt-12 text-white/40 text-sm hover:text-white/60 transition-colors"
+        className="mt-12 text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors"
       >
         &larr; Back to sssion.studio
       </a>

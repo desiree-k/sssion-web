@@ -49,7 +49,7 @@ function StudioCard({ creator }: { creator: StudioCreator }) {
   return (
     <Link
       href={`/student/studio/${creator.id}`}
-      className="group relative block aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 hover:border-[#B76E79]/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#B76E79]/10"
+      className="group relative block aspect-[4/5] rounded-2xl overflow-hidden border border-[#2A2A30] hover:border-[#B76E79]/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#B76E79]/10"
     >
       {imageUrl ? (
         <img
@@ -59,7 +59,7 @@ function StudioCard({ creator }: { creator: StudioCreator }) {
         />
       ) : (
         <div className={`absolute inset-0 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
-          <span className="text-6xl font-bold text-white/70">
+          <span className="text-6xl font-bold text-[#F4F1EA]/70">
             {name.charAt(0).toUpperCase()}
           </span>
         </div>
@@ -68,13 +68,13 @@ function StudioCard({ creator }: { creator: StudioCreator }) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
       <div className="absolute bottom-0 left-0 right-0 p-4">
-        <h3 className="text-lg font-bold text-white mb-1">{name}</h3>
+        <h3 className="text-lg font-bold text-[#F4F1EA] mb-1">{name}</h3>
         {creator.specialties && creator.specialties.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {creator.specialties.slice(0, 2).map((specialty, index) => (
               <span
                 key={index}
-                className="px-2 py-0.5 bg-white/15 backdrop-blur-sm text-white/90 rounded-full text-xs"
+                className="px-2 py-0.5 bg-white/15 backdrop-blur-sm text-[#F4F1EA]/90 rounded-full text-xs"
               >
                 {specialty}
               </span>
@@ -149,14 +149,14 @@ export default function StudentDashboardPage() {
   }
 
   return (
-    <main className="px-6 py-10">
+    <main className="min-h-screen bg-[#0E0E12] px-6 py-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl md:text-4xl font-bold">My Studios</h1>
           <button
             onClick={handleSignOut}
-            className="text-white/50 hover:text-white text-sm transition-colors"
+            className="text-[#F4F1EA]/50 hover:text-[#F4F1EA] text-sm transition-colors"
           >
             Sign Out
           </button>
@@ -180,21 +180,21 @@ export default function StudentDashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 mb-12 bg-[#16162a] rounded-2xl border border-white/10">
+              <div className="text-center py-16 mb-12 bg-[#1A1A20] rounded-2xl border border-[#2A2A30]">
                 <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-5">
-                  <svg className="w-8 h-8 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-[#F4F1EA]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-xl font-semibold text-[#F4F1EA] mb-2">
                   No studios yet
                 </h3>
-                <p className="text-white/50 mb-6">
+                <p className="text-[#F4F1EA]/50 mb-6">
                   Discover creators and request access to their studios
                 </p>
                 <Link
                   href="/discover"
-                  className="inline-block px-8 py-3 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+                  className="inline-block px-8 py-3 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
                 >
                   Discover Creators
                 </Link>
@@ -212,7 +212,7 @@ export default function StudentDashboardPage() {
                     const imageUrl = row.creator.profile?.profile_image_url
                     const username = row.creator.profile?.username
                     const inner = (
-                      <div className="flex items-center gap-4 p-4 bg-[#16162a] rounded-xl border border-white/10 hover:border-white/20 transition-colors">
+                      <div className="flex items-center gap-4 p-4 bg-[#1A1A20] rounded-xl border border-[#2A2A30] hover:border-white/20 transition-colors">
                         {imageUrl ? (
                           <img
                             src={imageUrl}
@@ -227,7 +227,7 @@ export default function StudentDashboardPage() {
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-white font-medium truncate">{name}</p>
+                          <p className="text-[#F4F1EA] font-medium truncate">{name}</p>
                         </div>
                         <span className="px-3 py-1 bg-amber-500/15 text-amber-400 text-xs font-medium rounded-full">
                           Pending
@@ -251,7 +251,7 @@ export default function StudentDashboardPage() {
               <div className="text-center">
                 <Link
                   href="/discover"
-                  className="inline-flex items-center gap-2 text-white/60 hover:text-[#B76E79] transition-colors"
+                  className="inline-flex items-center gap-2 text-[#F4F1EA]/60 hover:text-[#B76E79] transition-colors"
                 >
                   Discover more creators
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -66,11 +66,11 @@ async function getEmbedData(username: string): Promise<EmbedData | null> {
 }
 
 const styles = `
-  html, body { margin: 0; padding: 0; background: #1A1A2E; }
+  html, body { margin: 0; padding: 0; background: #0E0E12; }
   * { box-sizing: border-box; }
   .ss-embed {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #1A1A2E;
+    background: #0E0E12;
     color: #fff;
     border-radius: 16px;
     padding: 18px;

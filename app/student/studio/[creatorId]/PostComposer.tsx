@@ -164,7 +164,7 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className="w-full flex items-center justify-center gap-2 py-3 bg-[#16162a] border border-white/10 rounded-2xl text-white/60 hover:text-white hover:border-[#B76E79]/40 transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-3 bg-[#1A1A20] border border-[#2A2A30] rounded-2xl text-[#F4F1EA]/60 hover:text-[#F4F1EA] hover:border-[#B76E79]/40 transition-colors"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -175,13 +175,13 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
   }
 
   return (
-    <div className="bg-[#16162a] border border-white/10 rounded-2xl p-5 space-y-4">
+    <div className="bg-[#1A1A20] border border-[#2A2A30] rounded-2xl p-5 space-y-4">
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="Share something with the studio..."
         rows={3}
-        className="w-full px-4 py-3 bg-[#1A1A2E] border border-white/15 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors resize-y"
+        className="w-full px-4 py-3 bg-[#0E0E12] border border-white/15 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors resize-y"
         autoFocus
       />
 
@@ -193,7 +193,7 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
               setSelectedImage(null)
               if (fileInputRef.current) fileInputRef.current.value = ''
             }}
-            className="absolute top-2 right-2 w-7 h-7 bg-black/70 rounded-full flex items-center justify-center text-white/80 hover:text-white"
+            className="absolute top-2 right-2 w-7 h-7 bg-black/70 rounded-full flex items-center justify-center text-[#F4F1EA]/80 hover:text-[#F4F1EA]"
             aria-label="Remove image"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +216,7 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-sm text-[#F4F1EA]/60 hover:text-[#F4F1EA] transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -229,14 +229,14 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
           <button
             onClick={resetForm}
             disabled={isSubmitting}
-            className="text-sm text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
+            className="text-sm text-[#F4F1EA]/40 hover:text-[#F4F1EA]/70 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting || (!body.trim() && !selectedImage)}
-            className="px-6 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-40"
+            className="px-6 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-40"
           >
             {isSubmitting ? 'Posting...' : 'Post'}
           </button>

@@ -56,7 +56,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
   return (
     <Link
       href={`/${username}`}
-      className="group block bg-[#16162a] rounded-2xl overflow-hidden border border-white/10 hover:border-[#B76E79]/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#B76E79]/10"
+      className="group block bg-[#1A1A20] rounded-2xl overflow-hidden border border-[#2A2A30] hover:border-[#B76E79]/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#B76E79]/10"
     >
       {/* Profile Image / Gradient Header */}
       <div className="relative h-48 overflow-hidden">
@@ -68,13 +68,13 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
           />
         ) : (
           <div className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center`}>
-            <span className="text-5xl font-bold text-white/80">
+            <span className="text-5xl font-bold text-[#F4F1EA]/80">
               {initials}
             </span>
           </div>
         )}
         {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#16162a] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A20] via-transparent to-transparent" />
 
         {/* Follow toggle */}
         {viewer?.showFollow && (
@@ -91,7 +91,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
 
       {/* Content */}
       <div className="p-5">
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#B76E79] transition-colors">
+        <h3 className="text-xl font-bold text-[#F4F1EA] mb-2 group-hover:text-[#B76E79] transition-colors">
           {displayName}
           {creator.is_founding && (
             <FoundingSpark
@@ -118,7 +118,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
               </span>
             ))}
             {creator.specialties.length > 3 && (
-              <span className="px-2.5 py-0.5 bg-white/5 text-white/40 rounded-full text-xs">
+              <span className="px-2.5 py-0.5 bg-white/5 text-[#F4F1EA]/40 rounded-full text-xs">
                 +{creator.specialties.length - 3}
               </span>
             )}
@@ -127,7 +127,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
 
         {/* Bio */}
         {truncatedBio && (
-          <p className="text-white/50 text-sm leading-relaxed mb-4">
+          <p className="text-[#F4F1EA]/50 text-sm leading-relaxed mb-4">
             {truncatedBio}
           </p>
         )}
@@ -224,14 +224,14 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
     return (
       <div className="text-center py-20">
         <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg className="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-10 h-10 text-[#F4F1EA]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2">
+        <h3 className="text-xl font-semibold text-[#F4F1EA] mb-2">
           Creators are joining soon
         </h3>
-        <p className="text-white/50">
+        <p className="text-[#F4F1EA]/50">
           Check back to discover amazing movement instructors!
         </p>
       </div>
@@ -244,7 +244,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
       <div className="mb-10 max-w-xl mx-auto">
         <div className="relative">
           <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#F4F1EA]/40"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -256,12 +256,12 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
             placeholder="Search by name or specialty..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-[#16162a] border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-[#B76E79] transition-colors"
+            className="w-full pl-12 pr-4 py-4 bg-[#1A1A20] border border-[#2A2A30] rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/40 focus:outline-none focus:border-[#B76E79] transition-colors"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#F4F1EA]/40 hover:text-[#F4F1EA]/60"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -278,8 +278,8 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
             onClick={() => setSelectedSpecialty(null)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               selectedSpecialty === null
-                ? 'bg-[#B76E79] text-white'
-                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                ? 'bg-[#B76E79] text-[#F4F1EA]'
+                : 'bg-white/5 text-[#F4F1EA]/60 hover:bg-white/10 hover:text-[#F4F1EA]'
             }`}
           >
             All
@@ -292,8 +292,8 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
               }
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 selectedSpecialty === specialty
-                  ? 'bg-[#B76E79] text-white'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#B76E79] text-[#F4F1EA]'
+                  : 'bg-white/5 text-[#F4F1EA]/60 hover:bg-white/10 hover:text-[#F4F1EA]'
               }`}
             >
               {specialty}
@@ -304,7 +304,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
 
       {/* Results count */}
       {(searchQuery || selectedSpecialty) && (
-        <p className="text-white/40 text-sm mb-6">
+        <p className="text-[#F4F1EA]/40 text-sm mb-6">
           {filteredCreators.length} {filteredCreators.length === 1 ? 'creator' : 'creators'} found
         </p>
       )}
@@ -318,7 +318,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-white/50">
+          <p className="text-[#F4F1EA]/50">
             No creators match {searchQuery ? `“${searchQuery}”` : 'this filter'}
           </p>
           <button

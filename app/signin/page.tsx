@@ -84,16 +84,16 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-[#0E0E12] flex flex-col">
       {/* Header */}
-      <header className="py-6 px-6 border-b border-white/10">
+      <header className="py-6 px-6 border-b border-[#2A2A30]">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a href="/" className="text-2xl font-bold text-[#B76E79]">
             Sssion
           </a>
           <a
             href="/join"
-            className="text-white/60 hover:text-white text-sm transition-colors"
+            className="text-[#F4F1EA]/60 hover:text-[#F4F1EA] text-sm transition-colors"
           >
             Create Account
           </a>
@@ -109,14 +109,14 @@ export default function SignInPage() {
                 <h1 className="text-3xl md:text-4xl font-bold mb-3">
                   Creator Sign In
                 </h1>
-                <p className="text-white/60">
+                <p className="text-[#F4F1EA]/60">
                   Access your studio dashboard
                 </p>
               </div>
 
               <form onSubmit={handleSignIn} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
+                  <label className="block text-sm font-medium text-[#F4F1EA]/70 mb-2">
                     Email
                   </label>
                   <input
@@ -124,14 +124,14 @@ export default function SignInPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full px-4 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                    className="w-full px-4 py-3 bg-[#1A1A20] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                     autoFocus
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="block text-sm font-medium text-white/70">
+                    <label className="block text-sm font-medium text-[#F4F1EA]/70">
                       Password
                     </label>
                     <button
@@ -150,7 +150,7 @@ export default function SignInPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full px-4 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                    className="w-full px-4 py-3 bg-[#1A1A20] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                   />
                 </div>
 
@@ -163,24 +163,24 @@ export default function SignInPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Signing In...' : 'Sign In'}
                 </button>
               </form>
 
               <div className="space-y-4 pt-4">
-                <p className="text-center text-white/40 text-sm">
+                <p className="text-center text-[#F4F1EA]/40 text-sm">
                   Don&apos;t have an account?{' '}
                   <a href="/join" className="text-[#B76E79] hover:underline">
                     Join here
                   </a>
                 </p>
 
-                <div className="border-t border-white/10 pt-4">
+                <div className="border-t border-[#2A2A30] pt-4">
                   <button
                     onClick={() => setView('studentMessage')}
-                    className="w-full text-center text-white/40 text-sm hover:text-white/60 transition-colors"
+                    className="w-full text-center text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors"
                   >
                     I&apos;m a student &rarr;
                   </button>
@@ -201,7 +201,7 @@ export default function SignInPage() {
                 <h2 className="text-2xl font-bold mb-3">
                   Download the Sssion App
                 </h2>
-                <p className="text-white/60">
+                <p className="text-[#F4F1EA]/60">
                   Students access studios through the Sssion mobile app
                 </p>
               </div>
@@ -211,14 +211,14 @@ export default function SignInPage() {
                   href="https://apps.apple.com/us/app/sssion/id6763607808"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-4 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors"
+                  className="flex items-center justify-center gap-2 w-full py-4 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                   </svg>
                   Download on the App Store
                 </a>
-                <p className="text-xs text-white/40">
+                <p className="text-xs text-[#F4F1EA]/40">
                   Available now on the App Store
                 </p>
               </div>
@@ -232,7 +232,7 @@ export default function SignInPage() {
 
               <button
                 onClick={() => setView('form')}
-                className="text-white/40 text-sm hover:text-white/60 transition-colors"
+                className="text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors"
               >
                 &larr; Back to creator sign in
               </button>
@@ -243,14 +243,14 @@ export default function SignInPage() {
             <div className="space-y-8">
               <div className="text-center">
                 <h1 className="text-3xl font-bold mb-3">Reset Password</h1>
-                <p className="text-white/60">
+                <p className="text-[#F4F1EA]/60">
                   Enter your email and we&apos;ll send you a reset link
                 </p>
               </div>
 
               <form onSubmit={handleSendReset} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">
+                  <label className="block text-sm font-medium text-[#F4F1EA]/70 mb-2">
                     Email
                   </label>
                   <input
@@ -258,7 +258,7 @@ export default function SignInPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full px-4 py-3 bg-[#16162a] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                    className="w-full px-4 py-3 bg-[#1A1A20] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                     autoFocus
                   />
                 </div>
@@ -272,7 +272,7 @@ export default function SignInPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Sending...' : 'Send Reset Link'}
                 </button>
@@ -283,7 +283,7 @@ export default function SignInPage() {
                   setError(null)
                   setView('form')
                 }}
-                className="block mx-auto text-white/40 text-sm hover:text-white/60 transition-colors"
+                className="block mx-auto text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors"
               >
                 &larr; Back to sign in
               </button>
@@ -300,15 +300,15 @@ export default function SignInPage() {
 
               <div>
                 <h2 className="text-2xl font-bold mb-3">Reset link sent</h2>
-                <p className="text-white/60">
-                  Check your inbox at <span className="text-white">{email.trim()}</span>{' '}
+                <p className="text-[#F4F1EA]/60">
+                  Check your inbox at <span className="text-[#F4F1EA]">{email.trim()}</span>{' '}
                   for a link to reset your password.
                 </p>
               </div>
 
               <button
                 onClick={() => setView('form')}
-                className="text-white/40 text-sm hover:text-white/60 transition-colors"
+                className="text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors"
               >
                 &larr; Back to sign in
               </button>
@@ -318,9 +318,9 @@ export default function SignInPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 px-6 border-t border-white/10">
+      <footer className="py-6 px-6 border-t border-[#2A2A30]">
         <div className="max-w-6xl mx-auto text-center">
-          <a href="/" className="text-white/40 text-sm hover:text-white/60 transition-colors">
+          <a href="/" className="text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors">
             &larr; Back to sssion.studio
           </a>
         </div>

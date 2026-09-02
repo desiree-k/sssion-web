@@ -180,7 +180,7 @@ export default function WatchPage() {
   if (error || !video) {
     return (
       <div className="py-24 px-6 text-center space-y-4">
-        <p className="text-white/60">{error || 'Video not found'}</p>
+        <p className="text-[#F4F1EA]/60">{error || 'Video not found'}</p>
         <Link href="/student/dashboard" className="inline-block text-[#B76E79] hover:underline">
           &larr; Back to My Studios
         </Link>
@@ -191,12 +191,12 @@ export default function WatchPage() {
   const playbackId = video.mux_playback_id
 
   return (
-    <main className="pb-16">
+    <main className="min-h-screen bg-[#0E0E12] pb-16">
       <div className="max-w-5xl mx-auto px-6 pt-6">
         {/* Back button */}
         <Link
           href={`/student/studio/${video.creator_id}`}
-          className="inline-flex items-center gap-2 text-white/50 hover:text-white text-sm transition-colors mb-5"
+          className="inline-flex items-center gap-2 text-[#F4F1EA]/50 hover:text-[#F4F1EA] text-sm transition-colors mb-5"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -213,7 +213,7 @@ export default function WatchPage() {
             </span>
           )}
         </div>
-        {creatorName && <p className="text-white/50 mb-5">{creatorName}</p>}
+        {creatorName && <p className="text-[#F4F1EA]/50 mb-5">{creatorName}</p>}
 
         {/* Player */}
         {playbackId ? (
@@ -232,15 +232,15 @@ export default function WatchPage() {
             />
           </div>
         ) : (
-          <div className="rounded-2xl bg-[#16162a] border border-white/10 aspect-video flex items-center justify-center">
-            <p className="text-white/40">This video is still processing. Check back soon!</p>
+          <div className="rounded-2xl bg-[#1A1A20] border border-[#2A2A30] aspect-video flex items-center justify-center">
+            <p className="text-[#F4F1EA]/40">This video is still processing. Check back soon!</p>
           </div>
         )}
 
         {/* Description */}
         {video.description && (
-          <div className="mt-6 bg-[#16162a] border border-white/10 rounded-2xl p-6">
-            <p className="text-white/75 leading-relaxed whitespace-pre-wrap">
+          <div className="mt-6 bg-[#1A1A20] border border-[#2A2A30] rounded-2xl p-6">
+            <p className="text-[#F4F1EA]/75 leading-relaxed whitespace-pre-wrap">
               {video.description}
             </p>
           </div>

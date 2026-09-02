@@ -153,7 +153,7 @@ export default function StudentProfilePage() {
         <h1 className="text-3xl md:text-4xl font-bold">Profile</h1>
 
         {/* Profile card */}
-        <div className="bg-[#16162a] rounded-2xl border border-white/10 p-6 space-y-6">
+        <div className="bg-[#1A1A20] rounded-2xl border border-[#2A2A30] p-6 space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-[#B76E79]/20 flex items-center justify-center flex-shrink-0">
               <span className="text-2xl font-bold text-[#B76E79]">
@@ -161,17 +161,17 @@ export default function StudentProfilePage() {
               </span>
             </div>
             <div className="min-w-0">
-              <p className="text-xl font-semibold text-white truncate">
+              <p className="text-xl font-semibold text-[#F4F1EA] truncate">
                 {fullName || 'Student'}
               </p>
-              <p className="text-white/50 text-sm truncate">{email}</p>
+              <p className="text-[#F4F1EA]/50 text-sm truncate">{email}</p>
             </div>
           </div>
 
           {isEditing ? (
-            <div className="space-y-4 border-t border-white/10 pt-6">
+            <div className="space-y-4 border-t border-[#2A2A30] pt-6">
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
+                <label className="block text-sm font-medium text-[#F4F1EA]/70 mb-2">
                   Display Name
                 </label>
                 <input
@@ -179,7 +179,7 @@ export default function StudentProfilePage() {
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 bg-[#1A1A2E] border border-white/20 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                  className="w-full px-4 py-3 bg-[#0E0E12] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
                   autoFocus
                 />
               </div>
@@ -187,7 +187,7 @@ export default function StudentProfilePage() {
                 <button
                   onClick={handleSaveProfile}
                   disabled={isSaving || !editName.trim()}
-                  className="px-6 py-2.5 bg-[#B76E79] text-white font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </button>
@@ -196,20 +196,20 @@ export default function StudentProfilePage() {
                     setIsEditing(false)
                     setEditName(fullName)
                   }}
-                  className="px-6 py-2.5 bg-white/10 text-white rounded-xl hover:bg-white/15 transition-colors"
+                  className="px-6 py-2.5 bg-white/10 text-[#F4F1EA] rounded-xl hover:bg-white/15 transition-colors"
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <div className="border-t border-white/10 pt-6">
+            <div className="border-t border-[#2A2A30] pt-6">
               <button
                 onClick={() => {
                   setSaveMessage(null)
                   setIsEditing(true)
                 }}
-                className="px-6 py-2.5 bg-white/10 text-white rounded-xl hover:bg-white/15 transition-colors"
+                className="px-6 py-2.5 bg-white/10 text-[#F4F1EA] rounded-xl hover:bg-white/15 transition-colors"
               >
                 Edit Profile
               </button>
@@ -222,13 +222,13 @@ export default function StudentProfilePage() {
         </div>
 
         {/* Email preferences */}
-        <div className="bg-[#16162a] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#1A1A20] rounded-2xl border border-[#2A2A30] p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-white mb-1">
+              <h2 className="text-lg font-semibold text-[#F4F1EA] mb-1">
                 Weekly Training Digest
               </h2>
-              <p className="text-white/50 text-sm">
+              <p className="text-[#F4F1EA]/50 text-sm">
                 Get a Friday email with updates from your studios and creators
                 you follow
               </p>
@@ -255,20 +255,20 @@ export default function StudentProfilePage() {
         </div>
 
         {/* Sign out */}
-        <div className="bg-[#16162a] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#1A1A20] rounded-2xl border border-[#2A2A30] p-6">
           <button
             onClick={handleSignOut}
-            className="text-white/70 hover:text-white transition-colors"
+            className="text-[#F4F1EA]/70 hover:text-[#F4F1EA] transition-colors"
           >
             Sign Out
           </button>
         </div>
 
         {/* Danger zone */}
-        <div className="bg-[#16162a] rounded-2xl border border-red-500/20 p-6 space-y-4">
+        <div className="bg-[#1A1A20] rounded-2xl border border-red-500/20 p-6 space-y-4">
           <div>
             <h2 className="text-lg font-semibold text-red-400 mb-1">Delete Account</h2>
-            <p className="text-white/50 text-sm">
+            <p className="text-[#F4F1EA]/50 text-sm">
               Permanently removes your account, studio memberships, and activity.
               This cannot be undone.
             </p>
@@ -276,7 +276,7 @@ export default function StudentProfilePage() {
 
           {showDeleteConfirm ? (
             <div className="space-y-4 border-t border-red-500/20 pt-4">
-              <p className="text-white/80 text-sm">
+              <p className="text-[#F4F1EA]/80 text-sm">
                 Are you sure? All of your data will be permanently deleted.
               </p>
               {deleteError && (
@@ -286,14 +286,14 @@ export default function StudentProfilePage() {
                 <button
                   onClick={handleDeleteAccount}
                   disabled={isDeleting}
-                  className="px-6 py-2.5 bg-red-500/80 text-white font-semibold rounded-xl hover:bg-red-500 transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 bg-red-500/80 text-[#F4F1EA] font-semibold rounded-xl hover:bg-red-500 transition-colors disabled:opacity-50"
                 >
                   {isDeleting ? 'Deleting...' : 'Delete My Account'}
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={isDeleting}
-                  className="px-6 py-2.5 bg-white/10 text-white rounded-xl hover:bg-white/15 transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 bg-white/10 text-[#F4F1EA] rounded-xl hover:bg-white/15 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>

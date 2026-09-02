@@ -92,7 +92,7 @@ function VideoCard({ video, progressSeconds }: {
   return (
     <Link
       href={`/student/watch/${video.id}`}
-      className="group block rounded-xl overflow-hidden bg-[#16162a] border border-white/10 hover:border-[#B76E79]/50 transition-colors"
+      className="group block rounded-xl overflow-hidden bg-[#1A1A20] border border-[#2A2A30] hover:border-[#B76E79]/50 transition-colors"
     >
       <div className="relative aspect-video bg-black/40">
         {thumb ? (
@@ -103,7 +103,7 @@ function VideoCard({ video, progressSeconds }: {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-10 h-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-10 h-10 text-[#F4F1EA]/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           </div>
@@ -112,20 +112,20 @@ function VideoCard({ video, progressSeconds }: {
         {/* Play overlay */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
           <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-            <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-[#F4F1EA] ml-0.5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
         </div>
 
         {duration && (
-          <span className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 text-white text-xs rounded">
+          <span className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 text-[#F4F1EA] text-xs rounded">
             {duration}
           </span>
         )}
 
         {video.difficulty_level && (
-          <span className="absolute top-2 left-2 px-2 py-0.5 bg-black/60 backdrop-blur-sm text-white/90 text-xs rounded-full capitalize">
+          <span className="absolute top-2 left-2 px-2 py-0.5 bg-black/60 backdrop-blur-sm text-[#F4F1EA]/90 text-xs rounded-full capitalize">
             {video.difficulty_level.replace('_', ' ')}
           </span>
         )}
@@ -138,7 +138,7 @@ function VideoCard({ video, progressSeconds }: {
       </div>
 
       <div className="p-3">
-        <p className="text-sm font-medium text-white truncate">{video.title}</p>
+        <p className="text-sm font-medium text-[#F4F1EA] truncate">{video.title}</p>
       </div>
     </Link>
   )
@@ -297,12 +297,12 @@ export default function StudioTab({ creatorId, userId }: {
               return (
                 <div
                   key={liveClass.id}
-                  className="bg-gradient-to-br from-[#B76E79]/15 to-[#16162a] border border-[#B76E79]/25 rounded-2xl p-5"
+                  className="bg-gradient-to-br from-[#B76E79]/15 to-[#1A1A20] border border-[#B76E79]/25 rounded-2xl p-5"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                     <div className="min-w-0">
-                      <h3 className="text-lg font-bold text-white">{liveClass.title}</h3>
-                      <p className="text-white/60 text-sm">
+                      <h3 className="text-lg font-bold text-[#F4F1EA]">{liveClass.title}</h3>
+                      <p className="text-[#F4F1EA]/60 text-sm">
                         {formatClassDate(liveClass.scheduled_at)}
                         {liveClass.meeting_platform ? ` · ${liveClass.meeting_platform}` : ''}
                       </p>
@@ -313,7 +313,7 @@ export default function StudioTab({ creatorId, userId }: {
                   </div>
 
                   {liveClass.description && (
-                    <p className="text-white/60 text-sm mb-4">{liveClass.description}</p>
+                    <p className="text-[#F4F1EA]/60 text-sm mb-4">{liveClass.description}</p>
                   )}
 
                   <div className="flex flex-wrap items-center gap-3">
@@ -321,15 +321,15 @@ export default function StudioTab({ creatorId, userId }: {
                       onClick={() => handleRsvpToggle(liveClass.id)}
                       className={`px-5 py-2 text-sm font-semibold rounded-full transition-colors ${
                         isGoing
-                          ? 'bg-[#B76E79] text-white'
-                          : 'bg-white/10 text-white hover:bg-white/15'
+                          ? 'bg-[#B76E79] text-[#F4F1EA]'
+                          : 'bg-white/10 text-[#F4F1EA] hover:bg-white/15'
                       }`}
                     >
                       {isGoing ? "I'm Going ✓" : 'RSVP'}
                     </button>
                     <button
                       onClick={() => downloadIcsFile(liveClass)}
-                      className="px-5 py-2 bg-white/10 text-white text-sm font-semibold rounded-full hover:bg-white/15 transition-colors"
+                      className="px-5 py-2 bg-white/10 text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-white/15 transition-colors"
                     >
                       Add to Calendar
                     </button>
@@ -338,7 +338,7 @@ export default function StudioTab({ creatorId, userId }: {
                         href={liveClass.meeting_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-5 py-2 bg-[#B76E79] text-white text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+                        className="px-5 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
                       >
                         Join Class
                       </a>
@@ -362,8 +362,8 @@ export default function StudioTab({ creatorId, userId }: {
               onClick={() => setDifficultyFilter(filter)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 difficultyFilter === filter
-                  ? 'bg-[#B76E79] text-white'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#B76E79] text-[#F4F1EA]'
+                  : 'bg-white/5 text-[#F4F1EA]/60 hover:bg-white/10 hover:text-[#F4F1EA]'
               }`}
             >
               {filter}
@@ -372,7 +372,7 @@ export default function StudioTab({ creatorId, userId }: {
         </div>
 
         {filteredVideos.length === 0 ? (
-          <p className="text-white/40 py-8 text-center">
+          <p className="text-[#F4F1EA]/40 py-8 text-center">
             {videos.length === 0
               ? 'No videos in this studio yet.'
               : `No ${difficultyFilter.toLowerCase()} videos yet.`}
