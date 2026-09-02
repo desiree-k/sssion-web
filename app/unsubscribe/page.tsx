@@ -48,7 +48,7 @@ function UnsubscribeInner() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1A1A2E] flex items-center justify-center px-6">
+    <div className="min-h-screen bg-[#0E0E12] flex items-center justify-center px-6">
       <div className="w-full max-w-md text-center">
         <h1 className="text-4xl font-bold text-[#B76E79] mb-10">Sssion</h1>
 
@@ -58,8 +58,8 @@ function UnsubscribeInner() {
 
         {stage === 'error' && (
           <>
-            <h2 className="text-2xl font-semibold text-white mb-3">Something&apos;s not right</h2>
-            <p className="text-white/60 leading-relaxed">
+            <h2 className="text-2xl font-semibold text-[#F4F1EA] mb-3">Something&apos;s not right</h2>
+            <p className="text-[#F4F1EA]/60 leading-relaxed">
               This unsubscribe link looks incomplete or didn&apos;t work. Try the link from your
               most recent email, or reach out and we&apos;ll take care of it.
             </p>
@@ -68,16 +68,16 @@ function UnsubscribeInner() {
 
         {stage === 'confirm' && (
           <>
-            <h2 className="text-2xl font-semibold text-white mb-3">Unsubscribe from updates?</h2>
-            <p className="text-white/60 leading-relaxed mb-8">
+            <h2 className="text-2xl font-semibold text-[#F4F1EA] mb-3">Unsubscribe from updates?</h2>
+            <p className="text-[#F4F1EA]/60 leading-relaxed mb-8">
               {creatorId
-                ? <>You&apos;ll stop receiving emails from <span className="text-white">{label}</span>.</>
+                ? <>You&apos;ll stop receiving emails from <span className="text-[#F4F1EA]">{label}</span>.</>
                 : <>You&apos;ll stop receiving Sssion email updates.</>}
             </p>
             <button
               onClick={handleUnsubscribe}
               disabled={isSubmitting}
-              className="px-8 py-3.5 bg-[#B76E79] hover:bg-[#a05f69] disabled:opacity-60 text-white font-semibold rounded-full transition-colors"
+              className="px-8 py-3.5 bg-[#B76E79] hover:bg-[#a05f69] disabled:opacity-60 text-[#F4F1EA] font-semibold rounded-full transition-colors"
             >
               {isSubmitting ? 'Unsubscribing...' : 'Unsubscribe'}
             </button>
@@ -91,10 +91,10 @@ function UnsubscribeInner() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-2xl font-semibold text-white mb-3">You&apos;ve been unsubscribed</h2>
-            <p className="text-white/60 leading-relaxed">
+            <h2 className="text-2xl font-semibold text-[#F4F1EA] mb-3">You&apos;ve been unsubscribed</h2>
+            <p className="text-[#F4F1EA]/60 leading-relaxed">
               {creatorId
-                ? <>You won&apos;t receive updates from <span className="text-white">{label}</span> anymore. You&apos;re always welcome back. 🤍</>
+                ? <>You won&apos;t receive updates from <span className="text-[#F4F1EA]">{label}</span> anymore. You&apos;re always welcome back. 🤍</>
                 : <>You won&apos;t receive these updates anymore. You&apos;re always welcome back. 🤍</>}
             </p>
             <a href="https://sssion.studio" className="inline-block mt-8 text-[#B76E79] text-sm hover:underline">
@@ -109,7 +109,7 @@ function UnsubscribeInner() {
 
 export default function UnsubscribePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#1A1A2E]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0E0E12]" />}>
       <UnsubscribeInner />
     </Suspense>
   )
