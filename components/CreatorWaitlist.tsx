@@ -89,7 +89,7 @@ export default function CreatorWaitlist() {
           The next class of creators
         </h2>
         <p data-reveal data-reveal-delay="160" className="ss-wl-lead">
-          Founding Studios are full. Join the waitlist and we&apos;ll open your door soon.
+          Founding creator program is full. Join the waitlist and we&apos;ll open your door soon.
         </p>
 
         {done ? (

@@ -194,7 +194,7 @@ export default function FoundingPage() {
           <div className="ss-fs-banner">
             <span className="ss-fs-banner-dot" aria-hidden="true" />
             <span className="ss-fs-banner-text">
-              <strong>Founding Studios are full.</strong> The founding class is complete.
+              <strong>Founding creator program is full.</strong> The founding class is complete.
             </span>
             <a href={WAITLIST_HREF} className="ss-fs-banner-cta">Join the waitlist →</a>
           </div>
@@ -309,7 +309,7 @@ export default function FoundingPage() {
               Join the waitlist <span>→</span>
             </a>
             <p data-reveal data-reveal-delay="200" className="ss-closing-note">
-              Founding Studios are full — join the waitlist and we&apos;ll open your door as spots open.
+              Founding creator program is full — join the waitlist and we&apos;ll open your door as spots open.
             </p>
           </div>
         </section>
