@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import FollowButton from '@/components/FollowButton'
+import FoundingSpark from '@/components/FoundingSpark'
 
 // Viewer info loaded once so every card doesn't query follow state itself.
 // null = still loading; userId null = signed out; showFollow false = creator viewer
@@ -17,6 +18,7 @@ interface CreatorWithProfile {
   id: string
   display_name: string | null
   specialties: string[] | null
+  is_founding: boolean | null
   created_at: string
   profile: {
     username: string
@@ -91,6 +93,17 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
       <div className="p-5">
         <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#B76E79] transition-colors">
           {displayName}
+          {creator.is_founding && (
+            <FoundingSpark
+              color="#C9A96A"
+              size={15}
+              style={{
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                marginLeft: '6px',
+              }}
+            />
+          )}
         </h3>
 
         {/* Specialties */}

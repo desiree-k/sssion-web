@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { Bodoni_Moda, Archivo } from 'next/font/google'
 import { resolveProfileTheme, profileThemeVars } from '@/lib/profileThemes'
+import FoundingSpark from '@/components/FoundingSpark'
 import PreviewContentGrid from '@/components/PreviewContentGrid'
 import AppStoreBadge from '@/components/AppStoreBadge'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
@@ -48,6 +49,7 @@ interface Creator {
   cover_image_url: string | null
   profile_theme: string | null
   theme_accent: string | null
+  is_founding: boolean | null
   payment_links: {
     cashapp?: string
     paypal?: string
@@ -393,6 +395,17 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                     <br />
                     {nameRest}
                   </>
+                )}
+                {creator.is_founding && (
+                  <FoundingSpark
+                    color={theme.name === 'ivory' ? '#9E5C68' : '#C9A96A'}
+                    size="0.32em"
+                    style={{
+                      display: 'inline-block',
+                      verticalAlign: '0.35em',
+                      marginLeft: '0.12em',
+                    }}
+                  />
                 )}
               </h1>
               {creator.specialties && creator.specialties.length > 0 && (

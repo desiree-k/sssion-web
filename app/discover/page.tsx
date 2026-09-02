@@ -21,6 +21,7 @@ interface CreatorWithProfile {
   id: string
   display_name: string | null
   specialties: string[] | null
+  is_founding: boolean | null
   created_at: string
   profile: {
     username: string
@@ -37,6 +38,7 @@ async function getCreators() {
       id,
       display_name,
       specialties,
+      is_founding,
       created_at,
       profile:profiles!creators_user_id_fkey (
         username,
