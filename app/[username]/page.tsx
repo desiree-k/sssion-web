@@ -50,6 +50,7 @@ interface Creator {
   profile_theme: string | null
   theme_accent: string | null
   is_founding: boolean | null
+  location: string | null
   payment_links: {
     cashapp?: string
     paypal?: string
@@ -421,6 +422,23 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                       </span>
                     </span>
                   ))}
+                </div>
+              )}
+              {creator.location && creator.location.trim() && (
+                <div
+                  className="flex items-center gap-1.5 mt-3 text-[13px]"
+                  style={{ color: 'var(--pt-text2)' }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path
+                      d="M8 1.6c-2.6 0-4.7 2.1-4.7 4.7 0 3.3 4.7 8.1 4.7 8.1s4.7-4.8 4.7-8.1C12.7 3.7 10.6 1.6 8 1.6z"
+                      stroke="currentColor"
+                      strokeWidth="1.3"
+                      strokeLinejoin="round"
+                    />
+                    <circle cx="8" cy="6.2" r="1.7" stroke="currentColor" strokeWidth="1.3" />
+                  </svg>
+                  <span>{creator.location.trim()}</span>
                 </div>
               )}
             </div>
