@@ -1,5 +1,5 @@
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
-import CreatorWaitlist from '@/components/CreatorWaitlist'
+import OpenDoorCta from '@/components/OpenDoorCta'
 import VideoWell from '@/components/marketing/VideoWell'
 import IvoryInteractions from '@/components/marketing/IvoryInteractions'
 import {
@@ -221,8 +221,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ================= CREATOR WAITLIST (functionality preserved) ================= */}
-        <CreatorWaitlist />
+        {/* ================= OPEN DOOR CTA (replaces the creator waitlist) ================= */}
+        <OpenDoorCta />
 
         {/* ================= CLOSING — full-bleed footage ================= */}
         <section className="mk-closing">

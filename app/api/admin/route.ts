@@ -444,6 +444,133 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ ok: true, is_frozen: data[0].is_frozen })
       }
 
+      case 'get_publish_queue': {
+        const { data, error } = await serviceClient
+          .from('creators')
+          .select(`
+            id, display_name, publish_requested_at, publish_note,
+            profile:user_id(id, username, full_name, email)
+          `)
+          .eq('space_status', 'pending')
+          .order('publish_requested_at', { ascending: true })
+        if (error) throw error
+        const rows = data ?? []
+        const creatorIds = rows.map(c => c.id)
+        const sessionMap: Record<string, number> = {}
+        const memberMap: Record<string, number> = {}
+        const postMap: Record<string, number> = {}
+        if (creatorIds.length > 0) {
+          const [sessions, legacyAccess, offeringAccess, posts] = await Promise.all([
+            serviceClient.from('content_items').select('creator_id').in('creator_id', creatorIds),
+            serviceClient.from('studio_access').select('creator_id, student_id, user_id').in('creator_id', creatorIds).eq('status', 'approved'),
+            serviceClient.from('member_offerings').select('creator_id, user_id').in('creator_id', creatorIds).eq('status', 'active'),
+            serviceClient.from('community_posts').select('studio_id').in('studio_id', creatorIds),
+          ])
+          for (const r of sessions.data ?? []) {
+            sessionMap[r.creator_id] = (sessionMap[r.creator_id] ?? 0) + 1
+          }
+          // Members = distinct users across legacy studio_access + active member_offerings
+          const memberSets: Record<string, Set<string>> = {}
+          for (const r of legacyAccess.data ?? []) {
+            const uid = r.student_id ?? r.user_id
+            if (uid) (memberSets[r.creator_id] ??= new Set()).add(uid)
+          }
+          for (const r of offeringAccess.data ?? []) {
+            if (r.user_id) (memberSets[r.creator_id] ??= new Set()).add(r.user_id)
+          }
+          for (const [cid, users] of Object.entries(memberSets)) {
+            memberMap[cid] = users.size
+          }
+          for (const r of posts.data ?? []) {
+            postMap[r.studio_id] = (postMap[r.studio_id] ?? 0) + 1
+          }
+        }
+        return NextResponse.json({
+          queue: rows.map(c => ({
+            ...c,
+            sessionCount: sessionMap[c.id] ?? 0,
+            memberCount: memberMap[c.id] ?? 0,
+            postCount: postMap[c.id] ?? 0,
+          })),
+        })
+      }
+
+      case 'review_publish': {
+        const { creatorId, approve, note } = (payload ?? {}) as {
+          creatorId: string; approve: boolean; note?: string
+        }
+        if (!approve && !note?.trim()) {
+          return NextResponse.json({ error: 'A review note is required to decline' }, { status: 400 })
+        }
+        // .select() so a 0-row update (bad id / already reviewed) surfaces instead of lying
+        const { data, error } = await serviceClient
+          .from('creators')
+          .update({
+            space_status: approve ? 'published' : 'unlisted',
+            publish_reviewed_at: new Date().toISOString(),
+            ...(note?.trim() && { publish_review_note: note.trim() }),
+          })
+          .eq('id', creatorId)
+          .eq('space_status', 'pending')
+          .select('id, user_id, display_name, space_status, profile:user_id(username, full_name, email)')
+        if (error) throw error
+        if (!data || data.length === 0) throw new Error('Space not found in the pending queue (it may already have been reviewed)')
+
+        const creator = data[0]
+        const userProfile = creator.profile as { username?: string | null; full_name?: string | null; email?: string | null } | null
+        const title = approve ? 'Your Space is live 🎉' : 'Update on your Space'
+        const pushBody = approve
+          ? `${creator.display_name || 'Your Space'} is now published and visible in Discover.`
+          : `Your Space wasn't published this time. Note from the team: ${note!.trim()}`
+
+        // Notifications are best-effort — the review itself already succeeded.
+        let pushSent = false
+        let emailSent = false
+        if (creator.user_id) {
+          try {
+            const { error: pushError } = await serviceClient.functions.invoke('send-notification', {
+              body: {
+                user_id: creator.user_id,
+                title,
+                body: pushBody,
+                data: { type: 'publish_review', status: creator.space_status },
+              },
+            })
+            pushSent = !pushError
+          } catch (e) {
+            console.error('[admin] review_publish push failed:', e)
+          }
+        }
+        if (userProfile?.email && process.env.RESEND_API_KEY) {
+          try {
+            const resend = new Resend(process.env.RESEND_API_KEY)
+            const firstName = (userProfile.full_name || '').split(' ')[0] || 'there'
+            const spaceUrl = userProfile.username ? `https://sssion.studio/${userProfile.username}` : 'https://sssion.studio'
+            const html = approve
+              ? `<p>Hi ${firstName},</p>
+                 <p><strong>${creator.display_name || 'Your Space'}</strong> has been approved and is now published — it's visible in Discover and open to new members.</p>
+                 <p><a href="${spaceUrl}">${spaceUrl.replace('https://', '')}</a></p>
+                 <p>— The Sssion team</p>`
+              : `<p>Hi ${firstName},</p>
+                 <p>We reviewed <strong>${creator.display_name || 'your Space'}</strong> and it isn't ready to publish just yet. Your Space is still yours — it's back to unlisted, and you can apply again any time.</p>
+                 <p>Note from the team:</p>
+                 <blockquote style="margin:0;padding:8px 16px;border-left:3px solid #B76E79;">${note!.trim()}</blockquote>
+                 <p>— The Sssion team</p>`
+            await resend.emails.send({
+              from: 'Sssion <updates@updates.sssion.studio>',
+              to: userProfile.email,
+              subject: approve ? 'Your Space is live on Sssion' : 'An update on your Space',
+              html,
+            })
+            emailSent = true
+          } catch (e) {
+            console.error('[admin] review_publish email failed:', e)
+          }
+        }
+
+        return NextResponse.json({ ok: true, space_status: creator.space_status, pushSent, emailSent })
+      }
+
       default:
         return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
     }

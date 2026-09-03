@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: '▦' },
+  { href: '/admin/publish-queue', label: 'Publish Queue', icon: '☑' },
   { href: '/admin/invite-codes', label: 'Invite Codes', icon: '🔑' },
   { href: '/admin/creators', label: 'Creators', icon: '✦' },
   { href: '/admin/students', label: 'Students', icon: '◈' },
