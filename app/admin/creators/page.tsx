@@ -19,6 +19,9 @@ interface Creator {
   display_name: string
   created_at: string
   is_visible: boolean
+  space_status: string | null
+  is_frozen: boolean | null
+  admin_note: string | null
   studentCount: number
   videoCount: number
   profile: CreatorProfile | null
@@ -46,6 +49,9 @@ export default function CreatorsPage() {
   const [error, setError] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<Creator | null>(null)
+  const [confirmFreeze, setConfirmFreeze] = useState<Creator | null>(null)
+  const [freezeReason, setFreezeReason] = useState('')
+  const [freezingId, setFreezingId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
@@ -89,6 +95,27 @@ export default function CreatorsPage() {
     }
   }
 
+  const handleFreeze = async (creator: Creator, reason: string) => {
+    setFreezingId(creator.id)
+    const frozen = !(creator.is_frozen === true)
+    try {
+      await adminPost('set_creator_frozen', { creatorId: creator.id, frozen, note: reason })
+      setCreators(prev => prev.map(c =>
+        c.id === creator.id
+          ? { ...c, is_frozen: frozen, ...(reason.trim() && { admin_note: reason.trim() }) }
+          : c
+      ))
+      setSuccessMsg(`${creator.display_name} has been ${frozen ? 'frozen' : 'unfrozen'}`)
+      setTimeout(() => setSuccessMsg(null), 4000)
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to update freeze state')
+    } finally {
+      setFreezingId(null)
+      setConfirmFreeze(null)
+      setFreezeReason('')
+    }
+  }
+
   const handleDelete = async (creator: Creator) => {
     const userId = creator.profile?.id
     if (!userId) return
@@ -120,7 +147,7 @@ export default function CreatorsPage() {
           type="text"
           value={searchInput}
           onChange={e => handleSearchChange(e.target.value)}
-          placeholder="Search by name…"
+          placeholder="Search by name or username…"
           className="bg-[#111127] border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#B76E79]/50 w-64"
         />
       </div>
@@ -179,13 +206,35 @@ export default function CreatorsPage() {
                     </div>
                   </div>
 
-                  {/* Visibility badge + toggle */}
+                  {/* Status badges + toggles */}
                   <div className="flex items-center gap-2 flex-shrink-0">
+                    {creator.space_status && creator.space_status !== 'published' && (
+                      <span className="px-2 py-0.5 rounded-full bg-white/8 border border-white/15 text-white/50 text-xs font-medium capitalize">
+                        {creator.space_status}
+                      </span>
+                    )}
+                    {creator.is_frozen === true && (
+                      <span className="px-2 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-xs font-medium">
+                        Frozen
+                      </span>
+                    )}
                     {!creator.is_visible && (
                       <span className="px-2 py-0.5 rounded-full bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-xs font-medium">
                         Hidden
                       </span>
                     )}
+                    <button
+                      onClick={() => { setConfirmFreeze(creator); setFreezeReason('') }}
+                      disabled={freezingId === creator.id}
+                      title={creator.is_frozen ? 'Unfreeze Space' : 'Freeze Space'}
+                      className={`text-xs px-2.5 py-1 rounded-lg border transition-colors disabled:opacity-40 ${
+                        creator.is_frozen
+                          ? 'border-sky-500/30 text-sky-400 hover:bg-sky-500/10'
+                          : 'border-white/10 text-white/40 hover:text-white hover:border-white/30'
+                      }`}
+                    >
+                      {freezingId === creator.id ? '…' : creator.is_frozen ? 'Unfreeze' : 'Freeze'}
+                    </button>
                     <button
                       onClick={() => handleToggleVisibility(creator)}
                       disabled={togglingId === creator.id}
@@ -278,6 +327,12 @@ export default function CreatorsPage() {
                         <p className="text-white/70 text-sm">{creator.profile.bio}</p>
                       </div>
                     )}
+                    {creator.admin_note && (
+                      <div className="col-span-2 sm:col-span-4">
+                        <p className="text-white/40 text-xs mb-1">Admin note</p>
+                        <p className="text-white/70 text-sm">{creator.admin_note}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -305,6 +360,52 @@ export default function CreatorsPage() {
             >
               Next →
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm freeze/unfreeze modal */}
+      {confirmFreeze && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-[#111127] rounded-2xl border border-white/10 p-6 w-full max-w-md space-y-5">
+            <h2 className="text-lg font-semibold text-white">
+              {confirmFreeze.is_frozen ? 'Unfreeze' : 'Freeze'} this Space?
+            </h2>
+            <p className="text-white/60 text-sm leading-relaxed">
+              {confirmFreeze.is_frozen ? (
+                <>Unfreeze <span className="text-white font-medium">{confirmFreeze.display_name}</span>? Their Space becomes available again everywhere.</>
+              ) : (
+                <>Freeze <span className="text-white font-medium">{confirmFreeze.display_name}</span>? Visitors and members will see &ldquo;This Space is unavailable&rdquo; on every surface until unfrozen.</>
+              )}
+            </p>
+            <div>
+              <label className="text-white/40 text-xs block mb-1.5">Reason (stored as admin note)</label>
+              <textarea
+                value={freezeReason}
+                onChange={e => setFreezeReason(e.target.value)}
+                rows={3}
+                placeholder={confirmFreeze.is_frozen ? 'Why is this Space being unfrozen?' : 'Why is this Space being frozen?'}
+                className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#B76E79]/50 resize-none"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => { setConfirmFreeze(null); setFreezeReason('') }}
+                disabled={freezingId === confirmFreeze.id}
+                className="flex-1 py-2.5 border border-white/10 text-white/60 text-sm rounded-lg hover:text-white hover:bg-white/5 transition-colors disabled:opacity-30"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleFreeze(confirmFreeze, freezeReason)}
+                disabled={freezingId === confirmFreeze.id}
+                className="flex-1 py-2.5 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-500 disabled:opacity-50 transition-colors"
+              >
+                {freezingId === confirmFreeze.id
+                  ? 'Saving…'
+                  : confirmFreeze.is_frozen ? 'Unfreeze Space' : 'Freeze Space'}
+              </button>
+            </div>
           </div>
         </div>
       )}

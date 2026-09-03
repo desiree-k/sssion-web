@@ -237,13 +237,23 @@ export async function POST(req: NextRequest) {
         let query = serviceClient
           .from('creators')
           .select(`
-            id, display_name, created_at, is_visible,
+            id, display_name, created_at, is_visible, space_status, is_frozen, admin_note,
             profile:user_id(id, email, full_name, username, bio, profile_image_url)
           `, { count: 'exact' })
           .order('created_at', { ascending: false })
           .range((page - 1) * pageSize, page * pageSize - 1)
         if (search) {
-          query = query.ilike('display_name', `%${search}%`)
+          // Match display_name directly, or username via a profiles lookup
+          // (PostgREST can't OR across the base table and an embedded one).
+          const { data: usernameHits } = await serviceClient
+            .from('profiles')
+            .select('id')
+            .ilike('username', `%${search}%`)
+            .limit(100)
+          const userIds = (usernameHits ?? []).map(p => p.id)
+          query = userIds.length > 0
+            ? query.or(`display_name.ilike.%${search}%,user_id.in.(${userIds.join(',')})`)
+            : query.ilike('display_name', `%${search}%`)
         }
         const { data, error, count } = await query
         console.log('[admin] get_creators error:', error, 'count:', count)
@@ -414,6 +424,24 @@ export async function POST(req: NextRequest) {
           .eq('id', creatorId)
         if (error) throw error
         return NextResponse.json({ ok: true })
+      }
+
+      case 'set_creator_frozen': {
+        const { creatorId, frozen, note } = (payload ?? {}) as {
+          creatorId: string; frozen: boolean; note?: string
+        }
+        // .select() so a 0-row update (bad id) surfaces instead of lying
+        const { data, error } = await serviceClient
+          .from('creators')
+          .update({
+            is_frozen: frozen,
+            ...(note?.trim() && { admin_note: note.trim() }),
+          })
+          .eq('id', creatorId)
+          .select('id, is_frozen')
+        if (error) throw error
+        if (!data || data.length === 0) throw new Error('Creator not found')
+        return NextResponse.json({ ok: true, is_frozen: data[0].is_frozen })
       }
 
       default:

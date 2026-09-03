@@ -153,6 +153,8 @@ export function MarketingFooter() {
             <span className="mk-footer-label">Legal</span>
             <a href="/privacy" className="mk-footer-link">Privacy</a>
             <a href="/terms" className="mk-footer-link">Terms</a>
+            <a href="/content-policy" className="mk-footer-link">Content Policy</a>
+            <a href="/dmca" className="mk-footer-link">DMCA</a>
           </div>
         </div>
       </div>

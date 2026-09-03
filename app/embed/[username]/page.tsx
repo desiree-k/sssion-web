@@ -33,11 +33,13 @@ async function getEmbedData(username: string): Promise<EmbedData | null> {
 
   const { data: creator } = await supabase
     .from('creators')
-    .select('id, display_name, specialties, accent_color, is_visible')
+    .select('id, display_name, specialties, accent_color, is_visible, is_frozen')
     .eq('user_id', profile.id)
     .single()
 
-  if (!creator || creator.is_visible === false) return null
+  if (!creator || creator.is_visible === false || creator.is_frozen === true) {
+    return null
+  }
 
   // Up to 3 public "preview moments" (clips shared to discovery).
   const { data: clips } = await supabase

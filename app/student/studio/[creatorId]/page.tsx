@@ -27,6 +27,7 @@ export default function StudentStudioPage() {
   const [creator, setCreator] = useState<CreatorInfo | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isFrozen, setIsFrozen] = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('community')
 
   useEffect(() => {
@@ -37,12 +38,19 @@ export default function StudentStudioPage() {
 
         const { data: creatorData } = await supabase
           .from('creators')
-          .select('id, display_name, profile:profiles!user_id(username, full_name, profile_image_url)')
+          .select('id, display_name, is_frozen, profile:profiles!user_id(username, full_name, profile_image_url)')
           .eq('id', creatorId)
           .maybeSingle()
 
         if (!creatorData) {
           router.replace('/student/dashboard')
+          return
+        }
+
+        // Open Door: frozen Spaces are unavailable to members too.
+        if (creatorData.is_frozen === true) {
+          setIsFrozen(true)
+          setIsLoading(false)
           return
         }
 
@@ -75,6 +83,28 @@ export default function StudentStudioPage() {
 
     load()
   }, [creatorId, router])
+
+  if (isFrozen) {
+    return (
+      <main className="py-24 px-6 flex justify-center">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 rounded-full border border-[#2A2A30] flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-[#F4F1EA]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold mb-3">This Space is unavailable</h1>
+          <p className="text-[#F4F1EA]/50 text-sm leading-relaxed">Check back later.</p>
+          <Link
+            href="/student/dashboard"
+            className="inline-block mt-8 text-sm text-[#B76E79] hover:underline"
+          >
+            ← My Studios
+          </Link>
+        </div>
+      </main>
+    )
+  }
 
   if (isLoading || !creator || !userId) {
     return (
