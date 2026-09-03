@@ -91,7 +91,7 @@ export default function Home() {
             </p>
             <div data-reveal data-reveal-delay="280" className="mk-hero-ctas">
               <a href="#waitlist" className="mk-btn mk-btn-cream">I&apos;m a Creator</a>
-              <a href="/student-signup" className="mk-btn mk-btn-ghost">I&apos;m a Member</a>
+              <a href="/signup" className="mk-btn mk-btn-ghost">I&apos;m a Member</a>
             </div>
             <a data-reveal data-reveal-delay="360" href={APP_STORE} target="_blank" rel="noopener" className="mk-appstore mk-appstore--hero">
               <AppleLogo />
@@ -237,7 +237,7 @@ export default function Home() {
             <h2 data-reveal className="mk-closing-h">Your body. Your art. Your space.</h2>
             <div data-reveal data-reveal-delay="140" className="mk-closing-cta">
               <a href="#waitlist" className="mk-btn mk-btn-cream">I&apos;m a Creator</a>
-              <a href="/student-signup" className="mk-btn mk-btn-ghost">I&apos;m a Member</a>
+              <a href="/signup" className="mk-btn mk-btn-ghost">I&apos;m a Member</a>
             </div>
           </div>
         </section>

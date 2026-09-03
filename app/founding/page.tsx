@@ -9,13 +9,13 @@ import {
   MarketingFooter,
 } from '@/components/marketing/MarketingChrome'
 
-// Founding Studios are full — the founding CTAs funnel to the homepage waitlist.
-const WAITLIST_HREF = '/#waitlist'
+// Founding class is complete — the page is social proof; CTAs route to open signup.
+const SIGNUP_HREF = '/signup'
 
 export const metadata: Metadata = {
   title: 'Founding Studios | Sssion',
   description:
-    'The first 50 creators building Sssion with us. Apply to become a Founding Studio — free for good, built together.',
+    'The first 50 creators building Sssion with us. The founding class is complete — and the door is open to everyone. Start your Space free today.',
 }
 
 const DISCIPLINES = [
@@ -107,7 +107,7 @@ export default function FoundingPage() {
       <style dangerouslySetInnerHTML={{ __html: MARKETING_CSS + css }} />
 
       <div className="mk" id="top">
-        <MarketingNav pill={{ label: 'Join waitlist', href: WAITLIST_HREF }} />
+        <MarketingNav pill={{ label: 'Start free today', href: SIGNUP_HREF }} />
 
         {/* ================= HERO ================= */}
         {/* TODO(footage): full-bleed studio/class video when licensed; poster stands in now. */}
@@ -118,18 +118,18 @@ export default function FoundingPage() {
           </div>
           <div className="mk-hero-scrim" />
 
-          {/* Founding Studios are full — funnel new interest to the homepage waitlist */}
+          {/* Founding class is complete — the door is open; route new interest to signup */}
           <div className="mk-fs-banner">
             <span className="mk-fs-banner-dot" aria-hidden="true" />
             <span className="mk-fs-banner-text">
-              <strong>Founding creator program is full.</strong> The founding class is complete.
+              <strong>The founding class is complete.</strong> The door is open to everyone.
             </span>
-            <a href={WAITLIST_HREF} className="mk-fs-banner-cta">Join the waitlist →</a>
+            <a href={SIGNUP_HREF} className="mk-fs-banner-cta">Start free today →</a>
           </div>
 
           <div className="mk-hero-inner">
             <div data-reveal className="mk-badge">
-              <span className="mk-badge-dot" />50 spaces · by application
+              <span className="mk-badge-dot" />50 spaces · founding class complete
             </div>
             <h1 data-reveal data-reveal-delay="80" className="mk-hero-h1">
               Founding<br />Studios
@@ -137,8 +137,8 @@ export default function FoundingPage() {
             <p data-reveal data-reveal-delay="180" className="mk-hero-sub">
               The first 50 creators building Sssion with us.
             </p>
-            <a data-reveal data-reveal-delay="280" href={WAITLIST_HREF} className="mk-btn mk-btn-cream">
-              Join the waitlist <span aria-hidden>→</span>
+            <a data-reveal data-reveal-delay="280" href={SIGNUP_HREF} className="mk-btn mk-btn-cream">
+              Start free today <span aria-hidden>→</span>
             </a>
           </div>
         </section>
@@ -151,9 +151,9 @@ export default function FoundingPage() {
               mainstream platforms shadowban, demonetize, and slap content warnings on for doing their art.
             </p>
             <p data-reveal data-reveal-delay="120" className="mk-intro-big">
-              We&apos;re opening the doors to our first 50 Founding Studios.{' '}
+              We opened the doors to our first 50 Founding Studios.{' '}
               <span className="mk-serif-i mk-accent">Not a beta test — a founding class.</span>{' '}
-              The creators who get in now will shape what this platform becomes.
+              The creators who got in first are shaping what this platform becomes.
             </p>
           </div>
         </section>
@@ -193,7 +193,7 @@ export default function FoundingPage() {
           <div className="mk-fifty-inner">
             <div data-reveal className="mk-eyebrow" style={{ marginBottom: 22 }}>Why only 50</div>
             <p data-reveal data-reveal-delay="100" className="mk-fifty-h">
-              Because we onboard every Founding Studio{' '}
+              Because we onboarded every Founding Studio{' '}
               <span className="mk-serif-i mk-accent">personally.</span>
             </p>
           </div>
@@ -224,11 +224,11 @@ export default function FoundingPage() {
           <div className="mk-closing-scrim" />
           <div className="mk-closing-inner">
             <h2 data-reveal className="mk-closing-h">Your body. Your art. Your space.</h2>
-            <a data-reveal data-reveal-delay="120" href={WAITLIST_HREF} className="mk-btn mk-btn-cream">
-              Join the waitlist <span aria-hidden>→</span>
+            <a data-reveal data-reveal-delay="120" href={SIGNUP_HREF} className="mk-btn mk-btn-cream">
+              Start free today <span aria-hidden>→</span>
             </a>
             <p data-reveal data-reveal-delay="200" className="mk-closing-note">
-              Founding creator program is full — join the waitlist and we&apos;ll open your door as spots open.
+              The founding class is full — but the door is open. Start your Space free today.
             </p>
           </div>
         </section>

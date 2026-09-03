@@ -25,8 +25,8 @@ export default function OpenDoorCta() {
           Your space is waiting
         </h2>
         <p data-reveal data-reveal-delay="160" className="mk-wl-lead">
-          No waitlist, no invite codes. Create your account, build your space,
-          and open your doors — free to start, and you keep 100%.
+          No waitlist, no invite codes. Create your free account, then start
+          your Space in the Sssion app — free to start, and you keep 100%.
         </p>
         <div data-reveal data-reveal-delay="220">
           <a href="/signup" className="mk-btn mk-btn-ink">Start free today <span aria-hidden>→</span></a>
