@@ -47,6 +47,8 @@ async function getCreators() {
       )
     `)
     .eq('is_visible', true)
+    .eq('space_status', 'published')
+    .eq('is_frozen', false)
     .order('created_at', { ascending: false })
     .limit(50)
   console.log('Discover query took:', Date.now() - start, 'ms', '| rows:', data?.length ?? 0)

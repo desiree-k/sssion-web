@@ -63,6 +63,8 @@ interface Creator {
   } | null
   is_visible?: boolean
   community_enabled?: boolean | null
+  space_status?: string | null
+  is_frozen?: boolean | null
 }
 
 interface ContentItem {
@@ -249,6 +251,10 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
       images: profileImageUrl ? [profileImageUrl] : [],
       type: 'profile',
     },
+    // Unlisted Spaces render normally but stay out of search engines.
+    ...(creator.space_status === 'unlisted' && {
+      robots: { index: false, follow: false },
+    }),
   }
 }
 
@@ -298,6 +304,30 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
     color: 'var(--pt-text)',
     fontFamily: 'var(--font-body), system-ui, sans-serif',
   } as React.CSSProperties
+
+  // Frozen Spaces show a neutral unavailable page — no content, no offerings.
+  if (creator.is_frozen === true) {
+    return (
+      <div className={`${bodoni.variable} ${archivo.variable} min-h-screen flex items-center justify-center px-6`} style={themeStyle}>
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 rounded-full border border-[var(--pt-border)] flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-[var(--pt-text2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl mb-3" style={{ fontFamily: 'var(--font-display), serif' }}>
+            This Space is unavailable
+          </h1>
+          <p className="text-[var(--pt-text2)] text-sm leading-relaxed">
+            Check back later.
+          </p>
+          <a href="/" className="inline-block mt-8 text-sm hover:underline" style={{ color: 'var(--pt-accent)' }}>
+            ← Back to Sssion
+          </a>
+        </div>
+      </div>
+    )
+  }
 
   if (creator.is_visible === false) {
     return (
