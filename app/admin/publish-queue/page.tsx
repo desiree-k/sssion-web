@@ -15,8 +15,8 @@ interface PendingProfile {
 interface PendingSpace {
   id: string
   display_name: string
-  publish_requested_at: string | null
-  publish_note: string | null
+  publish_applied_at: string | null
+  publish_application_note: string | null
   sessionCount: number
   memberCount: number
   postCount: number
@@ -139,8 +139,8 @@ export default function PublishQueuePage() {
                       )}
                       <span className="text-white/30 text-xs">{space.profile?.email ?? '—'}</span>
                       <span className="text-white/30 text-xs">
-                        Applied {space.publish_requested_at
-                          ? new Date(space.publish_requested_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                        Applied {space.publish_applied_at
+                          ? new Date(space.publish_applied_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                           : '—'}
                       </span>
                     </div>
@@ -179,10 +179,10 @@ export default function PublishQueuePage() {
                   </div>
                 </div>
 
-                {space.publish_note && (
+                {space.publish_application_note && (
                   <div className="border-t border-white/6 pt-3">
                     <p className="text-white/40 text-xs mb-1">Note from the creator</p>
-                    <p className="text-white/70 text-sm">{space.publish_note}</p>
+                    <p className="text-white/70 text-sm">{space.publish_application_note}</p>
                   </div>
                 )}
               </div>

@@ -448,11 +448,11 @@ export async function POST(req: NextRequest) {
         const { data, error } = await serviceClient
           .from('creators')
           .select(`
-            id, display_name, publish_requested_at, publish_note,
+            id, display_name, publish_applied_at, publish_application_note,
             profile:user_id(id, username, full_name, email)
           `)
           .eq('space_status', 'pending')
-          .order('publish_requested_at', { ascending: true })
+          .order('publish_applied_at', { ascending: true })
         if (error) throw error
         const rows = data ?? []
         const creatorIds = rows.map(c => c.id)
@@ -461,7 +461,8 @@ export async function POST(req: NextRequest) {
         const postMap: Record<string, number> = {}
         if (creatorIds.length > 0) {
           const [sessions, legacyAccess, offeringAccess, posts] = await Promise.all([
-            serviceClient.from('content_items').select('creator_id').in('creator_id', creatorIds),
+            // Sessions = full-length classes only, matching app vocabulary
+            serviceClient.from('content_items').select('creator_id').in('creator_id', creatorIds).eq('content_type', 'class'),
             serviceClient.from('studio_access').select('creator_id, student_id, user_id').in('creator_id', creatorIds).eq('status', 'approved'),
             serviceClient.from('member_offerings').select('creator_id, user_id').in('creator_id', creatorIds).eq('status', 'active'),
             serviceClient.from('community_posts').select('studio_id').in('studio_id', creatorIds),
