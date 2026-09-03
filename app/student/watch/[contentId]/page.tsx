@@ -25,6 +25,7 @@ export default function WatchPage() {
   const [creatorName, setCreatorName] = useState<string>('')
   const [userId, setUserId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isFrozen, setIsFrozen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const videoElementRef = useRef<HTMLVideoElement | null>(null)
@@ -41,7 +42,7 @@ export default function WatchPage() {
 
         const { data: item } = await supabase
           .from('content_items')
-          .select('id, creator_id, title, description, mux_playback_id, difficulty_level, duration_seconds, creator:creators!creator_id(display_name, profile:profiles!user_id(username, full_name))')
+          .select('id, creator_id, title, description, mux_playback_id, difficulty_level, duration_seconds, creator:creators!creator_id(display_name, is_frozen, profile:profiles!user_id(username, full_name))')
           .eq('id', contentId)
           .maybeSingle()
 
@@ -55,6 +56,13 @@ export default function WatchPage() {
         const profile = creator
           ? (Array.isArray(creator.profile) ? creator.profile[0] : creator.profile)
           : null
+
+        // Open Door: frozen Spaces block playback even via direct link.
+        if (creator?.is_frozen === true) {
+          setIsFrozen(true)
+          setIsLoading(false)
+          return
+        }
 
         // Studio access required — otherwise send to the public studio page
         const { data: access } = await supabase
@@ -174,6 +182,28 @@ export default function WatchPage() {
       <div className="py-24 flex justify-center">
         <div className="w-10 h-10 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
       </div>
+    )
+  }
+
+  if (isFrozen) {
+    return (
+      <main className="py-24 px-6 flex justify-center">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 rounded-full border border-[#2A2A30] flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-[#F4F1EA]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold mb-3">This Space is unavailable</h1>
+          <p className="text-[#F4F1EA]/50 text-sm leading-relaxed">Check back later.</p>
+          <Link
+            href="/student/dashboard"
+            className="inline-block mt-8 text-sm text-[#B76E79] hover:underline"
+          >
+            ← My Studios
+          </Link>
+        </div>
+      </main>
     )
   }
 
