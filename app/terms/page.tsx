@@ -67,7 +67,8 @@ export default function TermsOfUsePage() {
               <ul className="list-disc list-inside ml-4 space-y-2">
                 <li>Hate speech, discrimination, or content promoting violence against individuals or groups</li>
                 <li>Harassment, bullying, intimidation, or threats</li>
-                <li>Sexually explicit content, especially any content involving minors</li>
+                <li>Sexually explicit content of any kind, including any content involving minors</li>
+                <li>Content in which any person depicted — in video, images, or live sessions — is under 18 years of age; all persons on camera must be adults regardless of whether the content is sexual in nature</li>
                 <li>Illegal content or content promoting illegal activities</li>
                 <li>Spam, malware, or deceptive content</li>
                 <li>Content that infringes on intellectual property rights</li>

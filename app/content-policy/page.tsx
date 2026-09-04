@@ -46,6 +46,14 @@ export default function ContentPolicyPage() {
                   presented sexually, or the offer or arrangement of sexual services of any kind.
                 </li>
                 <li>
+                  <span className="text-white">Everyone on camera must be 18 or older.</span>{' '}
+                  This applies without exception to every person appearing in videos, photos, or
+                  live sessions — not just the account holder. Uploading or streaming content in
+                  which any person under 18 is depicted is prohibited and will result in immediate
+                  content removal and permanent account termination. Creators and members must
+                  also be 18 or older to hold an account on Sssion.
+                </li>
+                <li>
                   <span className="text-white">No stolen content.</span> Upload only work you
                   created or have the rights to share. Reposting another instructor&apos;s classes,
                   choreography videos, or photos without permission gets content removed and
@@ -56,10 +64,6 @@ export default function ContentPolicyPage() {
                   <span className="text-white">No harassment.</span> No hate, threats, bullying,
                   or targeted abuse of creators, members, or anyone else — in videos, comments,
                   chat rooms, or reviews.
-                </li>
-                <li>
-                  <span className="text-white">18+ only.</span> Creators and members must be 18 or
-                  older, and everyone appearing in uploaded content must be an adult.
                 </li>
               </ul>
             </div>
