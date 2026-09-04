@@ -572,6 +572,287 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ ok: true, space_status: creator.space_status, pushSent, emailSent })
       }
 
+      case 'get_moderation_queue': {
+        const { status: mqStatus } = (payload ?? {}) as { status?: 'flagged' | 'blocked' }
+
+        // Fetch flagged/blocked content_items
+        let ciQuery = serviceClient
+          .from('content_items')
+          .select('id, title, creator_id, moderation_status, moderation_scores, moderated_at, mux_playback_id')
+          .in('moderation_status', ['flagged', 'blocked'])
+        if (mqStatus) ciQuery = ciQuery.eq('moderation_status', mqStatus)
+        const { data: ciData, error: ciError } = await ciQuery.limit(100)
+        if (ciError) throw ciError
+
+        // Fetch flagged/blocked community_posts
+        let cpQuery = serviceClient
+          .from('community_posts')
+          .select('id, body, author_id, moderation_status, moderation_scores, moderated_at')
+          .in('moderation_status', ['flagged', 'blocked'])
+        if (mqStatus) cpQuery = cpQuery.eq('moderation_status', mqStatus)
+        const { data: cpData, error: cpError } = await cpQuery.limit(100)
+        if (cpError) throw cpError
+
+        // Gather all creator/author IDs to resolve names + monetization_frozen
+        const ciCreatorIds = [...new Set((ciData ?? []).map(c => c.creator_id).filter(Boolean))]
+        const cpAuthorIds = [...new Set((cpData ?? []).map(p => p.author_id).filter(Boolean))]
+        const allCreatorIds = [...new Set([...ciCreatorIds])]
+        const allAuthorIds = [...new Set([...cpAuthorIds])]
+
+        // creator rows keyed by id
+        const creatorMap: Record<string, { display_name: string | null; monetization_frozen: boolean }> = {}
+        if (allCreatorIds.length > 0) {
+          const { data: creators } = await serviceClient
+            .from('creators')
+            .select('id, display_name, monetization_frozen')
+            .in('id', allCreatorIds)
+          for (const c of creators ?? []) {
+            creatorMap[c.id] = { display_name: c.display_name, monetization_frozen: c.monetization_frozen ?? false }
+          }
+        }
+        // For community post authors, resolve via creators.user_id
+        const authorCreatorMap: Record<string, { display_name: string | null; creator_id: string; monetization_frozen: boolean }> = {}
+        if (allAuthorIds.length > 0) {
+          const { data: authorCreators } = await serviceClient
+            .from('creators')
+            .select('id, user_id, display_name, monetization_frozen')
+            .in('user_id', allAuthorIds)
+          for (const c of authorCreators ?? []) {
+            if (c.user_id) {
+              authorCreatorMap[c.user_id] = { display_name: c.display_name, creator_id: c.id, monetization_frozen: c.monetization_frozen ?? false }
+            }
+          }
+        }
+
+        const ciItems = (ciData ?? []).map(c => ({
+          id: c.id,
+          subject_type: 'content_item' as const,
+          title: c.title ?? null,
+          creator_name: creatorMap[c.creator_id]?.display_name ?? null,
+          creator_id: c.creator_id,
+          moderation_status: c.moderation_status as 'flagged' | 'blocked',
+          moderation_scores: c.moderation_scores ?? null,
+          moderated_at: c.moderated_at ?? null,
+          mux_playback_id: c.mux_playback_id ?? null,
+          monetization_frozen: creatorMap[c.creator_id]?.monetization_frozen ?? false,
+        }))
+
+        const cpItems = (cpData ?? []).map(p => {
+          const body = (p.body as string | null) ?? ''
+          const ac = authorCreatorMap[p.author_id]
+          return {
+            id: p.id,
+            subject_type: 'community_post' as const,
+            title: body.length > 120 ? body.slice(0, 120) + '…' : body || null,
+            creator_name: ac?.display_name ?? null,
+            creator_id: ac?.creator_id ?? p.author_id,
+            moderation_status: p.moderation_status as 'flagged' | 'blocked',
+            moderation_scores: p.moderation_scores ?? null,
+            moderated_at: p.moderated_at ?? null,
+            mux_playback_id: null,
+            monetization_frozen: ac?.monetization_frozen ?? false,
+          }
+        })
+
+        const combined = [...ciItems, ...cpItems].sort((a, b) => {
+          if (!a.moderated_at) return 1
+          if (!b.moderated_at) return -1
+          return new Date(b.moderated_at).getTime() - new Date(a.moderated_at).getTime()
+        }).slice(0, 100)
+
+        return NextResponse.json({ items: combined })
+      }
+
+      case 'moderation_unblock': {
+        const { subject_type: unblockType, id: unblockId } = payload as {
+          subject_type: 'content_item' | 'community_post'
+          id: string
+        }
+        const now = new Date().toISOString()
+
+        if (unblockType === 'content_item') {
+          // Get asset info
+          const { data: ciRow, error: ciErr } = await serviceClient
+            .from('content_items')
+            .select('id, mux_asset_id, creator_id')
+            .eq('id', unblockId)
+            .single()
+          if (ciErr) throw ciErr
+
+          // Create a new public playback ID via Mux API
+          let newPlaybackId: string | null = null
+          if (ciRow?.mux_asset_id && process.env.MUX_TOKEN_ID && process.env.MUX_TOKEN_SECRET) {
+            try {
+              const muxAuth = Buffer.from(`${process.env.MUX_TOKEN_ID}:${process.env.MUX_TOKEN_SECRET}`).toString('base64')
+              const muxRes = await fetch(
+                `https://api.mux.com/video/v1/assets/${ciRow.mux_asset_id}/playback-ids`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${muxAuth}`,
+                  },
+                  body: JSON.stringify({ policy: 'public' }),
+                }
+              )
+              if (muxRes.ok) {
+                const muxData = await muxRes.json()
+                newPlaybackId = muxData?.data?.id ?? null
+              } else {
+                console.error('[admin] Mux playback-id creation failed:', await muxRes.text())
+              }
+            } catch (muxErr) {
+              console.error('[admin] Mux API error:', muxErr)
+            }
+          }
+
+          // Update content_item: clear block, set new playback id if obtained
+          const ciUpdate: Record<string, unknown> = { moderation_status: 'clear', moderated_at: now }
+          if (newPlaybackId) ciUpdate.mux_playback_id = newPlaybackId
+          const { error: updateErr } = await serviceClient
+            .from('content_items')
+            .update(ciUpdate)
+            .eq('id', unblockId)
+          if (updateErr) throw updateErr
+
+          // Check if creator has any remaining blocked content
+          const { data: remainingBlocked } = await serviceClient
+            .from('content_items')
+            .select('id')
+            .eq('creator_id', ciRow.creator_id)
+            .eq('moderation_status', 'blocked')
+            .neq('id', unblockId)
+            .limit(1)
+          const { data: remainingPosts } = await serviceClient
+            .from('community_posts')
+            .select('id')
+            .eq('moderation_status', 'blocked')
+            .limit(1)
+
+          const hasOtherBlocked = (remainingBlocked?.length ?? 0) > 0 || (remainingPosts?.length ?? 0) > 0
+
+          if (!hasOtherBlocked) {
+            await serviceClient
+              .from('creators')
+              .update({ monetization_frozen: false })
+              .eq('id', ciRow.creator_id)
+          }
+
+          // Insert moderation events
+          await serviceClient.from('moderation_events').insert({
+            subject_type: 'content_item',
+            subject_id: unblockId,
+            action: 'unblocked',
+            actor: 'admin',
+            created_at: now,
+          })
+          if (!hasOtherBlocked) {
+            await serviceClient.from('moderation_events').insert({
+              subject_type: 'content_item',
+              subject_id: unblockId,
+              action: 'monetization_restored',
+              actor: 'admin',
+              created_at: now,
+            })
+          }
+        } else {
+          // community_post unblock
+          const { data: postRow, error: postErr } = await serviceClient
+            .from('community_posts')
+            .select('id, author_id')
+            .eq('id', unblockId)
+            .single()
+          if (postErr) throw postErr
+
+          const { error: updateErr } = await serviceClient
+            .from('community_posts')
+            .update({ moderation_status: 'clear', moderated_at: now })
+            .eq('id', unblockId)
+          if (updateErr) throw updateErr
+
+          // Find the creator record for this author
+          const { data: authorCreator } = await serviceClient
+            .from('creators')
+            .select('id')
+            .eq('user_id', postRow.author_id)
+            .single()
+
+          if (authorCreator?.id) {
+            const { data: remainingCi } = await serviceClient
+              .from('content_items')
+              .select('id')
+              .eq('creator_id', authorCreator.id)
+              .eq('moderation_status', 'blocked')
+              .limit(1)
+            const { data: remainingCp } = await serviceClient
+              .from('community_posts')
+              .select('id')
+              .eq('author_id', postRow.author_id)
+              .eq('moderation_status', 'blocked')
+              .neq('id', unblockId)
+              .limit(1)
+
+            const hasOtherBlocked = (remainingCi?.length ?? 0) > 0 || (remainingCp?.length ?? 0) > 0
+
+            if (!hasOtherBlocked) {
+              await serviceClient
+                .from('creators')
+                .update({ monetization_frozen: false })
+                .eq('id', authorCreator.id)
+
+              await serviceClient.from('moderation_events').insert({
+                subject_type: 'community_post',
+                subject_id: unblockId,
+                action: 'monetization_restored',
+                actor: 'admin',
+                created_at: now,
+              })
+            }
+          }
+
+          await serviceClient.from('moderation_events').insert({
+            subject_type: 'community_post',
+            subject_id: unblockId,
+            action: 'unblocked',
+            actor: 'admin',
+            created_at: now,
+          })
+        }
+
+        return NextResponse.json({ success: true })
+      }
+
+      case 'moderation_confirm_block': {
+        const { subject_type: cbType, id: cbId } = payload as {
+          subject_type: 'content_item' | 'community_post'
+          id: string
+        }
+        const now = new Date().toISOString()
+
+        // Ensure status is blocked (no-op if already)
+        if (cbType === 'content_item') {
+          await serviceClient
+            .from('content_items')
+            .update({ moderation_status: 'blocked', moderated_at: now })
+            .eq('id', cbId)
+        } else {
+          await serviceClient
+            .from('community_posts')
+            .update({ moderation_status: 'blocked', moderated_at: now })
+            .eq('id', cbId)
+        }
+
+        await serviceClient.from('moderation_events').insert({
+          subject_type: cbType,
+          subject_id: cbId,
+          action: 'blocked',
+          actor: 'admin',
+          created_at: now,
+        })
+
+        return NextResponse.json({ success: true })
+      }
+
       default:
         return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
     }

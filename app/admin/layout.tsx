@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/admin/creators', label: 'Creators', icon: '✦' },
   { href: '/admin/students', label: 'Students', icon: '◈' },
   { href: '/admin/reports', label: 'Content Reports', icon: '⚑' },
+  { href: '/admin/moderation', label: 'Moderation', icon: '⊘' },
   { href: '/admin/announcements', label: 'Announcements', icon: '◎' },
 ]
 
