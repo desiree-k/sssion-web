@@ -664,6 +664,8 @@ export async function POST(req: NextRequest) {
       }
 
       case 'moderation_unblock': {
+        // Clears a flagged OR blocked item. For blocked items, restores the Mux playback ID.
+        // For flagged items (content was never taken offline), skips the Mux step.
         const { subject_type: unblockType, id: unblockId } = payload as {
           subject_type: 'content_item' | 'community_post'
           id: string
@@ -671,95 +673,80 @@ export async function POST(req: NextRequest) {
         const now = new Date().toISOString()
 
         if (unblockType === 'content_item') {
-          // Get asset info
           const { data: ciRow, error: ciErr } = await serviceClient
             .from('content_items')
-            .select('id, mux_asset_id, creator_id')
+            .select('id, mux_asset_id, mux_playback_id, moderation_status, creator_id')
             .eq('id', unblockId)
             .single()
           if (ciErr) throw ciErr
 
-          // Create a new public playback ID via Mux API
-          let newPlaybackId: string | null = null
-          if (ciRow?.mux_asset_id && process.env.MUX_TOKEN_ID && process.env.MUX_TOKEN_SECRET) {
-            try {
-              const muxAuth = Buffer.from(`${process.env.MUX_TOKEN_ID}:${process.env.MUX_TOKEN_SECRET}`).toString('base64')
-              const muxRes = await fetch(
-                `https://api.mux.com/video/v1/assets/${ciRow.mux_asset_id}/playback-ids`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${muxAuth}`,
-                  },
-                  body: JSON.stringify({ policy: 'public' }),
+          const wasBlocked = ciRow?.moderation_status === 'blocked'
+          const ciUpdate: Record<string, unknown> = { moderation_status: 'clear', moderated_at: now }
+
+          // Only restore Mux when content was actually blocked (playback was revoked)
+          if (wasBlocked && ciRow?.mux_asset_id && !ciRow.mux_playback_id) {
+            if (process.env.MUX_TOKEN_ID && process.env.MUX_TOKEN_SECRET) {
+              try {
+                const muxAuth = Buffer.from(`${process.env.MUX_TOKEN_ID}:${process.env.MUX_TOKEN_SECRET}`).toString('base64')
+                const muxRes = await fetch(
+                  `https://api.mux.com/video/v1/assets/${ciRow.mux_asset_id}/playback-ids`,
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${muxAuth}` },
+                    body: JSON.stringify({ policy: 'public' }),
+                  }
+                )
+                if (muxRes.ok) {
+                  const muxData = await muxRes.json()
+                  const newId = muxData?.data?.id ?? null
+                  if (newId) ciUpdate.mux_playback_id = newId
+                } else {
+                  console.error('[admin] Mux playback-id creation failed:', await muxRes.text())
                 }
-              )
-              if (muxRes.ok) {
-                const muxData = await muxRes.json()
-                newPlaybackId = muxData?.data?.id ?? null
-              } else {
-                console.error('[admin] Mux playback-id creation failed:', await muxRes.text())
+              } catch (muxErr) {
+                console.error('[admin] Mux API error:', muxErr)
               }
-            } catch (muxErr) {
-              console.error('[admin] Mux API error:', muxErr)
             }
           }
 
-          // Update content_item: clear block, set new playback id if obtained
-          const ciUpdate: Record<string, unknown> = { moderation_status: 'clear', moderated_at: now }
-          if (newPlaybackId) ciUpdate.mux_playback_id = newPlaybackId
           const { error: updateErr } = await serviceClient
-            .from('content_items')
-            .update(ciUpdate)
-            .eq('id', unblockId)
+            .from('content_items').update(ciUpdate).eq('id', unblockId)
           if (updateErr) throw updateErr
 
-          // Check if creator has any remaining blocked content
-          const { data: remainingBlocked } = await serviceClient
+          // Unfreeze monetization if no remaining blocked or priority-flagged content
+          const creatorId = ciRow.creator_id
+          const { data: remainingCi } = await serviceClient
             .from('content_items')
-            .select('id')
-            .eq('creator_id', ciRow.creator_id)
-            .eq('moderation_status', 'blocked')
+            .select('id, moderation_status, moderation_scores')
+            .eq('creator_id', creatorId)
+            .in('moderation_status', ['blocked', 'flagged'])
             .neq('id', unblockId)
-            .limit(1)
-          const { data: remainingPosts } = await serviceClient
+            .limit(10)
+          const { data: remainingCp } = await serviceClient
             .from('community_posts')
-            .select('id')
-            .eq('moderation_status', 'blocked')
-            .limit(1)
+            .select('id, moderation_status, moderation_scores')
+            .eq('studio_id', creatorId)
+            .in('moderation_status', ['blocked', 'flagged'])
+            .limit(10)
 
-          const hasOtherBlocked = (remainingBlocked?.length ?? 0) > 0 || (remainingPosts?.length ?? 0) > 0
+          const freezingItems = [...(remainingCi ?? []), ...(remainingCp ?? [])].filter(
+            item => item.moderation_status === 'blocked' ||
+              (item.moderation_status === 'flagged' && (item.moderation_scores as Record<string,unknown>)?.priority_flag === true)
+          )
 
-          if (!hasOtherBlocked) {
-            await serviceClient
-              .from('creators')
-              .update({ monetization_frozen: false })
-              .eq('id', ciRow.creator_id)
+          const logEvents: object[] = [{ subject_type: 'content_item', subject_id: unblockId, creator_id: creatorId, action: 'unblocked', actor: 'admin', created_at: now }]
+
+          if (freezingItems.length === 0) {
+            await serviceClient.from('creators').update({ monetization_frozen: false }).eq('id', creatorId)
+            logEvents.push({ subject_type: 'content_item', subject_id: unblockId, creator_id: creatorId, action: 'monetization_restored', actor: 'admin', created_at: now })
           }
 
-          // Insert moderation events
-          await serviceClient.from('moderation_events').insert({
-            subject_type: 'content_item',
-            subject_id: unblockId,
-            action: 'unblocked',
-            actor: 'admin',
-            created_at: now,
-          })
-          if (!hasOtherBlocked) {
-            await serviceClient.from('moderation_events').insert({
-              subject_type: 'content_item',
-              subject_id: unblockId,
-              action: 'monetization_restored',
-              actor: 'admin',
-              created_at: now,
-            })
-          }
+          await serviceClient.from('moderation_events').insert(logEvents)
         } else {
-          // community_post unblock
+          // community_post: studio_id is the creator FK per CLAUDE.md
           const { data: postRow, error: postErr } = await serviceClient
             .from('community_posts')
-            .select('id, author_id')
+            .select('id, studio_id, moderation_status')
             .eq('id', unblockId)
             .single()
           if (postErr) throw postErr
@@ -770,85 +757,111 @@ export async function POST(req: NextRequest) {
             .eq('id', unblockId)
           if (updateErr) throw updateErr
 
-          // Find the creator record for this author
-          const { data: authorCreator } = await serviceClient
-            .from('creators')
-            .select('id')
-            .eq('user_id', postRow.author_id)
-            .single()
+          const creatorId = postRow.studio_id
+          const logEvents: object[] = [{ subject_type: 'community_post', subject_id: unblockId, creator_id: creatorId, action: 'unblocked', actor: 'admin', created_at: now }]
 
-          if (authorCreator?.id) {
+          if (creatorId) {
             const { data: remainingCi } = await serviceClient
               .from('content_items')
-              .select('id')
-              .eq('creator_id', authorCreator.id)
-              .eq('moderation_status', 'blocked')
-              .limit(1)
+              .select('id, moderation_status, moderation_scores')
+              .eq('creator_id', creatorId)
+              .in('moderation_status', ['blocked', 'flagged'])
+              .limit(10)
             const { data: remainingCp } = await serviceClient
               .from('community_posts')
-              .select('id')
-              .eq('author_id', postRow.author_id)
-              .eq('moderation_status', 'blocked')
+              .select('id, moderation_status, moderation_scores')
+              .eq('studio_id', creatorId)
+              .in('moderation_status', ['blocked', 'flagged'])
               .neq('id', unblockId)
-              .limit(1)
+              .limit(10)
 
-            const hasOtherBlocked = (remainingCi?.length ?? 0) > 0 || (remainingCp?.length ?? 0) > 0
+            const freezingItems = [...(remainingCi ?? []), ...(remainingCp ?? [])].filter(
+              item => item.moderation_status === 'blocked' ||
+                (item.moderation_status === 'flagged' && (item.moderation_scores as Record<string,unknown>)?.priority_flag === true)
+            )
 
-            if (!hasOtherBlocked) {
-              await serviceClient
-                .from('creators')
-                .update({ monetization_frozen: false })
-                .eq('id', authorCreator.id)
-
-              await serviceClient.from('moderation_events').insert({
-                subject_type: 'community_post',
-                subject_id: unblockId,
-                action: 'monetization_restored',
-                actor: 'admin',
-                created_at: now,
-              })
+            if (freezingItems.length === 0) {
+              await serviceClient.from('creators').update({ monetization_frozen: false }).eq('id', creatorId)
+              logEvents.push({ subject_type: 'community_post', subject_id: unblockId, creator_id: creatorId, action: 'monetization_restored', actor: 'admin', created_at: now })
             }
           }
 
-          await serviceClient.from('moderation_events').insert({
-            subject_type: 'community_post',
-            subject_id: unblockId,
-            action: 'unblocked',
-            actor: 'admin',
-            created_at: now,
-          })
+          await serviceClient.from('moderation_events').insert(logEvents)
         }
 
         return NextResponse.json({ success: true })
       }
 
       case 'moderation_confirm_block': {
+        // Admin blocks a flagged item: revoke Mux playback (content goes offline), set blocked.
         const { subject_type: cbType, id: cbId } = payload as {
           subject_type: 'content_item' | 'community_post'
           id: string
         }
         const now = new Date().toISOString()
 
-        // Ensure status is blocked (no-op if already)
         if (cbType === 'content_item') {
-          await serviceClient
+          const { data: ciRow, error: ciErr } = await serviceClient
             .from('content_items')
-            .update({ moderation_status: 'blocked', moderated_at: now })
+            .select('id, mux_asset_id, mux_playback_id, creator_id')
             .eq('id', cbId)
+            .single()
+          if (ciErr) throw ciErr
+
+          // Revoke the live Mux playback ID so the stream goes dark
+          if (ciRow?.mux_asset_id && ciRow.mux_playback_id) {
+            if (process.env.MUX_TOKEN_ID && process.env.MUX_TOKEN_SECRET) {
+              try {
+                const muxAuth = Buffer.from(`${process.env.MUX_TOKEN_ID}:${process.env.MUX_TOKEN_SECRET}`).toString('base64')
+                const muxDel = await fetch(
+                  `https://api.mux.com/video/v1/assets/${ciRow.mux_asset_id}/playback-ids/${ciRow.mux_playback_id}`,
+                  { method: 'DELETE', headers: { 'Authorization': `Basic ${muxAuth}` } }
+                )
+                if (!muxDel.ok) console.error('[admin] Mux revoke failed:', await muxDel.text())
+              } catch (muxErr) {
+                console.error('[admin] Mux revoke error:', muxErr)
+              }
+            }
+          }
+
+          const { error: updateErr } = await serviceClient
+            .from('content_items')
+            .update({ moderation_status: 'blocked', mux_playback_id: null, moderated_at: now })
+            .eq('id', cbId)
+          if (updateErr) throw updateErr
+
+          const creatorId = ciRow?.creator_id
+          await serviceClient.from('moderation_events').insert({
+            subject_type: 'content_item',
+            subject_id: cbId,
+            creator_id: creatorId ?? undefined,
+            action: 'blocked',
+            actor: 'admin',
+            created_at: now,
+          })
         } else {
-          await serviceClient
+          const { data: postRow, error: postErr } = await serviceClient
+            .from('community_posts')
+            .select('id, studio_id')
+            .eq('id', cbId)
+            .single()
+          if (postErr) throw postErr
+
+          const { error: updateErr } = await serviceClient
             .from('community_posts')
             .update({ moderation_status: 'blocked', moderated_at: now })
             .eq('id', cbId)
-        }
+          if (updateErr) throw updateErr
 
-        await serviceClient.from('moderation_events').insert({
-          subject_type: cbType,
-          subject_id: cbId,
-          action: 'blocked',
-          actor: 'admin',
-          created_at: now,
-        })
+          await serviceClient.from('moderation_events').insert({
+            subject_type: 'community_post',
+            subject_id: cbId,
+            creator_id: postRow?.studio_id ?? undefined,
+            action: 'blocked',
+            actor: 'admin',
+            created_at: now,
+          })
+        }
 
         return NextResponse.json({ success: true })
       }

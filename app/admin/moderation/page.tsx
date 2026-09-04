@@ -250,21 +250,39 @@ export default function ModerationPage() {
                           <span className="px-3 py-1.5 text-xs text-green-400 border border-green-500/30 rounded-lg">
                             Done
                           </span>
+                        ) : item.moderation_status === 'blocked' ? (
+                          // Blocked: only Unblock (restores stream + monetization)
+                          <button
+                            onClick={() => handleAction(item, 'moderation_unblock')}
+                            disabled={isActing}
+                            className="px-3 py-1.5 text-xs bg-teal-600/80 hover:bg-teal-600 text-white rounded-lg disabled:opacity-30 transition-colors font-medium"
+                          >
+                            {isActing ? '…' : 'Unblock'}
+                          </button>
                         ) : (
+                          // Flagged: Block (takes content offline) or Clear (restores monetization)
                           <>
-                            <button
-                              onClick={() => handleAction(item, 'moderation_unblock')}
-                              disabled={isActing}
-                              className="px-3 py-1.5 text-xs bg-teal-600/80 hover:bg-teal-600 text-white rounded-lg disabled:opacity-30 transition-colors font-medium"
-                            >
-                              {isActing ? '…' : 'Unblock'}
-                            </button>
                             <button
                               onClick={() => handleAction(item, 'moderation_confirm_block')}
                               disabled={isActing}
-                              className="px-3 py-1.5 text-xs bg-red-600/80 hover:bg-red-600 text-white rounded-lg disabled:opacity-30 transition-colors font-medium"
+                              className={`px-3 py-1.5 text-xs text-white rounded-lg disabled:opacity-30 transition-colors font-medium ${
+                                isPriorityFlag
+                                  ? 'bg-red-600 hover:bg-red-500 ring-1 ring-red-400'
+                                  : 'bg-red-600/70 hover:bg-red-600'
+                              }`}
                             >
-                              {isActing ? '…' : 'Confirm Block'}
+                              {isActing ? '…' : 'Block'}
+                            </button>
+                            <button
+                              onClick={() => handleAction(item, 'moderation_unblock')}
+                              disabled={isActing}
+                              className={`px-3 py-1.5 text-xs rounded-lg disabled:opacity-30 transition-colors font-medium ${
+                                isPriorityFlag
+                                  ? 'bg-teal-600 hover:bg-teal-500 text-white ring-1 ring-teal-400'
+                                  : 'bg-white/10 hover:bg-white/15 text-white/70'
+                              }`}
+                            >
+                              {isActing ? '…' : 'Clear'}
                             </button>
                           </>
                         )}
