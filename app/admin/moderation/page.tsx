@@ -17,6 +17,7 @@ interface ModerationItem {
     text?: Record<string, number>
     frames?: { time: number; nudity?: Record<string, number> }[]
     original_playback_id?: string
+    priority_flag?: boolean
   } | null
   moderated_at: string | null
   mux_playback_id: string | null
@@ -177,6 +178,7 @@ export default function ModerationPage() {
             const maxScores = item.moderation_scores?.max ?? {}
             const textScores = item.moderation_scores?.text ?? {}
             const frames = item.moderation_scores?.frames ?? []
+            const isPriorityFlag = item.moderation_scores?.priority_flag === true
             const isActing = actingId === item.id
             const isSuccess = successId === item.id
 
@@ -220,6 +222,12 @@ export default function ModerationPage() {
                           <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-white/6 text-white/40">
                             {item.subject_type === 'content_item' ? 'video' : 'post'}
                           </span>
+                          {/* Priority flag chip */}
+                          {isPriorityFlag && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold">
+                              Priority Review
+                            </span>
+                          )}
                           {/* Monetization frozen chip */}
                           {item.monetization_frozen && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-orange-500/15 text-orange-400 border border-orange-500/20">
