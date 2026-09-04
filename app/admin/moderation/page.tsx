@@ -18,6 +18,8 @@ interface ModerationItem {
     frames?: { time: number; nudity?: Record<string, number> }[]
     original_playback_id?: string
     priority_flag?: boolean
+    minor_score?: number
+    minor_detected?: boolean
   } | null
   moderated_at: string | null
   mux_playback_id: string | null
