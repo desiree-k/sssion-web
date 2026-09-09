@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        // Founding program is closed and the page is retired. Preserve inbound
+        // links (Founding Sprint emails in Loops, the blog CTA) by sending them
+        // to open signup instead of 404ing.
+        source: '/founding',
+        destination: '/signup',
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

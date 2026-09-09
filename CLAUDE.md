@@ -10,7 +10,7 @@ Read before editing. This is production — Vercel auto-deploys every push to ma
 
 ## Site map
 - `/` homepage — creator CTAs point to `#waitlist` (CreatorWaitlist component → `creator_waitlist` table). Open creator signup is CLOSED; `/join` still works for invite codes only.
-- `/founding` — social proof + "Founding Studios are full" banner → waitlist
+- `/founding` — RETIRED (founding program closed). 301 → `/signup` via next.config.ts redirects. Do not re-add the page.
 - `/features`, `/blog` (MDX in content/blog/, plain text only — RTF files silently fail), `/discover`, `/privacy`, `/terms`
 - `/[username]` — THE creator profile page (see below)
 - `/embed/[username]` — iframe follow widget

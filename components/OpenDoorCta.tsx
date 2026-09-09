@@ -1,7 +1,7 @@
 /**
  * Open Door CTA section for the homepage — replaces the creator waitlist.
  * Keeps the section's ivory editorial styling and the #waitlist id so the
- * hero/founding "I'm a Creator" anchors still land here. The old form's
+ * homepage hero "I'm a Creator" anchor still lands here. The old form's
  * creator_waitlist table and data are untouched; signup is just open now.
  */
 

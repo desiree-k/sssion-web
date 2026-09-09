@@ -1,7 +1,7 @@
 import { Fraunces, Hanken_Grotesk } from 'next/font/google'
 
-// Shared ivory-editorial chrome for the marketing pages (homepage, /founding,
-// /features, blog). Fraunces = display; Hanken = body/UI.
+// Shared ivory-editorial chrome for the marketing pages (homepage, /features,
+// /studios, blog). Fraunces = display; Hanken = body/UI.
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
