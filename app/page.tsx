@@ -253,6 +253,27 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ================= TRUST & SAFETY — reassurance before the ask ================= */}
+        <section id="trust" className="mk-section" style={{ borderTop: '1px solid #E5E0D6' }}>
+          <div className="mk-wrap" style={{ maxWidth: 720, textAlign: 'center' }}>
+            <div data-reveal className="mk-eyebrow">Trust &amp; safety</div>
+            <h2 data-reveal data-reveal-delay="80" className="mk-h2">Curated on purpose.</h2>
+            <p data-reveal data-reveal-delay="160" className="mk-body" style={{ maxWidth: 620, margin: '0 auto' }}>
+              Every Space is reviewed by a real person before it goes public or sells anything.
+              Published media is monitored automatically, everyone on camera is 18+, and we enforce it.
+              Confidence without the corporate-speak.
+            </p>
+            <div
+              data-reveal
+              data-reveal-delay="220"
+              style={{ display: 'flex', gap: 'clamp(18px,3vw,32px)', justifyContent: 'center', flexWrap: 'wrap', marginTop: 'clamp(24px,3vw,32px)' }}
+            >
+              <a href="/content-policy" className="mk-arrowlink">Content Policy <span aria-hidden>→</span></a>
+              <a href="/dmca" className="mk-arrowlink">DMCA <span aria-hidden>→</span></a>
+            </div>
+          </div>
+        </section>
+
         {/* ================= OPEN DOOR CTA (replaces the creator waitlist) ================= */}
         <OpenDoorCta />
 
