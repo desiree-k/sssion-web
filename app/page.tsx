@@ -128,7 +128,39 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="mk-wrap"><hr className="mk-hairline" /></div>
+        {/* ================= HOW IT WORKS — the ladder ================= */}
+        <section id="how" className="mk-section" style={{ background: '#FFFFFF', borderTop: '1px solid #E5E0D6', borderBottom: '1px solid #E5E0D6' }}>
+          <div className="mk-wrap">
+            <div style={{ maxWidth: 700 }}>
+              <div data-reveal className="mk-eyebrow">How it works</div>
+              <h2 data-reveal data-reveal-delay="80" className="mk-h2">
+                Start free. Publish when you&apos;re ready. Sell on your terms.
+              </h2>
+              <p data-reveal data-reveal-delay="160" className="mk-body" style={{ maxWidth: 560 }}>
+                Sssion grows with you. You&apos;re never charged to begin, and nothing goes public
+                until you say so.
+              </p>
+            </div>
+
+            <div className="mk-cards" style={{ marginTop: 'clamp(28px,4vw,40px)' }}>
+              <div data-reveal data-reveal-delay="60" className="mk-card">
+                <div className="mk-card-num">01</div>
+                <h3 className="mk-card-h">Start free</h3>
+                <p className="mk-card-p">Open a private Space in minutes — invite-only by link, free to begin. A home for your people, not an audience to rent. Share video, build your library, and start the conversation that&apos;s actually yours.</p>
+              </div>
+              <div data-reveal data-reveal-delay="140" className="mk-card">
+                <div className="mk-card-num">02</div>
+                <h3 className="mk-card-h">Publish</h3>
+                <p className="mk-card-p">When you&apos;re ready to be found, apply to go public. Every Space is reviewed by a real person first — curation is a feature, not a bottleneck. Publishing also unlocks live classes: go live with your members today over Google Meet or Zoom, with native in-app live on the way.</p>
+              </div>
+              <div data-reveal data-reveal-delay="220" className="mk-card">
+                <div className="mk-card-num">03</div>
+                <h3 className="mk-card-h">Sell</h3>
+                <p className="mk-card-p">When the community&apos;s there, the livelihood can follow — memberships, workshops, drop-ins, live-class tickets. You set your prices. You keep the relationship with your members. Built-in checkout is coming soon.</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ================= FOR MEMBERS — well collage ================= */}
         <section id="members" className="mk-section">
