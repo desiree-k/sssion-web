@@ -262,9 +262,9 @@ export default function Home() {
             <div data-reveal className="mk-eyebrow">Trust &amp; safety</div>
             <h2 data-reveal data-reveal-delay="80" className="mk-h2">Curated on purpose.</h2>
             <p data-reveal data-reveal-delay="160" className="mk-body" style={{ maxWidth: 620, margin: '0 auto' }}>
-              Every Space is reviewed by a real person before it goes public or sells anything.
-              Published media is monitored automatically, everyone on camera is 18+, and we enforce it.
-              Confidence without the corporate-speak.
+              A real person reviews every Space before it goes public or sells anything.
+              Everyone on camera is 18+, published content is monitored, and we enforce all of it
+              — no exceptions. Confidence, not corporate-speak.
             </p>
             <div
               data-reveal
