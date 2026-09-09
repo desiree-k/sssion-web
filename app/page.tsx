@@ -224,7 +224,7 @@ export default function Home() {
             </div>
 
             <div data-reveal style={{ marginTop: 'clamp(28px,4vw,40px)' }}>
-              <a href="#waitlist" className="mk-btn mk-btn-ink">Start your space <span aria-hidden>→</span></a>
+              <a href="/signup" className="mk-btn mk-btn-ink">Start your Space <span aria-hidden>→</span></a>
             </div>
           </div>
         </section>

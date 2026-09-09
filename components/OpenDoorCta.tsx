@@ -1,8 +1,9 @@
 /**
  * Open Door CTA section for the homepage — replaces the creator waitlist.
- * Keeps the section's ivory editorial styling and the #waitlist id so the
- * homepage "Start your space" anchor still lands here. The old form's
- * creator_waitlist table and data are untouched; signup is just open now.
+ * Keeps the section's ivory editorial styling and the #waitlist id as a
+ * backward-compat anchor for any old links (no on-page button targets it
+ * now — hero, creators, and closing all go straight to /signup). The old
+ * form's creator_waitlist table and data are untouched; signup is just open now.
  */
 
 const css = `
