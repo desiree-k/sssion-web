@@ -1,7 +1,7 @@
 /**
  * Open Door CTA section for the homepage — replaces the creator waitlist.
  * Keeps the section's ivory editorial styling and the #waitlist id so the
- * homepage hero "I'm a Creator" anchor still lands here. The old form's
+ * homepage "Start your space" anchor still lands here. The old form's
  * creator_waitlist table and data are untouched; signup is just open now.
  */
 
@@ -25,8 +25,8 @@ export default function OpenDoorCta() {
           Your space is waiting
         </h2>
         <p data-reveal data-reveal-delay="160" className="mk-wl-lead">
-          No waitlist, no invite codes. Create your free account, then start
-          your Space in the Sssion app — free to start, and you keep 100%.
+          No waitlist, no invite codes. Create your free account, then open
+          your Space in the Sssion app — free to start, yours to grow.
         </p>
         <div data-reveal data-reveal-delay="220">
           <a href="/signup" className="mk-btn mk-btn-ink">Start free today <span aria-hidden>→</span></a>

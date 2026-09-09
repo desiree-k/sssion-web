@@ -82,16 +82,16 @@ export default function Home() {
           </div>
           <div className="mk-hero-scrim" />
           <div className="mk-hero-inner">
-            <div data-reveal className="mk-hero-eyebrow">Private space platform</div>
+            <div data-reveal className="mk-hero-eyebrow">Own your community</div>
             <h1 data-reveal data-reveal-delay="80" className="mk-hero-h1">
               Own your<br />movement.
             </h1>
             <p data-reveal data-reveal-delay="180" className="mk-hero-sub">
-              A private space platform for movement creators and the people who move with them.
+              The home for movement creators and their people. Your Space, your community,
+              your art — not an audience you rent from an algorithm.
             </p>
             <div data-reveal data-reveal-delay="280" className="mk-hero-ctas">
-              <a href="#waitlist" className="mk-btn mk-btn-cream">I&apos;m a Creator</a>
-              <a href="/signup" className="mk-btn mk-btn-ghost">I&apos;m a Member</a>
+              <a href="/signup" className="mk-btn mk-btn-cream">Start free today</a>
             </div>
             <a data-reveal data-reveal-delay="360" href={APP_STORE} target="_blank" rel="noopener" className="mk-appstore mk-appstore--hero">
               <AppleLogo />
@@ -119,7 +119,7 @@ export default function Home() {
               <div data-reveal data-reveal-delay="240" className="mk-chips">
                 <span className="mk-tag">No algorithm</span>
                 <span className="mk-tag">No shadowbans</span>
-                <span className="mk-tag">No cuts</span>
+                <span className="mk-tag">Yours to keep</span>
               </div>
             </div>
             <div data-reveal data-reveal-delay="120" className="mk-two-media">
@@ -196,8 +196,8 @@ export default function Home() {
                 Your space. Your community. Your terms.
               </h2>
               <p data-reveal data-reveal-delay="160" className="mk-body" style={{ maxWidth: 560 }}>
-                Build a home for your art — with the infrastructure to run it and none of the
-                middlemen taking a cut.
+                A home for your art, with the infrastructure to run it — and no algorithm
+                standing between you and the people who move with you.
               </p>
             </div>
 
@@ -218,8 +218,8 @@ export default function Home() {
               </div>
               <div data-reveal data-reveal-delay="220" className="mk-card">
                 <div className="mk-card-num">03</div>
-                <h3 className="mk-card-h">Your business</h3>
-                <p className="mk-card-p">Keep 100%. No cuts, no commissions — what you earn is yours.</p>
+                <h3 className="mk-card-h">Your offerings</h3>
+                <p className="mk-card-p">Memberships, workshops, drop-ins, live-class tickets. You set the prices and keep the member relationship. Built-in checkout is coming soon.</p>
               </div>
             </div>
 
@@ -268,8 +268,7 @@ export default function Home() {
           <div className="mk-closing-inner">
             <h2 data-reveal className="mk-closing-h">Your body. Your art. Your space.</h2>
             <div data-reveal data-reveal-delay="140" className="mk-closing-cta">
-              <a href="#waitlist" className="mk-btn mk-btn-cream">I&apos;m a Creator</a>
-              <a href="/signup" className="mk-btn mk-btn-ghost">I&apos;m a Member</a>
+              <a href="/signup" className="mk-btn mk-btn-cream">Start free today</a>
             </div>
           </div>
         </section>
