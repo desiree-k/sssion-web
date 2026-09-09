@@ -20,6 +20,15 @@ export const metadata: Metadata = {
     description: "A private studio platform for movement creators and their students.",
     siteName: "Sssion",
     type: "website",
+    // STOCK-PLACEHOLDER (Pexels) — replace /images/og-image.jpg with branded art when ready.
+    images: [{ url: "/images/og-image.jpg", width: 1200, height: 630, alt: "Sssion — own your movement" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Own your movement | Sssion",
+    description: "A private studio platform for movement creators and their students.",
+    // STOCK-PLACEHOLDER (Pexels) — shares /images/og-image.jpg with openGraph above.
+    images: ["/images/og-image.jpg"],
   },
 };
 

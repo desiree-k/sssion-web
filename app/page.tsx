@@ -123,7 +123,8 @@ export default function Home() {
               </div>
             </div>
             <div data-reveal data-reveal-delay="120" className="mk-two-media">
-              <VideoWell poster="/redesign/ss-home-why.webp" ratio="4 / 5" />
+              {/* STOCK-PLACEHOLDER (Pexels) — swap for real creator footage when licensed. */}
+              <VideoWell poster="/images/why-flexibility-pose.webp" ratio="4 / 5" />
             </div>
           </div>
         </section>
@@ -179,10 +180,11 @@ export default function Home() {
               </a>
             </div>
             <div data-reveal className="mk-two-media mk-mem-grid">
-              <VideoWell poster="/redesign/ss-home-mem1.webp" ratio="3 / 4" />
-              <VideoWell poster="/redesign/ss-home-mem2.webp" ratio="3 / 4" />
-              <VideoWell poster="/redesign/ss-home-mem3.webp" ratio="3 / 4" />
-              <VideoWell poster="/redesign/ss-home-mem4.webp" ratio="3 / 4" />
+              {/* STOCK-PLACEHOLDER (Pexels) — real portraits standing in until creator footage is licensed. */}
+              <VideoWell poster="/images/member-editorial-portrait.webp" ratio="3 / 4" />
+              <VideoWell poster="/images/member-body-positive.webp" ratio="3 / 4" />
+              <VideoWell poster="/images/member-flexibility-home.webp" ratio="3 / 4" />
+              <VideoWell poster="/images/member-motion-blur.webp" ratio="3 / 4" />
             </div>
           </div>
         </section>
@@ -244,12 +246,13 @@ export default function Home() {
             </p>
           </div>
           <div data-reveal className="mk-wall">
-            <div className="mk-wall-item"><VideoWell poster="/redesign/ss-home-mem1.webp" ratio="9 / 16" /></div>
-            <div className="mk-wall-item"><VideoWell poster="/redesign/ss-home-mem2.webp" ratio="9 / 16" /></div>
-            <div className="mk-wall-item"><VideoWell poster="/redesign/ss-home-mem3.webp" ratio="9 / 16" /></div>
-            <div className="mk-wall-item"><VideoWell poster="/redesign/ss-home-mem4.webp" ratio="9 / 16" /></div>
-            <div className="mk-wall-item"><VideoWell ratio="9 / 16" label="Clip coming" /></div>
-            <div className="mk-wall-item"><VideoWell ratio="9 / 16" label="Clip coming" /></div>
+            {/* STOCK-PLACEHOLDER (Pexels) — vertical stills until real creator clips are licensed. */}
+            <div className="mk-wall-item"><VideoWell poster="/images/member-editorial-portrait.webp" ratio="9 / 16" /></div>
+            <div className="mk-wall-item"><VideoWell poster="/images/member-body-positive.webp" ratio="9 / 16" /></div>
+            <div className="mk-wall-item"><VideoWell poster="/images/member-flexibility-home.webp" ratio="9 / 16" /></div>
+            <div className="mk-wall-item"><VideoWell poster="/images/member-motion-blur.webp" ratio="9 / 16" /></div>
+            <div className="mk-wall-item"><VideoWell poster="/images/pole-magenta-stage.webp" ratio="9 / 16" /></div>
+            <div className="mk-wall-item"><VideoWell poster="/images/pole-invert.webp" ratio="9 / 16" /></div>
           </div>
         </section>
 
