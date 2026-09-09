@@ -18,15 +18,15 @@ export const metadata: Metadata = {
 }
 
 const GROW = [
-  { d: 40, h: 'Earn from your community', p: 'Payments, paid sessions, and memberships.' },
-  { d: 100, h: 'Scale your content', p: 'Unlimited sessions, more storage, deeper tools.' },
+  { d: 40, h: 'Earn from your community', p: 'Memberships, workshops, drop-ins, and ticketed live classes.' },
+  { d: 100, h: 'Scale your library', p: 'More sessions, more storage, deeper tools as you grow.' },
   { d: 160, h: 'Understand your growth', p: 'Analytics and insights that actually help.' },
-  { d: 40, h: 'Run multiple spaces', p: 'Separate communities by location, level, or instructor.' },
+  { d: 40, h: 'Run multiple Spaces', p: 'Separate communities by location, level, or instructor.' },
 ]
 
 const PROMISE = [
   { n: '01', h: <>The community core stays free.</> },
-  { n: '02', h: <>We&apos;ll never take a cut of what you earn.</> },
+  { n: '02', h: <>You set your prices and keep your member relationships.</> },
   { n: '03', h: <>Paid tools are for when you&apos;re ready — <span className="mk-accent">never a wall in front of getting started.</span></> },
   { n: '04', h: <>We&apos;re building the paid layer <span className="mk-accent">with our creators, not at them.</span></> },
 ]
@@ -102,7 +102,7 @@ export default function FeaturesPage() {
               Start free.<br />Always.
             </h1>
             <p data-reveal data-reveal-delay="180" className="mk-hero-sub">
-              Building a community on Sssion is free — and the core of what we do always will be.
+              Building your community on Sssion is free — and the core of what we do always will be.
             </p>
           </div>
         </section>
@@ -114,8 +114,8 @@ export default function FeaturesPage() {
               <div data-reveal className="mk-eyebrow">Grow when you&apos;re ready</div>
               <h2 data-reveal data-reveal-delay="80" className="mk-h2">More, only when you want it.</h2>
               <p data-reveal data-reveal-delay="160" className="mk-body mk-body-2" style={{ maxWidth: 560 }}>
-                Some creators reach a point where they want more — to earn from their work, to scale,
-                to run something bigger.
+                Some creators reach a point where they want more — to earn from their work, to teach
+                live, to run something bigger. When you do, the tools are here.
               </p>
             </div>
             {/* TODO(footage): each capability gets a small app-UI screen-recording loop; placeholder wells now. */}
@@ -143,11 +143,12 @@ export default function FeaturesPage() {
                 An extension of your studio — not a competitor.
               </h2>
               <p data-reveal data-reveal-delay="160" className="mk-body mk-body-2" style={{ maxWidth: 520, marginBottom: 28 }}>
-                If you run a studio or teach in person, Sssion isn&apos;t here to compete with you —
-                it&apos;s here to extend what you already do.
+                Run a studio or teach in person? Sssion isn&apos;t here to compete — it&apos;s here to
+                extend what you already do. Rooms per class, staff accounts, and a community that keeps
+                members between sessions.
               </p>
-              <a data-reveal data-reveal-delay="220" href={STUDIO_MAILTO} className="mk-arrowlink">
-                Reach out <span aria-hidden>→</span>
+              <a data-reveal data-reveal-delay="220" href="/studios" className="mk-arrowlink">
+                See Sssion for Studios <span aria-hidden>→</span>
               </a>
             </div>
             <div data-reveal data-reveal-delay="120">
@@ -178,16 +179,16 @@ export default function FeaturesPage() {
                 <span className="mk-road-dot" style={{ background: '#9E5C68', animation: 'mk-pulse 2.4s ease-in-out infinite' }} />
                 <div className="mk-road-title">Now</div>
                 <ul className="mk-road-list">
-                  {['Free community spaces', 'Content hosting', 'Live sessions', 'Discovery'].map((t) => (
+                  {['Free private Spaces', 'Video-first feed, rooms & chat', 'Session library', 'Publishing & Discover', 'Live classes (Google Meet / Zoom)'].map((t) => (
                     <li key={t}><span className="mk-accent">—</span>{t}</li>
                   ))}
                 </ul>
               </div>
               <div data-reveal data-reveal-delay="100" className="mk-road-col" style={{ borderTop: '2px solid rgba(158,92,104,.5)' }}>
                 <span className="mk-road-dot" style={{ background: '#FFFFFF', border: '2px solid #9E5C68' }} />
-                <div className="mk-road-title mk-accent">Soon</div>
+                <div className="mk-road-title mk-accent">Rolling out</div>
                 <ul className="mk-road-list">
-                  {['Payments', 'Paid memberships'].map((t) => (
+                  {['Native in-app live streaming', 'Built-in checkout', 'Memberships & subscriptions'].map((t) => (
                     <li key={t} style={{ color: '#8D877D' }}><span className="mk-accent">—</span>{t}</li>
                   ))}
                 </ul>
@@ -196,7 +197,7 @@ export default function FeaturesPage() {
                 <span className="mk-road-dot" style={{ background: '#FFFFFF', border: '2px solid #C4BEB2' }} />
                 <div className="mk-road-title" style={{ color: '#8D877D' }}>Ahead</div>
                 <ul className="mk-road-list">
-                  {['Analytics', 'Multiple spaces', 'Tools for studios'].map((t) => (
+                  {['Analytics', 'Multiple Spaces', 'Deeper studio tools'].map((t) => (
                     <li key={t} style={{ color: '#8D877D' }}><span style={{ color: '#C4BEB2' }}>—</span>{t}</li>
                   ))}
                 </ul>
@@ -215,7 +216,7 @@ export default function FeaturesPage() {
           <div className="mk-closing-inner">
             <h2 data-reveal className="mk-closing-h">Start free. Grow when you&apos;re ready.</h2>
             <div data-reveal data-reveal-delay="120" className="mk-closing-cta">
-              <a href="/join" className="mk-btn mk-btn-cream">Start your free community →</a>
+              <a href="/signup" className="mk-btn mk-btn-cream">Start your free Space →</a>
               <a href={STUDIO_MAILTO} className="mk-btn mk-btn-ghost">Talk to us about studios →</a>
             </div>
           </div>
