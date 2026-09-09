@@ -20,19 +20,19 @@ export const metadata: Metadata = {
 
 // Studio-tier capabilities. Staff (studio_staff), Rooms (community_channels),
 // and Retention ship today; white-label is on the roadmap and is marked "soon".
-const CAPABILITIES = ['Staff & instructors', 'Rooms', 'Retention']
+const CAPABILITIES = ['Rooms per class', 'Staff accounts', 'Retention']
 
 const HOW_IT_WORKS = [
-  { n: '01', d: 40, h: 'We set up your Sssion Space', p: 'A private online home for your studio, with your name on it. We set it up with you, personally.' },
+  { n: '01', d: 40, h: 'We set up your Sssion Space', p: 'A private online home for your studio, with your name on it. We set it up with you, personally — then get it reviewed and ready to publish.' },
   { n: '02', d: 100, h: 'Invite your students', p: 'Your members join your Space — no algorithm, no strangers, just the people who train with you.' },
   { n: '03', d: 160, h: 'Keep the conversation going', p: 'Share content, celebrate progress, keep the community talking between classes.' },
   { n: '04', d: 220, h: 'Students keep the habit', p: 'Connected students stay motivated — and motivated students keep showing up to class.' },
 ]
 
 const SOLUTION_POINTS = [
-  { n: '01', d: 40, h: 'A hub, not a rival', p: 'Sssion is a supplement to your studio, not a competitor. Everything in your Space points students back to the room.' },
-  { n: '02', d: 100, h: 'Community between classes', p: 'Your students connect with each other and with you in the days between sessions — the days when the habit slips.' },
-  { n: '03', d: 160, h: 'Your content, your people', p: 'Post what keeps your community engaged: recaps, drills, wins, announcements. Your Space, your rules.' },
+  { n: '01', d: 40, h: 'A hub, not a rival', p: 'Everything in your Space points students back to the room — a supplement to your studio, never a replacement.' },
+  { n: '02', d: 100, h: 'Community between classes', p: 'Your students connect with each other and with you on the days the habit usually slips.' },
+  { n: '03', d: 160, h: 'Your rooms, your people', p: 'Recaps, drills, wins, announcements — organized by class or instructor. Your Space, your rules.' },
 ]
 
 const css = `
@@ -105,8 +105,8 @@ export default function StudiosPage() {
                 Keep the students you worked <span className="mk-serif-i mk-accent">so hard</span> to get.
               </h1>
               <p data-reveal data-reveal-delay="180" className="mk-hero-sub">
-                Sssion gives your studio an online community hub that keeps students connected
-                between classes — so the habit sticks, and they keep coming back.
+                Sssion gives your studio a community online that keeps students connected between
+                classes — so the habit sticks, and they keep coming back to the room.
               </p>
               <a data-reveal data-reveal-delay="280" href={STUDIO_MAILTO} className="mk-btn mk-btn-cream">
                 Talk to us about your studio <span aria-hidden>→</span>
@@ -142,8 +142,9 @@ export default function StudiosPage() {
                 Your studio&apos;s community, carried between classes.
               </h2>
               <p data-reveal data-reveal-delay="120" className="mk-fs-lead" style={{ marginTop: 18 }}>
-                A private Sssion Space where your students connect, share progress, and stay
-                motivated in the days between sessions.{' '}
+                A private Space for your studio online — rooms for each class, instructor, or vibe;
+                staff accounts for your teachers; a feed and chat where your students stay connected
+                in the days between sessions.{' '}
                 <span style={{ color: '#1D1B18', fontWeight: 600 }}>
                   It&apos;s not here to move your studio online — it&apos;s here to keep your
                   students coming back to it.
@@ -219,7 +220,7 @@ export default function StudiosPage() {
           </div>
         </section>
 
-        {/* ================= FOUNDING STUDIOS CTA ================= */}
+        {/* ================= STUDIO PARTNERS CTA ================= */}
         <section className="mk-closing">
           <div className="mk-closing-media">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -230,7 +231,7 @@ export default function StudiosPage() {
             <div data-reveal className="mk-eyebrow" style={{ color: 'rgba(247,244,239,.6)', marginBottom: 24 }}>Early days, honestly</div>
             <h2 data-reveal data-reveal-delay="80" className="mk-closing-h">
               We&apos;re building this with a small group of{' '}
-              <span className="mk-serif-i" style={{ color: '#D9A6AE' }}>founding studio partners.</span>
+              <span className="mk-serif-i" style={{ color: '#D9A6AE' }}>studio partners.</span>
             </h2>
             <p data-reveal data-reveal-delay="160" className="mk-closing-sub">
               The studio side of Sssion is in early beta — we&apos;re not selling you a finished
