@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import StaffInviteBanners from '@/components/StaffInviteBanners'
 
 interface StudioProfile {
   username: string | null
@@ -161,6 +162,10 @@ export default function StudentDashboardPage() {
             Sign Out
           </button>
         </div>
+
+        {/* Staff invitations — surfaced for invitees whose studio_staff row
+            (status='invited') the studio_access query below never returns. */}
+        <StaffInviteBanners />
 
         {isLoading ? (
           <div className="py-24 flex justify-center">
