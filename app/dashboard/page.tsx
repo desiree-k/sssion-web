@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import AppStoreBadge from '@/components/AppStoreBadge'
 import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
+import StaffInviteBanners from '@/components/StaffInviteBanners'
 
 interface UserData {
   displayName: string
@@ -170,6 +171,10 @@ export default function DashboardPage() {
               Your creator dashboard
             </p>
           </div>
+
+          {/* Staff invitations — a creator can also be invited to another
+              studio's team; surface any pending studio_staff invite here too. */}
+          <StaffInviteBanners />
 
           {/* Studio Link */}
           {userData.username ? (
