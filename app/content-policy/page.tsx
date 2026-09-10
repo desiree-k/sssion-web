@@ -76,19 +76,34 @@ export default function ContentPolicyPage() {
             </h2>
             <div className="text-white/70 space-y-4">
               <p>
-                We review reports and act on violations. Depending on severity, that means content
-                removal, a frozen Space (everything unavailable until resolved), or permanent
-                removal from Sssion. We aim to be fair and to talk to creators first when the
-                situation allows it — but safety and legality come before growth, every time.
+                We review reports and flagged content ourselves. Whether content violates this
+                policy is determined by Sssion after human review — automated systems flag content
+                for review, they don&apos;t decide.
+              </p>
+              <p>When we confirm a violation:</p>
+              <ul className="list-disc pl-6 space-y-3">
+                <li>
+                  <span className="text-white">First violation</span> — the content is removed and
+                  the account&apos;s ability to earn is paused while we review.
+                </li>
+                <li>
+                  <span className="text-white">Second violation</span> — the Space is frozen and
+                  access suspended pending appeal.
+                </li>
+                <li>
+                  <span className="text-white">Third violation</span> — the account is terminated.
+                </li>
+              </ul>
+              <p>
+                Severity may warrant immediate escalation. Violations involving minors,
+                non-consensual content, or illegal material result in immediate termination and
+                reporting to the appropriate authorities, regardless of history.
               </p>
               <p>
-                To report something, use the in-app report option or email{' '}
-                <a href="mailto:hello@sssion.studio" className="text-[#B76E79] hover:underline">
-                  hello@sssion.studio
-                </a>
-                . Copyright complaints go to{' '}
-                <a href="/dmca" className="text-[#B76E79] hover:underline">
-                  dmca@sssion.studio
+                <span className="text-white">Appeals:</span> reply to any enforcement notice, or
+                write to{' '}
+                <a href="mailto:moderation@sssion.studio" className="text-[#B76E79] hover:underline">
+                  moderation@sssion.studio
                 </a>
                 .
               </p>
