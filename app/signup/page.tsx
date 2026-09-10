@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
 
 /**
  * One-door signup, mirroring the app: every account starts as a member
@@ -37,7 +38,7 @@ export default function SignupPage() {
       return
     }
     if (!agreedToTerms) {
-      setError('Please agree to the Terms of Use and Privacy Policy')
+      setError('Please agree to the Terms of Use, Privacy Policy, and Content Policy')
       return
     }
 
@@ -161,10 +162,14 @@ export default function SignupPage() {
                     I agree to the{' '}
                     <a href="/terms" target="_blank" className="text-[#B76E79] hover:underline">
                       Terms of Use
-                    </a>{' '}
-                    and{' '}
+                    </a>
+                    ,{' '}
                     <a href="/privacy" target="_blank" className="text-[#B76E79] hover:underline">
                       Privacy Policy
+                    </a>
+                    , and{' '}
+                    <a href="/content-policy" target="_blank" className="text-[#B76E79] hover:underline">
+                      Content Policy
                     </a>
                   </span>
                 </label>
@@ -271,9 +276,10 @@ export default function SignupPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 px-6 border-t border-[#2A2A30]">
-        <div className="max-w-6xl mx-auto text-center">
-          <a href="/" className="text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors">
+      <footer className="py-6 px-6 border-t border-[#2A2A30] text-[#F4F1EA]/50">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-4">
+          <ComplianceFooterLinks />
+          <a href="/" className="text-sm hover:text-[#F4F1EA]/70 transition-colors">
             &larr; Back to sssion.studio
           </a>
         </div>

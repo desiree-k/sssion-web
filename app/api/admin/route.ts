@@ -295,7 +295,7 @@ export async function POST(req: NextRequest) {
         const pageSize = 50
         let query = serviceClient
           .from('content_reports')
-          .select('id, reason, details, report_type, status, created_at, content_item_id, post_id, reporter_id, reported_user_id', { count: 'exact' })
+          .select('id, reason, details, report_type, status, created_at, content_item_id, post_id, reporter_id, reported_user_id, report_source, subject_url, subject_username, reporter_email', { count: 'exact' })
           .order('created_at', { ascending: false })
           .range((page - 1) * pageSize, page * pageSize - 1)
         if (status && status !== 'all') {

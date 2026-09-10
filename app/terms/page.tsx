@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
 
 export const metadata: Metadata = {
   title: 'Terms of Use | Sssion',
@@ -244,9 +245,10 @@ export default function TermsOfUsePage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-white/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <a href="/" className="text-white/40 text-sm hover:text-white/60 transition-colors">
+      <footer className="py-8 px-6 border-t border-white/10 text-white/50">
+        <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
+          <ComplianceFooterLinks />
+          <a href="/" className="text-sm hover:text-white/70 transition-colors">
             &larr; Back to sssion.studio
           </a>
         </div>

@@ -15,6 +15,8 @@ import StudioAccessCTA from '@/components/StudioAccessCTA'
 import FollowButton from '@/components/FollowButton'
 import EnterSpaceButton from '@/components/EnterSpaceButton'
 import OfferingCards, { Offering } from '@/components/OfferingCards'
+import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
+import ReportLink from '@/components/ReportLink'
 
 // The approved design's type pairing: Bodoni Moda display, Archivo body.
 const bodoni = Bodoni_Moda({
@@ -645,6 +647,16 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
               <AppStoreBadge size="lg" />
             </div>
           </section>
+
+          {/* Unobtrusive safety affordance — report this profile/content */}
+          <div className="pb-8 flex justify-center">
+            <ReportLink
+              username={profile.username}
+              subject={`Profile: ${displayName}`}
+              label="Report this profile"
+              className="text-[var(--pt-text2)] hover:text-[var(--pt-text)] transition-colors"
+            />
+          </div>
         </div>
       </main>
 
@@ -653,21 +665,34 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
 
       {/* Footer */}
       <footer className="border-t border-[var(--pt-border)] py-6 px-6 md:px-16">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-          <span className="text-[11px] uppercase tracking-[0.18em] text-[var(--pt-text2)]">
-            Powered by Sssion
-          </span>
-          <div className="flex gap-6 items-center">
-            <a
-              href="/discover"
-              className="text-[11px] hover:underline"
-              style={{ color: 'var(--pt-accent)' }}
-            >
-              Discover more creators
-            </a>
-            <a href="/" className="text-[11px] text-[var(--pt-text2)] hover:text-[var(--pt-text)] transition-colors">
-              Home
-            </a>
+        <div className="max-w-5xl mx-auto flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+            <span className="text-[11px] uppercase tracking-[0.18em] text-[var(--pt-text2)]">
+              Powered by Sssion
+            </span>
+            <div className="flex gap-6 items-center">
+              <a
+                href="/discover"
+                className="text-[11px] hover:underline"
+                style={{ color: 'var(--pt-accent)' }}
+              >
+                Discover more creators
+              </a>
+              <a href="/" className="text-[11px] text-[var(--pt-text2)] hover:text-[var(--pt-text)] transition-colors">
+                Home
+              </a>
+              <ReportLink
+                username={profile.username}
+                subject={`Profile: ${displayName}`}
+                className="text-[var(--pt-text2)] hover:text-[var(--pt-text)] transition-colors"
+                style={{ fontSize: '11px', opacity: 1 }}
+              />
+            </div>
+          </div>
+          <div
+            className="border-t border-[var(--pt-border)] pt-4 flex justify-center text-[var(--pt-text2)]"
+          >
+            <ComplianceFooterLinks />
           </div>
         </div>
       </footer>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
 
 type View = 'form' | 'needsVerification' | 'forgotPassword' | 'resetSent'
 
@@ -337,9 +338,10 @@ export default function StudentSignInPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 px-6 border-t border-[#2A2A30]">
-        <div className="max-w-6xl mx-auto text-center">
-          <a href="/" className="text-[#F4F1EA]/40 text-sm hover:text-[#F4F1EA]/60 transition-colors">
+      <footer className="py-6 px-6 border-t border-[#2A2A30] text-[#F4F1EA]/50">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-4">
+          <ComplianceFooterLinks />
+          <a href="/" className="text-sm hover:text-[#F4F1EA]/70 transition-colors">
             &larr; Back to sssion.studio
           </a>
         </div>

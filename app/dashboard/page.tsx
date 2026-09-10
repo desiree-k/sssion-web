@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import AppStoreBadge from '@/components/AppStoreBadge'
+import StaffInviteBanners from '@/components/StaffInviteBanners'
+import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
 
 interface UserData {
   displayName: string
@@ -160,6 +162,10 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 py-12 px-6">
         <div className="max-w-3xl mx-auto space-y-8">
+          {/* Staff invitations — a creator can also be invited to another
+              studio's team; the banner no-ops when there are none. */}
+          <StaffInviteBanners />
+
           {/* Welcome */}
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">
@@ -258,21 +264,26 @@ export default function DashboardPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 px-6 border-t border-[#2A2A30]">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <p className="text-[#F4F1EA]/40 text-sm">
-              &copy; 2026 Sssion
-            </p>
-            <AppStoreBadge className="scale-90 origin-left" />
+      <footer className="py-6 px-6 border-t border-[#2A2A30] text-[#F4F1EA]/40">
+        <div className="max-w-6xl mx-auto flex flex-col gap-5">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <p className="text-sm">
+                &copy; 2026 Sssion
+              </p>
+              <AppStoreBadge className="scale-90 origin-left" />
+            </div>
+            <div className="flex gap-6">
+              <a href="/" className="hover:text-[#F4F1EA]/60 text-sm transition-colors">
+                Home
+              </a>
+              <a href="/discover" className="hover:text-[#F4F1EA]/60 text-sm transition-colors">
+                Discover
+              </a>
+            </div>
           </div>
-          <div className="flex gap-6">
-            <a href="/" className="text-[#F4F1EA]/40 hover:text-[#F4F1EA]/60 text-sm transition-colors">
-              Home
-            </a>
-            <a href="/discover" className="text-[#F4F1EA]/40 hover:text-[#F4F1EA]/60 text-sm transition-colors">
-              Discover
-            </a>
+          <div className="border-t border-[#2A2A30] pt-4 flex justify-center">
+            <ComplianceFooterLinks />
           </div>
         </div>
       </footer>

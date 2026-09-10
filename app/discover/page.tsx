@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { Metadata } from 'next'
 import CreatorGrid from './CreatorGrid'
 import StudentNav from '@/components/StudentNav'
+import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
 
 export const metadata: Metadata = {
   title: 'Discover Creators | Sssion',
@@ -117,21 +118,26 @@ export default async function DiscoverPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-[#2A2A30]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[#F4F1EA]/40 text-sm">
-            &copy; 2026 Sssion
-          </p>
-          <div className="flex gap-6">
-            <a href="/" className="text-[#F4F1EA]/40 hover:text-[#F4F1EA]/60 text-sm transition-colors">
-              Home
-            </a>
-            <a href="/signin" className="text-[#F4F1EA]/40 hover:text-[#F4F1EA]/60 text-sm transition-colors">
-              Creator Sign In
-            </a>
-            <a href="/join" className="text-[#F4F1EA]/40 hover:text-[#F4F1EA]/60 text-sm transition-colors">
-              Creator Signup
-            </a>
+      <footer className="py-8 px-6 border-t border-[#2A2A30] text-[#F4F1EA]/40">
+        <div className="max-w-6xl mx-auto flex flex-col gap-5">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm">
+              &copy; 2026 Sssion
+            </p>
+            <div className="flex gap-6">
+              <a href="/" className="hover:text-[#F4F1EA]/60 text-sm transition-colors">
+                Home
+              </a>
+              <a href="/signin" className="hover:text-[#F4F1EA]/60 text-sm transition-colors">
+                Creator Sign In
+              </a>
+              <a href="/join" className="hover:text-[#F4F1EA]/60 text-sm transition-colors">
+                Creator Signup
+              </a>
+            </div>
+          </div>
+          <div className="border-t border-[#2A2A30] pt-4 flex justify-center">
+            <ComplianceFooterLinks />
           </div>
         </div>
       </footer>

@@ -150,11 +150,12 @@ export function MarketingFooter() {
             <a href="/student-signin" className="mk-footer-link">Student Sign In</a>
           </div>
           <div className="mk-footer-col">
-            <span className="mk-footer-label">Legal</span>
+            <span className="mk-footer-label">Legal &amp; Safety</span>
             <a href="/privacy" className="mk-footer-link">Privacy</a>
             <a href="/terms" className="mk-footer-link">Terms</a>
             <a href="/content-policy" className="mk-footer-link">Content Policy</a>
             <a href="/dmca" className="mk-footer-link">DMCA</a>
+            <a href="/report" className="mk-footer-link">Report content</a>
           </div>
         </div>
       </div>

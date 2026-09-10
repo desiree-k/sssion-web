@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
 
 export const metadata: Metadata = {
   title: 'DMCA / Copyright Policy | Sssion',
@@ -135,6 +136,16 @@ export default function DmcaPage() {
           </section>
         </article>
       </main>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-white/10 text-white/50">
+        <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
+          <ComplianceFooterLinks />
+          <a href="/" className="text-sm hover:text-white/70 transition-colors">
+            &larr; Back to sssion.studio
+          </a>
+        </div>
+      </footer>
     </div>
   )
 }

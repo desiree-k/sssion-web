@@ -21,9 +21,29 @@ interface Report {
   post_id: string | null
   reporter: UserRef | null
   reported_user: UserRef | null
+  // Web / anonymous reports (from the public /report page)
+  report_source: string | null
+  subject_url: string | null
+  subject_username: string | null
+  reporter_email: string | null
 }
 
 type FilterTab = 'all' | 'pending' | 'reviewed' | 'actioned'
+
+// Human-readable labels for the /report category slugs stored in `reason`.
+const REASON_LABELS: Record<string, string> = {
+  sexual_content: 'Non-consensual / prohibited sexual content',
+  minor_safety: 'Minor safety',
+  violence: 'Violence or threats',
+  hate: 'Hate or harassment',
+  spam_misleading: 'Spam or misleading',
+  copyright: 'Copyright / IP',
+  other: 'Something else',
+}
+
+function reasonLabel(reason: string) {
+  return REASON_LABELS[reason] ?? reason
+}
 
 async function adminPost(action: string, payload?: unknown) {
   const { data: { session } } = await supabase.auth.getSession()
@@ -154,7 +174,17 @@ export default function ReportsPage() {
                     }`}>
                       {report.status}
                     </span>
-                    {report.report_type && (
+                    {report.report_source === 'web' && (
+                      <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-blue-500/15 text-blue-300">
+                        Web
+                      </span>
+                    )}
+                    {report.reason === 'minor_safety' && (
+                      <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-red-500/25 text-red-300 font-semibold">
+                        ⚠ Minor safety
+                      </span>
+                    )}
+                    {report.report_type && report.report_type !== 'web' && (
                       <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-white/6 text-white/50">
                         {report.report_type}
                       </span>
@@ -188,22 +218,58 @@ export default function ReportsPage() {
 
                 {/* Reason */}
                 <div>
-                  <p className="text-white text-sm font-medium">{report.reason}</p>
+                  <p className="text-white text-sm font-medium">{reasonLabel(report.reason)}</p>
                   {report.details && (
-                    <p className="text-white/50 text-sm mt-1">{report.details}</p>
+                    <p className="text-white/50 text-sm mt-1 whitespace-pre-wrap">{report.details}</p>
                   )}
                 </div>
 
-                {/* People */}
+                {/* People / subject */}
                 <div className="flex gap-6 text-xs flex-wrap">
                   <div>
                     <span className="text-white/30">Reported by: </span>
-                    <span className="text-white/70">{userName(report.reporter)}</span>
+                    <span className="text-white/70">
+                      {report.reporter
+                        ? userName(report.reporter)
+                        : report.reporter_email
+                          ? report.reporter_email
+                          : report.report_source === 'web'
+                            ? 'Anonymous (web)'
+                            : '—'}
+                    </span>
                   </div>
-                  <div>
-                    <span className="text-white/30">Reported user: </span>
-                    <span className="text-white/70">{userName(report.reported_user)}</span>
-                  </div>
+                  {(report.reported_user || !report.subject_username) && (
+                    <div>
+                      <span className="text-white/30">Reported user: </span>
+                      <span className="text-white/70">{userName(report.reported_user)}</span>
+                    </div>
+                  )}
+                  {report.subject_username && (
+                    <div>
+                      <span className="text-white/30">Reported handle: </span>
+                      <a
+                        href={`/${report.subject_username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#B76E79] hover:underline"
+                      >
+                        @{report.subject_username}
+                      </a>
+                    </div>
+                  )}
+                  {report.subject_url && (
+                    <div className="min-w-0">
+                      <span className="text-white/30">URL: </span>
+                      <a
+                        href={report.subject_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#B76E79] hover:underline break-all"
+                      >
+                        {report.subject_url}
+                      </a>
+                    </div>
+                  )}
                   {report.content_item_id && (
                     <div>
                       <span className="text-white/30">Content ID: </span>
