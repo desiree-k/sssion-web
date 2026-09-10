@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import AppStoreBadge from '@/components/AppStoreBadge'
-import StaffInviteBanners from '@/components/StaffInviteBanners'
 import ComplianceFooterLinks from '@/components/ComplianceFooterLinks'
 
 interface UserData {
@@ -162,10 +161,6 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 py-12 px-6">
         <div className="max-w-3xl mx-auto space-y-8">
-          {/* Staff invitations — a creator can also be invited to another
-              studio's team; the banner no-ops when there are none. */}
-          <StaffInviteBanners />
-
           {/* Welcome */}
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">
