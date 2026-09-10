@@ -1,41 +1,68 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import type { EmailOtpType } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
-type Stage = 'checking' | 'form' | 'success' | 'no-session'
+// 'verifying' — establishing a session from the link
+// 'form'      — session confirmed, collect the new password
+// 'success'   — password updated
+// 'missing'   — no token in the URL at all
+// 'expired'   — token present but rejected (expired / already used)
+type Stage = 'verifying' | 'form' | 'success' | 'missing' | 'expired'
 
 export default function ResetPasswordPage() {
-  const [stage, setStage] = useState<Stage>('checking')
+  const [stage, setStage] = useState<Stage>('verifying')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
-    let settled = false
+    const establishSession = async () => {
+      // Supabase may bounce here with the error already in the URL when the
+      // token is dead on arrival (?error=access_denied&error_code=otp_expired,
+      // sometimes in the hash fragment instead of the query string).
+      const search = new URLSearchParams(window.location.search)
+      const hash = new URLSearchParams(window.location.hash.slice(1))
+      if (
+        search.get('error') || search.get('error_code') ||
+        hash.get('error') || hash.get('error_code')
+      ) {
+        setStage('expired')
+        return
+      }
 
-    const settle = (next: Stage) => {
-      if (settled) return
-      settled = true
-      setStage(next)
+      // Primary flow: cross-client recovery. The email links straight here with
+      // ?token_hash=...&type=recovery. verifyOtp needs no PKCE code-verifier, so
+      // it works when the reset was requested in the app and opened in Safari.
+      const tokenHash = search.get('token_hash')
+      const type = (search.get('type') as EmailOtpType | null) ?? 'recovery'
+      if (tokenHash) {
+        const { data, error: verifyError } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type,
+        })
+        setStage(!verifyError && data.session ? 'form' : 'expired')
+        return
+      }
+
+      // Backward support: web-initiated PKCE links land with ?code=.
+      const code = search.get('code')
+      if (code) {
+        const { data, error: exchangeError } =
+          await supabase.auth.exchangeCodeForSession(code)
+        setStage(!exchangeError && data.session ? 'form' : 'expired')
+        return
+      }
+
+      // Nothing to work with. If a recovery session somehow already exists
+      // (e.g. a re-render after a successful verify), keep the form.
+      const { data: { session } } = await supabase.auth.getSession()
+      setStage(session ? 'form' : 'missing')
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) settle('form')
-    })
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) settle('form')
-    })
-
-    // Recovery tokens arrive in the URL hash and take a moment to process.
-    const timer = setTimeout(() => settle('no-session'), 4000)
-
-    return () => {
-      subscription.unsubscribe()
-      clearTimeout(timer)
-    }
+    establishSession()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,33 +80,58 @@ export default function ResetPasswordPage() {
     const { error: updateError } = await supabase.auth.updateUser({ password })
     setIsSaving(false)
     if (updateError) {
-      setError(updateError.message)
+      // Update failed — stay on the form so they can retry.
+      setError(updateError.message || 'Something went wrong updating your password. Please try again.')
       return
     }
     setStage('success')
   }
+
+  const RequestNewLink = () => (
+    <a
+      href="/signin"
+      className="inline-block mt-6 px-6 py-3 bg-[#B76E79] hover:bg-[#a05f69] text-[#F4F1EA] font-semibold rounded-full transition-colors"
+    >
+      Request a new link
+    </a>
+  )
 
   return (
     <div className="min-h-screen bg-[#0E0E12] flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <h1 className="text-4xl font-bold text-[#B76E79] mb-10 text-center">Sssion</h1>
 
-        {stage === 'checking' && (
+        {stage === 'verifying' && (
           <div className="text-center">
             <div className="w-12 h-12 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
             <p className="text-lg text-[#F4F1EA]/80">Checking your reset link...</p>
           </div>
         )}
 
-        {stage === 'no-session' && (
+        {stage === 'missing' && (
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold text-[#F4F1EA] mb-3">
+              No reset link found
+            </h2>
+            <p className="text-[#F4F1EA]/60 leading-relaxed">
+              Open the password reset link directly from your email. If you typed
+              this address in by hand, request a new link to get started.
+            </p>
+            <RequestNewLink />
+          </div>
+        )}
+
+        {stage === 'expired' && (
           <div className="text-center">
             <h2 className="text-2xl font-semibold text-[#F4F1EA] mb-3">
               This reset link isn&apos;t valid anymore
             </h2>
             <p className="text-[#F4F1EA]/60 leading-relaxed">
-              Password reset links only work once and expire after a while.
-              Request a new one from the sign-in screen and try again.
+              Password reset links only work once and expire after a while. This
+              one has already been used or has timed out — request a new one and
+              try again.
             </p>
+            <RequestNewLink />
           </div>
         )}
 
