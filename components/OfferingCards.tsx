@@ -150,21 +150,30 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
       const expiresAt = offering.access_duration_days
         ? new Date(Date.now() + offering.access_duration_days * 86400000).toISOString()
         : null
-      const { error: insertError } = await supabase.from('member_offerings').insert({
-        user_id: signedInStudentId,
-        offering_id: offering.id,
-        creator_id: creatorId,
-        status: autoApproved ? 'active' : 'pending',
-        ...(autoApproved ? { granted_at: new Date().toISOString(), expires_at: expiresAt } : {}),
-      })
+      // Chain .select() so the UI reflects the row the DB actually accepted.
+      // An insert filtered out by RLS (e.g. an 'active' write on a
+      // non-auto-approve offering) returns zero rows rather than erroring, and
+      // must not read as a granted/pending success.
+      const { data: rows, error: insertError } = await supabase
+        .from('member_offerings')
+        .insert({
+          user_id: signedInStudentId,
+          offering_id: offering.id,
+          creator_id: creatorId,
+          status: autoApproved ? 'active' : 'pending',
+          ...(autoApproved ? { granted_at: new Date().toISOString(), expires_at: expiresAt } : {}),
+        })
+        .select('id, offering_id, status, expires_at')
       if (insertError) throw insertError
+      const saved = rows?.[0]
+      if (!saved) throw new Error('request-not-saved')
       setMine((prev) => ({
         ...prev,
         [offering.id]: {
-          id: 'local',
-          offering_id: offering.id,
-          status: autoApproved ? 'active' : 'pending',
-          expires_at: autoApproved ? expiresAt : null,
+          id: saved.id,
+          offering_id: saved.offering_id,
+          status: saved.status,
+          expires_at: saved.expires_at,
         },
       }))
       setAwaitingPaymentId(null)
@@ -213,7 +222,10 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
             else if (pending) label = 'Requested — awaiting approval'
             else if (awaiting) label = "I've paid — request access"
             else if (offering.is_free) {
-              label = offering.access_duration_days && offering.auto_approve ? 'Start Free Trial' : 'Join'
+              // Manual-review free offerings send a request, not an instant join.
+              label = !offering.auto_approve
+                ? 'Request to Join'
+                : offering.access_duration_days ? 'Start Free Trial' : 'Join'
             } else label = 'Get Access'
 
             const priceLine = offering.access_duration_days
