@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 
 export default function TermsOfUsePage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#0E0E12]">
       {/* Header */}
       <header className="py-6 px-6 border-b border-white/10">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-2xl font-bold text-[#B76E79]">
-            Sssion
+          <a href="/" className="text-2xl font-semibold tracking-[0.3em] text-[#F4F1EA]">
+            SSSION
           </a>
         </div>
       </header>
@@ -21,14 +21,14 @@ export default function TermsOfUsePage() {
       {/* Content */}
       <main className="py-12 px-6">
         <article className="max-w-3xl mx-auto prose prose-invert">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#F4F1EA] mb-2">
             Terms of Use
           </h1>
-          <p className="text-white/50 mb-8">
+          <p className="text-[#F4F1EA]/50 mb-8">
             Effective Date: April 30, 2026
           </p>
 
-          <p className="text-white/70 leading-relaxed mb-8">
+          <p className="text-[#F4F1EA]/70 leading-relaxed mb-8">
             Welcome to Sssion. These Terms of Use (&quot;Terms&quot;) govern your access to and use of
             the Sssion mobile application and website (collectively, the &quot;Service&quot;). By using
             Sssion, you agree to be bound by these Terms.
@@ -36,13 +36,13 @@ export default function TermsOfUsePage() {
 
           {/* Section 1 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               1. Acceptance of Terms
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 By creating an account or using Sssion, you agree to these Terms and our{' '}
-                <a href="/privacy" className="text-[#B76E79] hover:underline">
+                <a href="/privacy" className="text-[#C9A96A] hover:underline">
                   Privacy Policy
                 </a>. If you do not agree to these Terms, do not use the Service.
               </p>
@@ -55,12 +55,12 @@ export default function TermsOfUsePage() {
 
           {/* Section 2 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               2. User Conduct
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
-                <strong className="text-white">Sssion has zero tolerance for objectionable content or abusive behavior.</strong>
+                <strong className="text-[#F4F1EA]">Sssion has zero tolerance for objectionable content or abusive behavior.</strong>
               </p>
               <p>
                 You agree not to post, upload, or share any content that includes:
@@ -75,7 +75,7 @@ export default function TermsOfUsePage() {
                 <li>Content that infringes on intellectual property rights</li>
               </ul>
               <p>
-                <strong className="text-white">Users who violate these terms will have their content removed and their account
+                <strong className="text-[#F4F1EA]">Users who violate these terms will have their content removed and their account
                 suspended or permanently terminated.</strong> Sssion reserves the right to remove any content at
                 its sole discretion.
               </p>
@@ -84,16 +84,16 @@ export default function TermsOfUsePage() {
 
           {/* Section 3 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               3. Content Guidelines
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 Sssion is a platform for movement and dance instruction. All content must be related
                 to movement education and community building.
               </p>
               <p>
-                <strong className="text-white">You are responsible for all content you post.</strong> By posting content,
+                <strong className="text-[#F4F1EA]">You are responsible for all content you post.</strong> By posting content,
                 you represent that you have the right to share it and that it complies with these Terms.
               </p>
               <p>
@@ -110,16 +110,16 @@ export default function TermsOfUsePage() {
 
           {/* Section 4 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               4. Reporting and Enforcement
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 Users can report objectionable content and abusive users through the app&apos;s reporting
                 features or by contacting us directly.
               </p>
               <p>
-                <strong className="text-white">Sssion will review all reports within 24 hours.</strong>
+                <strong className="text-[#F4F1EA]">Sssion will review all reports within 24 hours.</strong>
               </p>
               <p>
                 Content found to violate these Terms will be removed promptly. Users who post
@@ -136,18 +136,18 @@ export default function TermsOfUsePage() {
 
           {/* Section 5 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               5. Account Termination
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
-                <strong className="text-white">Sssion reserves the right to suspend or terminate accounts</strong> that
+                <strong className="text-[#F4F1EA]">Sssion reserves the right to suspend or terminate accounts</strong> that
                 violate these Terms, at our sole discretion, with or without notice.
               </p>
               <p>
                 You may delete your own account at any time through the app settings. Account deletion
                 will remove your profile, content, and associated data as described in our{' '}
-                <a href="/privacy" className="text-[#B76E79] hover:underline">
+                <a href="/privacy" className="text-[#C9A96A] hover:underline">
                   Privacy Policy
                 </a>.
               </p>
@@ -156,10 +156,10 @@ export default function TermsOfUsePage() {
 
           {/* Section 6 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               6. Intellectual Property
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 You retain ownership of content you create and post on Sssion. By posting content,
                 you grant Sssion a non-exclusive, worldwide license to display and distribute your
@@ -174,13 +174,13 @@ export default function TermsOfUsePage() {
 
           {/* Section 7 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               7. Privacy
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 Your privacy is important to us. Please review our{' '}
-                <a href="/privacy" className="text-[#B76E79] hover:underline">
+                <a href="/privacy" className="text-[#C9A96A] hover:underline">
                   Privacy Policy
                 </a>{' '}
                 to understand how we collect, use, and protect your information.
@@ -190,10 +190,10 @@ export default function TermsOfUsePage() {
 
           {/* Section 8 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               8. Disclaimers
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 The Service is provided &quot;as is&quot; without warranties of any kind. Sssion does not
                 guarantee the accuracy, completeness, or usefulness of any content posted by users.
@@ -208,10 +208,10 @@ export default function TermsOfUsePage() {
 
           {/* Section 9 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               9. Changes to Terms
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 We may update these Terms from time to time. If we make material changes, we will
                 notify you through the app or by email.
@@ -225,16 +225,16 @@ export default function TermsOfUsePage() {
 
           {/* Section 10 */}
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               10. Contact Us
             </h2>
-            <div className="text-white/70">
+            <div className="text-[#F4F1EA]/70">
               <p>
                 If you have questions about these Terms, need to report content, or wish to
                 contact us for any reason, please reach out at:
               </p>
               <p className="mt-4">
-                <a href="mailto:support@sssion.studio" className="text-[#B76E79] hover:underline">
+                <a href="mailto:support@sssion.studio" className="text-[#C9A96A] hover:underline">
                   support@sssion.studio
                 </a>
               </p>
@@ -245,10 +245,10 @@ export default function TermsOfUsePage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-white/10 text-white/50">
+      <footer className="py-8 px-6 border-t border-white/10 text-[#F4F1EA]/50">
         <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
           <ComplianceFooterLinks />
-          <a href="/" className="text-sm hover:text-white/70 transition-colors">
+          <a href="/" className="text-sm hover:text-[#F4F1EA]/70 transition-colors">
             &larr; Back to sssion.studio
           </a>
         </div>

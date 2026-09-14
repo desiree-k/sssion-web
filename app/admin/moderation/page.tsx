@@ -155,7 +155,7 @@ export default function ModerationPage() {
                   ? 'bg-red-500/20 text-red-400'
                   : tab === 'flagged'
                     ? 'bg-amber-500/20 text-amber-400'
-                    : 'bg-[#B76E79]/15 text-[#B76E79]'
+                    : 'bg-[#F4F1EA]/10 text-[#F4F1EA]'
                 : 'text-white/40 hover:text-white'
             }`}
           >
@@ -167,7 +167,7 @@ export default function ModerationPage() {
       {/* Content */}
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#F4F1EA]/70 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : items.length === 0 ? (
         <div className="bg-[#111127] rounded-xl border border-white/6 px-6 py-14 text-center">

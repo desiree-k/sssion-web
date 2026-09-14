@@ -71,8 +71,8 @@ function Avatar({ author, size = 'md' }: { author: PostAuthor | null; size?: 'sm
     )
   }
   return (
-    <div className={`${sizeClass} rounded-full bg-[#B76E79]/20 flex items-center justify-center flex-shrink-0`}>
-      <span className="font-bold text-[#B76E79]">{name.charAt(0).toUpperCase()}</span>
+    <div className={`${sizeClass} rounded-full bg-[#F4F1EA]/10 flex items-center justify-center flex-shrink-0`}>
+      <span className="font-bold text-[#F4F1EA]">{name.charAt(0).toUpperCase()}</span>
     </div>
   )
 }
@@ -173,12 +173,12 @@ function CommentSection({ postId, userId, onCommentAdded }: {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
-          className="flex-1 px-4 py-2 bg-[#0E0E12] border border-white/15 rounded-full text-sm text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+          className="flex-1 px-4 py-2 bg-[#0E0E12] border border-white/15 rounded-full text-sm text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#F4F1EA]/40 transition-colors"
         />
         <button
           type="submit"
           disabled={isSubmitting || !newComment.trim()}
-          className="px-5 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-40"
+          className="px-5 py-2 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] text-sm font-semibold rounded-full hover:opacity-90 transition-colors disabled:opacity-40"
         >
           Post
         </button>
@@ -210,7 +210,7 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide ${
                 post.author_role === 'creator'
-                  ? 'bg-[#B76E79]/20 text-[#B76E79]'
+                  ? 'bg-[#F4F1EA]/10 text-[#F4F1EA]'
                   : 'bg-white/10 text-[#F4F1EA]/50'
               }`}
             >
@@ -223,8 +223,8 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
 
       {/* Body */}
       {liveClass ? (
-        <div className="bg-gradient-to-br from-[#B76E79]/20 to-[#B76E79]/5 border border-[#B76E79]/30 rounded-xl p-4 mb-4">
-          <p className="text-[#B76E79] text-xs font-semibold uppercase tracking-widest mb-2">
+        <div className="bg-gradient-to-br from-[#F4F1EA]/10 to-[#F4F1EA]/5 border border-[#F4F1EA]/20 rounded-xl p-4 mb-4">
+          <p className="text-[var(--pt-accent,#C9A96A)] text-xs font-semibold uppercase tracking-widest mb-2">
             Live Class
           </p>
           <h3 className="text-lg font-bold text-[#F4F1EA] mb-1">
@@ -240,7 +240,7 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
               href={liveClass.meeting_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-5 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+              className="inline-block px-5 py-2 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] text-sm font-semibold rounded-full hover:opacity-90 transition-colors"
             >
               Join
             </a>
@@ -282,7 +282,7 @@ function PostCard({ post, userId, onLikeToggle, onCommentAdded }: {
         <button
           onClick={() => onLikeToggle(post.id)}
           className={`flex items-center gap-1.5 transition-colors ${
-            post.is_liked_by_user ? 'text-[#B76E79]' : 'text-[#F4F1EA]/50 hover:text-[#F4F1EA]'
+            post.is_liked_by_user ? 'text-[var(--pt-accent,#C9A96A)]' : 'text-[#F4F1EA]/50 hover:text-[#F4F1EA]'
           }`}
         >
           <svg
@@ -457,7 +457,7 @@ export default function CommunityTab({ creatorId, userId }: {
   if (isLoading) {
     return (
       <div className="py-16 flex justify-center">
-        <div className="w-8 h-8 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--pt-accent,#F4F1EA)]/70 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }

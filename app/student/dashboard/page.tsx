@@ -31,11 +31,11 @@ function first<T>(value: T | T[] | null): T | null {
 }
 
 const GRADIENTS = [
-  'from-[#B76E79] to-[#8B5A62]',
-  'from-[#A05F69] to-[#6B4A52]',
-  'from-[#C4848D] to-[#9A6871]',
-  'from-[#D4979F] to-[#B07880]',
-  'from-[#8B6E79] to-[#6B4E59]',
+  'from-[#2A2A30] to-[#1A1A20]',
+  'from-[#2A2A30] to-[#1A1A20]',
+  'from-[#30303A] to-[#1D1D24]',
+  'from-[#26262E] to-[#17171C]',
+  'from-[#2E2E38] to-[#1A1A22]',
 ]
 
 function studioName(creator: StudioCreator): string {
@@ -50,7 +50,7 @@ function StudioCard({ creator }: { creator: StudioCreator }) {
   return (
     <Link
       href={`/student/studio/${creator.id}`}
-      className="group relative block aspect-[4/5] rounded-2xl overflow-hidden border border-[#2A2A30] hover:border-[#B76E79]/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#B76E79]/10"
+      className="group relative block aspect-[4/5] rounded-2xl overflow-hidden border border-[#2A2A30] hover:border-[#F4F1EA]/30 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#F4F1EA]/10"
     >
       {imageUrl ? (
         <img
@@ -169,7 +169,7 @@ export default function StudentDashboardPage() {
 
         {isLoading ? (
           <div className="py-24 flex justify-center">
-            <div className="w-10 h-10 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-2 border-[#F4F1EA]/70 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="p-6 bg-red-500/10 border border-red-500/30 rounded-xl text-center">
@@ -199,7 +199,7 @@ export default function StudentDashboardPage() {
                 </p>
                 <Link
                   href="/discover"
-                  className="inline-block px-8 py-3 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+                  className="inline-block px-8 py-3 bg-[#F4F1EA] text-[#0E0E12] font-semibold rounded-full hover:bg-white transition-colors"
                 >
                   Discover Creators
                 </Link>
@@ -225,8 +225,8 @@ export default function StudentDashboardPage() {
                             className="w-12 h-12 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-12 h-12 rounded-full bg-[#B76E79]/20 flex items-center justify-center">
-                            <span className="text-lg font-bold text-[#B76E79]">
+                          <div className="w-12 h-12 rounded-full bg-[#F4F1EA]/10 flex items-center justify-center">
+                            <span className="text-lg font-bold text-[#F4F1EA]">
                               {name.charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -256,7 +256,7 @@ export default function StudentDashboardPage() {
               <div className="text-center">
                 <Link
                   href="/discover"
-                  className="inline-flex items-center gap-2 text-[#F4F1EA]/60 hover:text-[#B76E79] transition-colors"
+                  className="inline-flex items-center gap-2 text-[#F4F1EA]/60 hover:text-[#C9A96A] transition-colors"
                 >
                   Discover more creators
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

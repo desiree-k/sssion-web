@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { EmailOtpType } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
+import { AuthCenter, Masthead, authPrimaryBtn } from '@/components/auth/AuthChrome'
 
 // 'verifying' — exchanging the token for a session
 // 'expired'   — no token, or the token was rejected (invalid / expired / used)
@@ -65,35 +66,31 @@ export default function VerifyPage() {
   }, [router])
 
   return (
-    <div className="min-h-screen bg-[#0E0E12] flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
-        <h1 className="text-4xl font-bold text-[#B76E79] mb-10 text-center">Sssion</h1>
+    <AuthCenter>
+      {stage === 'verifying' && (
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-[#F4F1EA] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+          <p className="text-lg text-[#F4F1EA]/80">Signing you in...</p>
+        </div>
+      )}
 
-        {stage === 'verifying' && (
-          <div className="text-center">
-            <div className="w-12 h-12 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-            <p className="text-lg text-[#F4F1EA]/80">Signing you in...</p>
-          </div>
-        )}
-
-        {stage === 'expired' && (
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold text-[#F4F1EA] mb-3">
-              This link is invalid or expired
-            </h2>
-            <p className="text-[#F4F1EA]/60 leading-relaxed">
-              Sign-in links only work once and time out after a while. Head back
-              to sign in and we&apos;ll send you a fresh one.
-            </p>
-            <a
-              href="/signin"
-              className="inline-block mt-6 px-6 py-3 bg-[#B76E79] hover:bg-[#a05f69] text-[#F4F1EA] font-semibold rounded-full transition-colors"
-            >
-              Sign In
-            </a>
-          </div>
-        )}
-      </div>
-    </div>
+      {stage === 'expired' && (
+        <div className="text-center">
+          <Masthead className="text-2xl md:text-2xl mb-3">
+            This link is invalid or expired
+          </Masthead>
+          <p className="text-[#F4F1EA]/60 leading-relaxed">
+            Sign-in links only work once and time out after a while. Head back
+            to sign in and we&apos;ll send you a fresh one.
+          </p>
+          <a
+            href="/signin"
+            className={`${authPrimaryBtn} inline-block w-auto mt-6 px-6 py-3`}
+          >
+            Sign In
+          </a>
+        </div>
+      )}
+    </AuthCenter>
   )
 }

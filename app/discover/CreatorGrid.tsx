@@ -34,11 +34,11 @@ interface CreatorGridProps {
 // Generate a consistent gradient based on username
 function getGradient(username: string): string {
   const gradients = [
-    'from-[#B76E79] to-[#8B5A62]',
-    'from-[#A05F69] to-[#6B4A52]',
-    'from-[#C4848D] to-[#9A6871]',
-    'from-[#D4979F] to-[#B07880]',
-    'from-[#8B6E79] to-[#6B4E59]',
+    'from-[#2A2A30] to-[#1A1A20]',
+    'from-[#2A2A30] to-[#1A1A20]',
+    'from-[#30303A] to-[#1D1D24]',
+    'from-[#26262E] to-[#17171C]',
+    'from-[#2E2E38] to-[#1A1A22]',
   ]
   const index = username.charCodeAt(0) % gradients.length
   return gradients[index]
@@ -56,7 +56,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
   return (
     <Link
       href={`/${username}`}
-      className="group block bg-[#1A1A20] rounded-2xl overflow-hidden border border-[#2A2A30] hover:border-[#B76E79]/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#B76E79]/10"
+      className="group block bg-[#1A1A20] rounded-2xl overflow-hidden border border-[#2A2A30] hover:border-[#F4F1EA]/30 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#F4F1EA]/10"
     >
       {/* Profile Image / Gradient Header */}
       <div className="relative h-48 overflow-hidden">
@@ -91,7 +91,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
 
       {/* Content */}
       <div className="p-5">
-        <h3 className="text-xl font-bold text-[#F4F1EA] mb-2 group-hover:text-[#B76E79] transition-colors">
+        <h3 className="text-xl font-bold text-[#F4F1EA] mb-2 group-hover:text-[#C9A96A] transition-colors">
           {displayName}
           {creator.is_founding && (
             <FoundingSpark
@@ -112,7 +112,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
             {creator.specialties.slice(0, 3).map((specialty, index) => (
               <span
                 key={index}
-                className="px-2.5 py-0.5 bg-[#B76E79]/15 text-[#B76E79] rounded-full text-xs font-medium"
+                className="px-2.5 py-0.5 bg-[#F4F1EA]/10 text-[#F4F1EA] rounded-full text-xs font-medium"
               >
                 {specialty}
               </span>
@@ -134,7 +134,7 @@ function CreatorCard({ creator, viewer }: { creator: CreatorWithProfile; viewer:
 
         {/* View Studio Button */}
         <div className="pt-2 border-t border-white/5">
-          <span className="inline-flex items-center gap-2 text-[#B76E79] text-sm font-medium group-hover:gap-3 transition-all">
+          <span className="inline-flex items-center gap-2 text-[#C9A96A] text-sm font-medium group-hover:gap-3 transition-all">
             View Studio
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -256,7 +256,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
             placeholder="Search by name or specialty..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-[#1A1A20] border border-[#2A2A30] rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/40 focus:outline-none focus:border-[#B76E79] transition-colors"
+            className="w-full pl-12 pr-4 py-4 bg-[#1A1A20] border border-[#2A2A30] rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/40 focus:outline-none focus:border-[#F4F1EA]/40 transition-colors"
           />
           {searchQuery && (
             <button
@@ -278,7 +278,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
             onClick={() => setSelectedSpecialty(null)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               selectedSpecialty === null
-                ? 'bg-[#B76E79] text-[#F4F1EA]'
+                ? 'bg-[#F4F1EA] text-[#0E0E12]'
                 : 'bg-white/5 text-[#F4F1EA]/60 hover:bg-white/10 hover:text-[#F4F1EA]'
             }`}
           >
@@ -292,7 +292,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
               }
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 selectedSpecialty === specialty
-                  ? 'bg-[#B76E79] text-[#F4F1EA]'
+                  ? 'bg-[#F4F1EA] text-[#0E0E12]'
                   : 'bg-white/5 text-[#F4F1EA]/60 hover:bg-white/10 hover:text-[#F4F1EA]'
               }`}
             >
@@ -326,7 +326,7 @@ export default function CreatorGrid({ creators }: CreatorGridProps) {
               setSearchQuery('')
               setSelectedSpecialty(null)
             }}
-            className="mt-4 text-[#B76E79] hover:underline"
+            className="mt-4 text-[#C9A96A] hover:underline"
           >
             Clear filters
           </button>

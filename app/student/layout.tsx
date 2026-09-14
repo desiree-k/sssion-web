@@ -41,7 +41,7 @@ export default function StudentLayout({
   if (!isReady) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+        <div className="w-12 h-12 border-2 border-[#F4F1EA]/70 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }

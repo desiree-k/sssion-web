@@ -23,7 +23,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
     <Link
       href={href}
       className={`text-sm transition-colors ${
-        isActive ? 'text-[#B76E79] font-semibold' : 'text-[#F4F1EA]/70 hover:text-[#F4F1EA]'
+        isActive ? 'text-[#F4F1EA] font-semibold' : 'text-[#F4F1EA]/70 hover:text-[#F4F1EA]'
       }`}
     >
       {label}
@@ -76,8 +76,8 @@ export default function StudentNav() {
   return (
     <header className="sticky top-0 z-40 py-4 px-6 border-b border-[#2A2A30] bg-[#0E0E12]/95 backdrop-blur">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold text-[#B76E79]">
-          Sssion
+        <Link href="/" className="text-2xl font-semibold tracking-[0.3em] text-[#F4F1EA]">
+          SSSION
         </Link>
 
         <nav className={`items-center gap-4 sm:gap-6 ${useBottomNavOnMobile ? 'hidden md:flex' : 'flex'}`}>
@@ -104,7 +104,7 @@ export default function StudentNav() {
                 href={APP_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+                className="px-5 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-semibold rounded-full hover:bg-white transition-colors"
               >
                 Download App
               </a>
@@ -126,7 +126,7 @@ export default function StudentNav() {
                   key={link.href}
                   href={link.href}
                   className={`flex flex-col items-center gap-1 py-2.5 px-5 text-[10px] font-medium transition-colors ${
-                    isActive ? 'text-[#B76E79]' : 'text-[#F4F1EA]/50 hover:text-[#F4F1EA]'
+                    isActive ? 'text-[#F4F1EA]' : 'text-[#F4F1EA]/50 hover:text-[#F4F1EA]'
                   }`}
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

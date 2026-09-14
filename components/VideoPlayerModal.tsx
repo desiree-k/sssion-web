@@ -115,7 +115,7 @@ export default function VideoPlayerModal({
           <div className="flex items-start justify-between gap-4 mb-4">
             <h3 className="text-xl font-semibold text-white">{title}</h3>
             {difficultyLevel && (
-              <span className="px-3 py-1 bg-[#B76E79]/20 text-[#B76E79] text-sm rounded-full capitalize whitespace-nowrap">
+              <span className="px-3 py-1 bg-[#F4F1EA]/10 text-[#F4F1EA] text-sm rounded-full capitalize whitespace-nowrap">
                 {difficultyLevel.replace('_', ' ')}
               </span>
             )}
@@ -129,7 +129,7 @@ export default function VideoPlayerModal({
               href="https://apps.apple.com/us/app/sssion/id6763607808"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-6 py-3 bg-[#B76E79] text-white font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+              className="inline-block px-6 py-3 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] font-semibold rounded-full hover:opacity-90 transition-colors"
             >
               Download Sssion
             </a>

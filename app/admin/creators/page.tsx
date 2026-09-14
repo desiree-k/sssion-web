@@ -148,7 +148,7 @@ export default function CreatorsPage() {
           value={searchInput}
           onChange={e => handleSearchChange(e.target.value)}
           placeholder="Search by name or username…"
-          className="bg-[#111127] border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#B76E79]/50 w-64"
+          className="bg-[#111127] border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#F4F1EA]/40 w-64"
         />
       </div>
 
@@ -184,12 +184,12 @@ export default function CreatorsPage() {
                 {/* Row */}
                 <div className="flex items-center gap-4 px-5 py-4">
                   {/* Avatar */}
-                  <div className="w-10 h-10 rounded-full bg-[#B76E79]/20 border border-[#B76E79]/30 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <div className="w-10 h-10 rounded-full bg-[#F4F1EA]/10 border border-[#F4F1EA]/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {creator.profile?.profile_image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={creator.profile.profile_image_url} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-[#B76E79] text-sm font-medium">
+                      <span className="text-[#F4F1EA] text-sm font-medium">
                         {(creator.display_name || '?')[0].toUpperCase()}
                       </span>
                     )}
@@ -242,7 +242,7 @@ export default function CreatorsPage() {
                       className={`text-xs px-2.5 py-1 rounded-lg border transition-colors disabled:opacity-40 ${
                         creator.is_visible
                           ? 'border-white/10 text-white/40 hover:text-white hover:border-white/30'
-                          : 'border-[#B76E79]/30 text-[#B76E79] hover:bg-[#B76E79]/10'
+                          : 'border-[#F4F1EA]/20 text-[#F4F1EA] hover:bg-[#F4F1EA]/10'
                       }`}
                     >
                       {togglingId === creator.id ? '…' : creator.is_visible ? 'Hide' : 'Show'}
@@ -313,7 +313,7 @@ export default function CreatorsPage() {
                           href={`https://${studioUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[#B76E79] hover:underline font-mono text-xs"
+                          className="text-[#C9A96A] hover:underline font-mono text-xs"
                         >
                           {studioUrl} ↗
                         </a>
@@ -385,7 +385,7 @@ export default function CreatorsPage() {
                 onChange={e => setFreezeReason(e.target.value)}
                 rows={3}
                 placeholder={confirmFreeze.is_frozen ? 'Why is this Space being unfrozen?' : 'Why is this Space being frozen?'}
-                className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#B76E79]/50 resize-none"
+                className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#F4F1EA]/40 resize-none"
               />
             </div>
             <div className="flex gap-3">

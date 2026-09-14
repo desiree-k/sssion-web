@@ -134,7 +134,7 @@ export default function ReportsPage() {
               filter === tab
                 ? tab === 'pending'
                   ? 'bg-red-500/20 text-red-400'
-                  : 'bg-[#B76E79]/20 text-[#B76E79]'
+                  : 'bg-[#F4F1EA]/10 text-[#F4F1EA]'
                 : 'text-white/40 hover:text-white'
             }`}
           >
@@ -208,7 +208,7 @@ export default function ReportsPage() {
                       <button
                         onClick={() => handleAction(report.id, 'resolve_report')}
                         disabled={actingId === report.id}
-                        className="px-3 py-1.5 text-xs bg-[#B76E79]/80 text-white rounded-lg hover:bg-[#B76E79] disabled:opacity-30 transition-colors"
+                        className="px-3 py-1.5 text-xs bg-[#F4F1EA]/90 text-[#0E0E12] rounded-lg hover:bg-white disabled:opacity-30 transition-colors"
                       >
                         {actingId === report.id ? 'Saving…' : 'Mark Resolved'}
                       </button>
@@ -251,7 +251,7 @@ export default function ReportsPage() {
                         href={`/${report.subject_username}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#B76E79] hover:underline"
+                        className="text-[#C9A96A] hover:underline"
                       >
                         @{report.subject_username}
                       </a>
@@ -264,7 +264,7 @@ export default function ReportsPage() {
                         href={report.subject_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#B76E79] hover:underline break-all"
+                        className="text-[#C9A96A] hover:underline break-all"
                       >
                         {report.subject_url}
                       </a>

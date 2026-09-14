@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 
 export default function DmcaPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#0E0E12]">
       {/* Header */}
       <header className="py-6 px-6 border-b border-white/10">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-2xl font-bold text-[#B76E79]">
-            Sssion
+          <a href="/" className="text-2xl font-semibold tracking-[0.3em] text-[#F4F1EA]">
+            SSSION
           </a>
         </div>
       </header>
@@ -21,14 +21,14 @@ export default function DmcaPage() {
       {/* Content */}
       <main className="py-12 px-6">
         <article className="max-w-3xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#F4F1EA] mb-2">
             Copyright &amp; DMCA Policy
           </h1>
-          <p className="text-white/50 mb-8">
+          <p className="text-[#F4F1EA]/50 mb-8">
             Effective Date: September 3, 2026
           </p>
 
-          <p className="text-white/70 leading-relaxed mb-8">
+          <p className="text-[#F4F1EA]/70 leading-relaxed mb-8">
             Sssion respects the work of choreographers, instructors, and artists. If you believe
             content on Sssion infringes your copyright, tell us and we&apos;ll act on it. This page
             explains how, in plain language, consistent with the Digital Millennium Copyright Act
@@ -36,13 +36,13 @@ export default function DmcaPage() {
           </p>
 
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               How to file a complaint
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 Email our designated copyright agent at{' '}
-                <a href="mailto:dmca@sssion.studio" className="text-[#B76E79] hover:underline">
+                <a href="mailto:dmca@sssion.studio" className="text-[#C9A96A] hover:underline">
                   dmca@sssion.studio
                 </a>{' '}
                 with the subject line &ldquo;DMCA Notice.&rdquo; To be valid, your notice must
@@ -50,30 +50,30 @@ export default function DmcaPage() {
               </p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>
-                  <span className="text-white">Identification of your work</span> — describe the
+                  <span className="text-[#F4F1EA]">Identification of your work</span> — describe the
                   copyrighted work you believe has been infringed (e.g. a class video, choreography
                   recording, or photo, with a link to the original if one exists).
                 </li>
                 <li>
-                  <span className="text-white">Where it is on Sssion</span> — the URL(s) or enough
+                  <span className="text-[#F4F1EA]">Where it is on Sssion</span> — the URL(s) or enough
                   detail for us to find the material (creator name, Space, video title).
                 </li>
                 <li>
-                  <span className="text-white">Your contact information</span> — name, email
+                  <span className="text-[#F4F1EA]">Your contact information</span> — name, email
                   address, and mailing address so we can reach you.
                 </li>
                 <li>
-                  <span className="text-white">A good-faith statement</span> — &ldquo;I have a
+                  <span className="text-[#F4F1EA]">A good-faith statement</span> — &ldquo;I have a
                   good-faith belief that the use of the material described above is not authorized
                   by the copyright owner, its agent, or the law.&rdquo;
                 </li>
                 <li>
-                  <span className="text-white">An accuracy statement</span> — &ldquo;The
+                  <span className="text-[#F4F1EA]">An accuracy statement</span> — &ldquo;The
                   information in this notice is accurate, and under penalty of perjury, I am the
                   copyright owner or authorized to act on the owner&apos;s behalf.&rdquo;
                 </li>
                 <li>
-                  <span className="text-white">Your signature</span> — a physical or electronic
+                  <span className="text-[#F4F1EA]">Your signature</span> — a physical or electronic
                   signature (typing your full legal name counts).
                 </li>
               </ul>
@@ -81,10 +81,10 @@ export default function DmcaPage() {
           </section>
 
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               What happens next
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 We review complete notices promptly. If the notice is valid, we remove or disable
                 access to the material and notify the creator who posted it. Repeat infringers
@@ -100,10 +100,10 @@ export default function DmcaPage() {
           </section>
 
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               A note on misuse
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 Knowingly filing a false infringement claim can make you liable for damages under
                 the DMCA. If you&apos;re not sure whether a use is infringing, consider speaking
@@ -113,21 +113,21 @@ export default function DmcaPage() {
           </section>
 
           <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">
               Questions
             </h2>
-            <div className="text-white/70 space-y-4">
+            <div className="text-[#F4F1EA]/70 space-y-4">
               <p>
                 Anything else copyright-related:{' '}
-                <a href="mailto:dmca@sssion.studio" className="text-[#B76E79] hover:underline">
+                <a href="mailto:dmca@sssion.studio" className="text-[#C9A96A] hover:underline">
                   dmca@sssion.studio
                 </a>
                 . For our general rules, see the{' '}
-                <a href="/content-policy" className="text-[#B76E79] hover:underline">
+                <a href="/content-policy" className="text-[#C9A96A] hover:underline">
                   Content Policy
                 </a>{' '}
                 and{' '}
-                <a href="/terms" className="text-[#B76E79] hover:underline">
+                <a href="/terms" className="text-[#C9A96A] hover:underline">
                   Terms of Use
                 </a>
                 .
@@ -138,10 +138,10 @@ export default function DmcaPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-white/10 text-white/50">
+      <footer className="py-8 px-6 border-t border-white/10 text-[#F4F1EA]/50">
         <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
           <ComplianceFooterLinks />
-          <a href="/" className="text-sm hover:text-white/70 transition-colors">
+          <a href="/" className="text-sm hover:text-[#F4F1EA]/70 transition-colors">
             &larr; Back to sssion.studio
           </a>
         </div>

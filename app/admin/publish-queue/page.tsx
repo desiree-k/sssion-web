@@ -130,7 +130,7 @@ export default function PublishQueuePage() {
                           href={`/${username}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[#B76E79] hover:underline text-xs font-mono"
+                          className="text-[#C9A96A] hover:underline text-xs font-mono"
                         >
                           sssion.studio/{username} ↗
                         </a>
@@ -236,7 +236,7 @@ export default function PublishQueuePage() {
                 onChange={e => setDeclineNote(e.target.value)}
                 rows={3}
                 placeholder="What should they change before applying again?"
-                className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#B76E79]/50 resize-none"
+                className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#F4F1EA]/40 resize-none"
               />
             </div>
             <div className="flex gap-3">

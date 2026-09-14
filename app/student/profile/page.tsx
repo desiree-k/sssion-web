@@ -142,7 +142,7 @@ export default function StudentProfilePage() {
   if (isLoading) {
     return (
       <div className="py-24 flex justify-center">
-        <div className="w-10 h-10 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-[#F4F1EA]/70 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -155,8 +155,8 @@ export default function StudentProfilePage() {
         {/* Profile card */}
         <div className="bg-[#1A1A20] rounded-2xl border border-[#2A2A30] p-6 space-y-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-[#B76E79]/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-2xl font-bold text-[#B76E79]">
+            <div className="w-16 h-16 rounded-full bg-[#F4F1EA]/10 flex items-center justify-center flex-shrink-0">
+              <span className="text-2xl font-bold text-[#F4F1EA]">
                 {(fullName || email).charAt(0).toUpperCase()}
               </span>
             </div>
@@ -179,7 +179,7 @@ export default function StudentProfilePage() {
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 bg-[#0E0E12] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors"
+                  className="w-full px-4 py-3 bg-[#0E0E12] border border-white/20 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#F4F1EA]/40 transition-colors"
                   autoFocus
                 />
               </div>
@@ -187,7 +187,7 @@ export default function StudentProfilePage() {
                 <button
                   onClick={handleSaveProfile}
                   disabled={isSaving || !editName.trim()}
-                  className="px-6 py-2.5 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[#a05f69] transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 bg-[#F4F1EA] text-[#0E0E12] font-semibold rounded-xl hover:bg-white transition-colors disabled:opacity-50"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </button>
@@ -217,7 +217,7 @@ export default function StudentProfilePage() {
           )}
 
           {saveMessage && (
-            <p className="text-sm text-[#B76E79]">{saveMessage}</p>
+            <p className="text-sm text-[#C9A96A]">{saveMessage}</p>
           )}
         </div>
 
@@ -239,7 +239,7 @@ export default function StudentProfilePage() {
               aria-checked={digestOptIn}
               aria-label="Weekly Training Digest"
               className={`relative w-11 h-6 rounded-full flex-shrink-0 mt-1 transition-colors ${
-                digestOptIn ? 'bg-[#B76E79]' : 'bg-white/15'
+                digestOptIn ? 'bg-[#F4F1EA]' : 'bg-white/15'
               }`}
             >
               <span

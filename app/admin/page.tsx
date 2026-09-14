@@ -46,7 +46,7 @@ export default function AdminOverviewPage() {
   }, [])
 
   const statCards = data ? [
-    { label: 'Total Creators', value: data.creatorCount, color: 'text-[#B76E79]' },
+    { label: 'Total Creators', value: data.creatorCount, color: 'text-[#C9A96A]' },
     { label: 'Total Students', value: data.studentCount, color: 'text-white' },
     { label: 'Videos Uploaded', value: data.videoCount, color: 'text-white' },
     {
@@ -98,7 +98,7 @@ export default function AdminOverviewPage() {
         <div className="flex gap-3 flex-wrap">
           <button
             onClick={() => router.push('/admin/invite-codes')}
-            className="px-4 py-2 bg-[#B76E79] text-white text-sm font-medium rounded-lg hover:bg-[#a55f69] transition-colors"
+            className="px-4 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-medium rounded-lg hover:bg-[#C9A96A] transition-colors"
           >
             + Create Invite Code
           </button>
@@ -143,7 +143,7 @@ export default function AdminOverviewPage() {
                     <td className="px-5 py-3">
                       <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
                         user.role === 'creator'
-                          ? 'bg-[#B76E79]/15 text-[#B76E79]'
+                          ? 'bg-[#F4F1EA]/10 text-[#F4F1EA]'
                           : 'bg-white/8 text-white/60'
                       }`}>
                         {user.role}

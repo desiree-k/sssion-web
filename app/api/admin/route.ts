@@ -555,7 +555,7 @@ export async function POST(req: NextRequest) {
               : `<p>Hi ${firstName},</p>
                  <p>We reviewed <strong>${creator.display_name || 'your Space'}</strong> and it isn't ready to publish just yet. Your Space is still yours — it's back to unlisted, and you can apply again any time.</p>
                  <p>Note from the team:</p>
-                 <blockquote style="margin:0;padding:8px 16px;border-left:3px solid #B76E79;">${note!.trim()}</blockquote>
+                 <blockquote style="margin:0;padding:8px 16px;border-left:3px solid #1D1B18;">${note!.trim()}</blockquote>
                  <p>— The Sssion team</p>`
             await resend.emails.send({
               from: 'Sssion <updates@updates.sssion.studio>',

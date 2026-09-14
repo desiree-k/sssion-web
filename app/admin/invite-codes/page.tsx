@@ -158,7 +158,7 @@ export default function InviteCodesPage() {
           </button>
           <button
             onClick={() => setShowCreate(true)}
-            className="px-4 py-2 bg-[#B76E79] text-white text-sm font-medium rounded-lg hover:bg-[#a55f69] transition-colors"
+            className="px-4 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-medium rounded-lg hover:bg-[#C9A96A] transition-colors"
           >
             + New Code
           </button>
@@ -179,7 +179,7 @@ export default function InviteCodesPage() {
             onClick={() => setFilter(tab)}
             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors capitalize ${
               filter === tab
-                ? 'bg-[#B76E79]/20 text-[#B76E79]'
+                ? 'bg-[#F4F1EA]/10 text-[#F4F1EA]'
                 : 'text-white/40 hover:text-white'
             }`}
           >
@@ -274,7 +274,7 @@ export default function InviteCodesPage() {
                           {!isUsed && (
                             <button
                               onClick={() => handleToggle(code.id, code.is_active)}
-                              className={`relative w-9 h-5 rounded-full transition-colors ${code.is_active ? 'bg-[#B76E79]' : 'bg-white/15'}`}
+                              className={`relative w-9 h-5 rounded-full transition-colors ${code.is_active ? 'bg-[#F4F1EA]' : 'bg-white/15'}`}
                               title={code.is_active ? 'Deactivate' : 'Activate'}
                             >
                               <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${code.is_active ? 'left-4' : 'left-0.5'}`} />
@@ -308,7 +308,7 @@ export default function InviteCodesPage() {
                   onChange={e => setCustomCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
                   placeholder="e.g. DANCEWITH"
                   maxLength={20}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white font-mono text-sm placeholder-white/20 focus:outline-none focus:border-[#B76E79]/50"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white font-mono text-sm placeholder-white/20 focus:outline-none focus:border-[#F4F1EA]/40"
                 />
                 <button
                   onClick={() => setCustomCode(generateCode())}
@@ -329,7 +329,7 @@ export default function InviteCodesPage() {
               <button
                 onClick={handleCreate}
                 disabled={isCreating}
-                className="flex-1 py-2.5 bg-[#B76E79] text-white text-sm font-medium rounded-lg hover:bg-[#a55f69] disabled:opacity-50 transition-colors"
+                className="flex-1 py-2.5 bg-[#F4F1EA] text-[#0E0E12] text-sm font-medium rounded-lg hover:bg-[#C9A96A] disabled:opacity-50 transition-colors"
               >
                 {isCreating ? 'Creating…' : 'Create Code'}
               </button>
@@ -354,7 +354,7 @@ export default function InviteCodesPage() {
                 onChange={e => setBatchCount(e.target.value)}
                 min={1}
                 max={100}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#B76E79]/50"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#F4F1EA]/40"
               />
               {batchError && <p className="text-red-400 text-xs mt-2">{batchError}</p>}
               <p className="text-white/30 text-xs mt-2">Each code is a unique 8-character alphanumeric string.</p>
@@ -369,7 +369,7 @@ export default function InviteCodesPage() {
               <button
                 onClick={handleBatch}
                 disabled={isBatching}
-                className="flex-1 py-2.5 bg-[#B76E79] text-white text-sm font-medium rounded-lg hover:bg-[#a55f69] disabled:opacity-50 transition-colors"
+                className="flex-1 py-2.5 bg-[#F4F1EA] text-[#0E0E12] text-sm font-medium rounded-lg hover:bg-[#C9A96A] disabled:opacity-50 transition-colors"
               >
                 {isBatching ? 'Generating…' : `Generate ${batchCount || '?'} Codes`}
               </button>

@@ -86,7 +86,7 @@ export default function AnnouncementsPage() {
           <button
             onClick={() => setPreview(false)}
             className={`px-5 py-3 text-sm font-medium transition-colors ${
-              !preview ? 'text-white border-b-2 border-[#B76E79] -mb-px' : 'text-white/40 hover:text-white'
+              !preview ? 'text-white border-b-2 border-[#F4F1EA] -mb-px' : 'text-white/40 hover:text-white'
             }`}
           >
             Compose
@@ -94,7 +94,7 @@ export default function AnnouncementsPage() {
           <button
             onClick={() => setPreview(true)}
             className={`px-5 py-3 text-sm font-medium transition-colors ${
-              preview ? 'text-white border-b-2 border-[#B76E79] -mb-px' : 'text-white/40 hover:text-white'
+              preview ? 'text-white border-b-2 border-[#F4F1EA] -mb-px' : 'text-white/40 hover:text-white'
             }`}
           >
             Preview
@@ -113,7 +113,7 @@ export default function AnnouncementsPage() {
                     onClick={() => setAudience(a)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
                       audience === a
-                        ? 'bg-[#B76E79]/20 border-[#B76E79]/50 text-[#B76E79]'
+                        ? 'bg-[#F4F1EA]/10 border-[#F4F1EA]/50 text-[#F4F1EA]'
                         : 'border-white/10 text-white/50 hover:text-white hover:bg-white/5'
                     }`}
                   >
@@ -131,7 +131,7 @@ export default function AnnouncementsPage() {
                 value={subject}
                 onChange={e => setSubject(e.target.value)}
                 placeholder="e.g. New features in Sssion"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#B76E79]/50"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#F4F1EA]/40"
               />
             </div>
 
@@ -145,7 +145,7 @@ export default function AnnouncementsPage() {
                 onChange={e => setBody(e.target.value)}
                 placeholder={`<p>Hi there,</p>\n<p>We have some exciting updates to share...</p>`}
                 rows={12}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#B76E79]/50 font-mono resize-y"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#F4F1EA]/40 font-mono resize-y"
               />
               <p className="text-white/25 text-xs mt-1.5">
                 Use HTML tags for formatting: &lt;p&gt;, &lt;b&gt;, &lt;a href="..."&gt;, &lt;br&gt;, &lt;ul&gt;&lt;li&gt;, etc.
@@ -158,7 +158,7 @@ export default function AnnouncementsPage() {
             <div className="bg-white rounded-xl overflow-hidden text-gray-900 max-w-xl mx-auto shadow-xl">
               {/* Email header */}
               <div className="bg-black px-6 py-5 text-center">
-                <span className="text-[#B76E79] text-3xl font-light">S</span>
+                <span className="text-[#F4F1EA] text-3xl font-light">S</span>
                 <p className="text-white/60 text-xs tracking-widest mt-1">SSSION</p>
               </div>
               <div className="px-8 py-6">
@@ -190,7 +190,7 @@ export default function AnnouncementsPage() {
           <button
             onClick={handleSend}
             disabled={isSending || !subject.trim() || !body.trim()}
-            className="px-5 py-2.5 bg-[#B76E79] text-white text-sm font-medium rounded-lg hover:bg-[#a55f69] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="px-5 py-2.5 bg-[#F4F1EA] text-[#0E0E12] text-sm font-medium rounded-lg hover:bg-[#C9A96A] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {isSending ? 'Sending…' : `Send to ${audienceLabel}`}
           </button>

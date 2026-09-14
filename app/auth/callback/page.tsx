@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { AuthCenter, Masthead, authSecondaryBtn } from '@/components/auth/AuthChrome'
 
 export default function AuthCallback() {
   const router = useRouter()
@@ -132,12 +133,11 @@ export default function AuthCallback() {
   // Expired / invalid link
   if (showExpiredLink) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6">
-        <div className="text-center max-w-md">
-          <h1 className="text-4xl font-bold text-[#B76E79] mb-8">Sssion</h1>
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#B76E79]/20 flex items-center justify-center">
+      <AuthCenter>
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#1A1A20] border border-[#2A2A30] flex items-center justify-center">
             <svg
-              className="w-10 h-10 text-[#B76E79]"
+              className="w-10 h-10 text-[#C9A96A]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -150,29 +150,26 @@ export default function AuthCallback() {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-3">
+          <Masthead className="text-2xl md:text-2xl mb-3">
             This verification link has expired.
-          </h2>
-          <p className="text-white/60 text-base leading-relaxed">
-            Go back to the app and tap <span className="text-[#B76E79] font-medium">&ldquo;Resend verification email&rdquo;</span> to get a new one.
+          </Masthead>
+          <p className="text-[#F4F1EA]/60 text-base leading-relaxed">
+            Go back to the app and tap <span className="text-[#C9A96A] font-medium">&ldquo;Resend verification email&rdquo;</span> to get a new one.
           </p>
         </div>
-      </div>
+      </AuthCenter>
     )
   }
 
   // Show confirmation page for app-based email verification
   if (showConfirmation) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6">
-        <div className="text-center max-w-md">
-          {/* Logo */}
-          <h1 className="text-4xl font-bold text-[#B76E79] mb-8">Sssion</h1>
-
+      <AuthCenter>
+        <div className="text-center">
           {/* Success icon */}
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#B76E79]/20 flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#1A1A20] border border-[#2A2A30] flex items-center justify-center">
             <svg
-              className="w-10 h-10 text-[#B76E79]"
+              className="w-10 h-10 text-[#C9A96A]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -187,16 +184,16 @@ export default function AuthCallback() {
           </div>
 
           {/* Confirmation message */}
-          <h2 className="text-2xl font-semibold text-white mb-3">
+          <Masthead className="text-2xl md:text-2xl mb-3">
             Email verified!
-          </h2>
-          <p className="text-white/60 text-lg mb-8">
+          </Masthead>
+          <p className="text-[#F4F1EA]/60 text-lg mb-8">
             You&apos;re all set. Head back to the Sssion app to sign in.
           </p>
 
           {/* App download section */}
-          <div className="pt-6 border-t border-white/10">
-            <p className="text-white/40 text-sm mb-4">
+          <div className="pt-6 border-t border-[#2A2A30]">
+            <p className="text-[#F4F1EA]/40 text-sm mb-4">
               Don&apos;t have the app yet?
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -204,36 +201,36 @@ export default function AuthCallback() {
                 href="https://apps.apple.com/us/app/sssion/id6763607808"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/15 rounded-lg transition-colors"
+                className={authSecondaryBtn}
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                 </svg>
-                <span className="text-white/80">App Store</span>
+                <span>App Store</span>
               </a>
               <a
                 href="#"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/15 rounded-lg transition-colors"
+                className={authSecondaryBtn}
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
                 </svg>
-                <span className="text-white/80">Google Play</span>
+                <span>Google Play</span>
               </a>
             </div>
           </div>
         </div>
-      </div>
+      </AuthCenter>
     )
   }
 
   // Loading state while checking session
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <AuthCenter>
       <div className="text-center">
-        <div className="w-12 h-12 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-        <p className="text-lg text-white/80">Verifying your account...</p>
+        <div className="w-12 h-12 border-2 border-[#F4F1EA] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+        <p className="text-lg text-[#F4F1EA]/80">Verifying your account...</p>
       </div>
-    </div>
+    </AuthCenter>
   )
 }

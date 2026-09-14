@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (isChecking) {
     return (
       <div className="min-h-screen bg-[#0D0D1A] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#F4F1EA]/70 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Logo */}
         <div className="px-6 py-6 border-b border-white/8">
           <div className="flex items-center gap-2">
-            <span className="text-[#B76E79] text-2xl font-light">S</span>
+            <span className="text-[#F4F1EA] text-2xl font-light">S</span>
             <div>
               <p className="text-white text-sm font-semibold tracking-widest">SSSION</p>
               <p className="text-white/40 text-xs tracking-widest">ADMIN</p>
@@ -96,7 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors
                   ${isActive
-                    ? 'bg-[#B76E79]/15 text-[#B76E79]'
+                    ? 'bg-[#F4F1EA]/10 text-[#F4F1EA]'
                     : 'text-white/60 hover:text-white hover:bg-white/5'
                   }
                 `}

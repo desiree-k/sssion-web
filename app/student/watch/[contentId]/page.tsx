@@ -180,7 +180,7 @@ export default function WatchPage() {
   if (isLoading) {
     return (
       <div className="py-24 flex justify-center">
-        <div className="w-10 h-10 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-[#F4F1EA]/70 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -198,7 +198,7 @@ export default function WatchPage() {
           <p className="text-[#F4F1EA]/50 text-sm leading-relaxed">Check back later.</p>
           <Link
             href="/student/dashboard"
-            className="inline-block mt-8 text-sm text-[#B76E79] hover:underline"
+            className="inline-block mt-8 text-sm text-[#C9A96A] hover:underline"
           >
             ← My Studios
           </Link>
@@ -211,7 +211,7 @@ export default function WatchPage() {
     return (
       <div className="py-24 px-6 text-center space-y-4">
         <p className="text-[#F4F1EA]/60">{error || 'Video not found'}</p>
-        <Link href="/student/dashboard" className="inline-block text-[#B76E79] hover:underline">
+        <Link href="/student/dashboard" className="inline-block text-[#C9A96A] hover:underline">
           &larr; Back to My Studios
         </Link>
       </div>
@@ -238,7 +238,7 @@ export default function WatchPage() {
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <h1 className="text-2xl md:text-3xl font-bold">{video.title}</h1>
           {video.difficulty_level && (
-            <span className="px-3 py-1 bg-[#B76E79]/20 text-[#B76E79] text-sm rounded-full capitalize">
+            <span className="px-3 py-1 bg-[#F4F1EA]/10 text-[#F4F1EA] text-sm rounded-full capitalize">
               {video.difficulty_level.replace('_', ' ')}
             </span>
           )}

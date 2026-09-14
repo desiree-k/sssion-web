@@ -1,9 +1,9 @@
-import { Bodoni_Moda, Archivo } from 'next/font/google'
+import { Fraunces, Hanken_Grotesk } from 'next/font/google'
 
-// Matches the ivory editorial look of the profile pages: Bodoni masthead,
-// Archivo body, ivory tokens.
-const bodoni = Bodoni_Moda({ subsets: ['latin'], weight: ['400', '500'] })
-const archivo = Archivo({ subsets: ['latin'], weight: ['400', '500', '600'] })
+// NOIR auth-family styling to match /signup, /signin, /reset-password, /auth/*:
+// ebony page, ivory type, Fraunces masthead, letterspaced SSSION wordmark.
+const fraunces = Fraunces({ subsets: ['latin'], weight: ['400', '500'] })
+const hanken = Hanken_Grotesk({ subsets: ['latin'], weight: ['400', '500', '600'] })
 
 export default function StripeMessage({
   title,
@@ -16,8 +16,8 @@ export default function StripeMessage({
     <main
       style={{
         minHeight: '100vh',
-        background: '#F7F4EF',
-        color: '#1D1B18',
+        background: '#0E0E12',
+        color: '#F4F1EA',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -35,20 +35,20 @@ export default function StripeMessage({
         }}
       >
         <span
-          className={archivo.className}
+          className={hanken.className}
           style={{
-            fontSize: 11,
-            letterSpacing: '0.28em',
+            fontSize: 12,
+            letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#9E5C68',
+            color: '#F4F1EA',
             fontWeight: 600,
             marginBottom: 22,
           }}
         >
-          Sssion
+          SSSION
         </span>
         <h1
-          className={bodoni.className}
+          className={fraunces.className}
           style={{
             margin: 0,
             fontWeight: 400,
@@ -60,14 +60,14 @@ export default function StripeMessage({
           {title}
         </h1>
         <p
-          className={archivo.className}
+          className={hanken.className}
           style={{
             marginTop: 18,
             marginBottom: 0,
             maxWidth: 380,
             fontSize: 16,
             lineHeight: 1.6,
-            color: '#8D877D',
+            color: 'rgba(244, 241, 234, 0.6)',
           }}
         >
           {body}

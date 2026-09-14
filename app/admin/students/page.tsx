@@ -112,7 +112,7 @@ export default function StudentsPage() {
           value={searchInput}
           onChange={e => handleSearchChange(e.target.value)}
           placeholder="Search by name or email…"
-          className="bg-[#111127] border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#B76E79]/50 w-64"
+          className="bg-[#111127] border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#F4F1EA]/40 w-64"
         />
       </div>
 

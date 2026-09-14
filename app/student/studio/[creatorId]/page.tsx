@@ -97,7 +97,7 @@ export default function StudentStudioPage() {
           <p className="text-[#F4F1EA]/50 text-sm leading-relaxed">Check back later.</p>
           <Link
             href="/student/dashboard"
-            className="inline-block mt-8 text-sm text-[#B76E79] hover:underline"
+            className="inline-block mt-8 text-sm text-[var(--pt-accent,#C9A96A)] hover:underline"
           >
             ← My Studios
           </Link>
@@ -109,7 +109,7 @@ export default function StudentStudioPage() {
   if (isLoading || !creator || !userId) {
     return (
       <div className="py-24 flex justify-center">
-        <div className="w-10 h-10 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-[var(--pt-accent,#F4F1EA)]/70 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -120,7 +120,7 @@ export default function StudentStudioPage() {
   return (
     <main className="pb-16">
       {/* Studio header */}
-      <div className="px-6 pt-8 pb-6 bg-gradient-to-b from-[#B76E79]/15 to-transparent">
+      <div className="px-6 pt-8 pb-6 bg-gradient-to-b from-[#F4F1EA]/10 to-transparent">
         <div className="max-w-4xl mx-auto">
           <Link
             href="/student/dashboard"
@@ -137,11 +137,11 @@ export default function StudentStudioPage() {
               <img
                 src={imageUrl}
                 alt={name}
-                className="w-16 h-16 rounded-full object-cover border-2 border-[#B76E79]"
+                className="w-16 h-16 rounded-full object-cover border-2 border-[var(--pt-accent,#F4F1EA)]"
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-[#B76E79]/20 border-2 border-[#B76E79] flex items-center justify-center">
-                <span className="text-2xl font-bold text-[#B76E79]">
+              <div className="w-16 h-16 rounded-full bg-[#F4F1EA]/10 border-2 border-[var(--pt-accent,#F4F1EA)] flex items-center justify-center">
+                <span className="text-2xl font-bold text-[#F4F1EA]">
                   {name.charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -160,7 +160,7 @@ export default function StudentStudioPage() {
               onClick={() => setActiveTab(tab)}
               className={`py-3 text-sm font-semibold border-b-2 -mb-px capitalize transition-colors ${
                 activeTab === tab
-                  ? 'border-[#B76E79] text-[#B76E79]'
+                  ? 'border-[var(--pt-accent,#F4F1EA)] text-[var(--pt-accent,#F4F1EA)]'
                   : 'border-transparent text-[#F4F1EA]/50 hover:text-[#F4F1EA]'
               }`}
             >

@@ -92,7 +92,7 @@ function VideoCard({ video, progressSeconds }: {
   return (
     <Link
       href={`/student/watch/${video.id}`}
-      className="group block rounded-xl overflow-hidden bg-[#1A1A20] border border-[#2A2A30] hover:border-[#B76E79]/50 transition-colors"
+      className="group block rounded-xl overflow-hidden bg-[#1A1A20] border border-[#2A2A30] hover:border-[#F4F1EA]/30 transition-colors"
     >
       <div className="relative aspect-video bg-black/40">
         {thumb ? (
@@ -132,7 +132,7 @@ function VideoCard({ video, progressSeconds }: {
 
         {progressPct !== null && (
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-            <div className="h-full bg-[#B76E79]" style={{ width: `${progressPct}%` }} />
+            <div className="h-full bg-[var(--pt-accent,#F4F1EA)]" style={{ width: `${progressPct}%` }} />
           </div>
         )}
       </div>
@@ -266,7 +266,7 @@ export default function StudioTab({ creatorId, userId }: {
   if (isLoading) {
     return (
       <div className="py-16 flex justify-center">
-        <div className="w-8 h-8 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[var(--pt-accent,#F4F1EA)]/70 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -297,7 +297,7 @@ export default function StudioTab({ creatorId, userId }: {
               return (
                 <div
                   key={liveClass.id}
-                  className="bg-gradient-to-br from-[#B76E79]/15 to-[#1A1A20] border border-[#B76E79]/25 rounded-2xl p-5"
+                  className="bg-gradient-to-br from-[#F4F1EA]/10 to-[#1A1A20] border border-[#F4F1EA]/20 rounded-2xl p-5"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                     <div className="min-w-0">
@@ -307,7 +307,7 @@ export default function StudioTab({ creatorId, userId }: {
                         {liveClass.meeting_platform ? ` · ${liveClass.meeting_platform}` : ''}
                       </p>
                     </div>
-                    <span className="px-3 py-1 bg-[#B76E79]/20 text-[#B76E79] text-xs font-semibold rounded-full whitespace-nowrap">
+                    <span className="px-3 py-1 bg-[#F4F1EA]/10 text-[#F4F1EA] text-xs font-semibold rounded-full whitespace-nowrap">
                       {countdownTo(liveClass.scheduled_at)}
                     </span>
                   </div>
@@ -321,7 +321,7 @@ export default function StudioTab({ creatorId, userId }: {
                       onClick={() => handleRsvpToggle(liveClass.id)}
                       className={`px-5 py-2 text-sm font-semibold rounded-full transition-colors ${
                         isGoing
-                          ? 'bg-[#B76E79] text-[#F4F1EA]'
+                          ? 'bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)]'
                           : 'bg-white/10 text-[#F4F1EA] hover:bg-white/15'
                       }`}
                     >
@@ -338,7 +338,7 @@ export default function StudioTab({ creatorId, userId }: {
                         href={liveClass.meeting_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-5 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+                        className="px-5 py-2 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] text-sm font-semibold rounded-full hover:opacity-90 transition-colors"
                       >
                         Join Class
                       </a>
@@ -362,7 +362,7 @@ export default function StudioTab({ creatorId, userId }: {
               onClick={() => setDifficultyFilter(filter)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 difficultyFilter === filter
-                  ? 'bg-[#B76E79] text-[#F4F1EA]'
+                  ? 'bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)]'
                   : 'bg-white/5 text-[#F4F1EA]/60 hover:bg-white/10 hover:text-[#F4F1EA]'
               }`}
             >

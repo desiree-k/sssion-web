@@ -81,7 +81,7 @@ export default async function DiscoverPage() {
       <StudentNav />
 
       {/* Hero Section */}
-      <section className="pt-16 pb-12 px-6 bg-gradient-to-b from-[#B76E79]/20 to-transparent">
+      <section className="pt-16 pb-12 px-6 bg-gradient-to-b from-[#F4F1EA]/10 to-transparent">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-[#F4F1EA] mb-4">
             Discover Creators
@@ -110,7 +110,7 @@ export default async function DiscoverPage() {
           </p>
           <a
             href="/join"
-            className="inline-block px-10 py-4 bg-[#B76E79] text-[#F4F1EA] font-semibold rounded-full hover:bg-[#a05f69] transition-colors"
+            className="inline-block px-10 py-4 bg-[#F4F1EA] text-[#0E0E12] font-semibold rounded-full hover:bg-white transition-colors"
           >
             Join as Creator
           </a>

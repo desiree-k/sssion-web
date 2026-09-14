@@ -50,10 +50,10 @@ function UnsubscribeInner() {
   return (
     <div className="min-h-screen bg-[#0E0E12] flex items-center justify-center px-6">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-4xl font-bold text-[#B76E79] mb-10">Sssion</h1>
+        <h1 className="text-4xl font-semibold tracking-[0.3em] text-[#F4F1EA] mb-10">SSSION</h1>
 
         {stage === 'loading' && (
-          <div className="w-10 h-10 border-2 border-[#B76E79] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-2 border-[#F4F1EA]/70 border-t-transparent rounded-full animate-spin mx-auto" />
         )}
 
         {stage === 'error' && (
@@ -77,7 +77,7 @@ function UnsubscribeInner() {
             <button
               onClick={handleUnsubscribe}
               disabled={isSubmitting}
-              className="px-8 py-3.5 bg-[#B76E79] hover:bg-[#a05f69] disabled:opacity-60 text-[#F4F1EA] font-semibold rounded-full transition-colors"
+              className="px-8 py-3.5 bg-[#F4F1EA] hover:bg-white disabled:opacity-60 text-[#0E0E12] font-semibold rounded-full transition-colors"
             >
               {isSubmitting ? 'Unsubscribing...' : 'Unsubscribe'}
             </button>
@@ -86,8 +86,8 @@ function UnsubscribeInner() {
 
         {stage === 'done' && (
           <>
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#B76E79]/20 flex items-center justify-center">
-              <svg className="w-10 h-10 text-[#B76E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#F4F1EA]/10 flex items-center justify-center">
+              <svg className="w-10 h-10 text-[#F4F1EA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
@@ -97,7 +97,7 @@ function UnsubscribeInner() {
                 ? <>You won&apos;t receive updates from <span className="text-[#F4F1EA]">{label}</span> anymore. You&apos;re always welcome back. 🤍</>
                 : <>You won&apos;t receive these updates anymore. You&apos;re always welcome back. 🤍</>}
             </p>
-            <a href="https://sssion.studio" className="inline-block mt-8 text-[#B76E79] text-sm hover:underline">
+            <a href="https://sssion.studio" className="inline-block mt-8 text-[#C9A96A] text-sm hover:underline">
               ← Back to Sssion
             </a>
           </>

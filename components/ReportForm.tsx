@@ -13,7 +13,7 @@ export const REPORT_CATEGORIES: { value: string; label: string; hint: string }[]
 ]
 
 const inputCls =
-  'w-full rounded-lg bg-[#12121A] border border-[#2A2A30] px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#B76E79] transition-colors'
+  'w-full rounded-lg bg-[#12121A] border border-[#2A2A30] px-4 py-3 text-[#F4F1EA] placeholder-white/30 focus:outline-none focus:border-[#F4F1EA]/40 transition-colors'
 
 export default function ReportForm({
   initialUrl = '',
@@ -75,17 +75,17 @@ export default function ReportForm({
   if (status === 'done') {
     return (
       <div className="rounded-xl border border-[#2A2A30] bg-[#12121A] p-8 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#B76E79]/15">
-          <svg className="h-6 w-6 text-[#B76E79]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F4F1EA]/10">
+          <svg className="h-6 w-6 text-[#F4F1EA]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="mb-2 text-xl font-semibold text-white">Report received</h2>
-        <p className="text-white/60 leading-relaxed">
+        <h2 className="mb-2 text-xl font-semibold text-[#F4F1EA]">Report received</h2>
+        <p className="text-[#F4F1EA]/60 leading-relaxed">
           Thank you. Our moderation team reviews every report. If you left an email we may follow up;
           otherwise no reply is needed. Urgent minor-safety concerns are escalated immediately.
         </p>
-        <a href="/" className="mt-6 inline-block text-sm text-[#B76E79] hover:underline">
+        <a href="/" className="mt-6 inline-block text-sm text-[#C9A96A] hover:underline">
           ← Back to sssion.studio
         </a>
       </div>
@@ -103,10 +103,10 @@ export default function ReportForm({
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-white/80">
+        <label className="mb-2 block text-sm font-medium text-[#F4F1EA]/80">
           What are you reporting?
         </label>
-        <p className="mb-3 text-xs text-white/40">
+        <p className="mb-3 text-xs text-[#F4F1EA]/40">
           A profile link or username, and/or the page URL. At least one, or describe it in the details.
         </p>
         <input
@@ -126,14 +126,14 @@ export default function ReportForm({
       </div>
 
       <fieldset>
-        <legend className="mb-3 block text-sm font-medium text-white/80">Category</legend>
+        <legend className="mb-3 block text-sm font-medium text-[#F4F1EA]/80">Category</legend>
         <div className="space-y-2">
           {REPORT_CATEGORIES.map((c) => (
             <label
               key={c.value}
               className={`flex cursor-pointer items-start gap-3 rounded-lg border px-4 py-3 transition-colors ${
                 category === c.value
-                  ? 'border-[#B76E79] bg-[#B76E79]/10'
+                  ? 'border-[#F4F1EA] bg-[#F4F1EA]/10'
                   : 'border-[#2A2A30] hover:border-[#3A3A42]'
               }`}
             >
@@ -143,11 +143,11 @@ export default function ReportForm({
                 value={c.value}
                 checked={category === c.value}
                 onChange={() => setCategory(c.value)}
-                className="mt-1 accent-[#B76E79]"
+                className="mt-1 accent-[#F4F1EA]"
               />
               <span>
-                <span className="block text-sm text-white">{c.label}</span>
-                <span className="block text-xs text-white/40">{c.hint}</span>
+                <span className="block text-sm text-[#F4F1EA]">{c.label}</span>
+                <span className="block text-xs text-[#F4F1EA]/40">{c.hint}</span>
               </span>
             </label>
           ))}
@@ -155,7 +155,7 @@ export default function ReportForm({
       </fieldset>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-white/80">Details</label>
+        <label className="mb-2 block text-sm font-medium text-[#F4F1EA]/80">Details</label>
         <textarea
           value={details}
           onChange={(e) => setDetails(e.target.value)}
@@ -166,8 +166,8 @@ export default function ReportForm({
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-white/80">
-          Your email <span className="font-normal text-white/40">(optional)</span>
+        <label className="mb-2 block text-sm font-medium text-[#F4F1EA]/80">
+          Your email <span className="font-normal text-[#F4F1EA]/40">(optional)</span>
         </label>
         <input
           type="email"
@@ -187,14 +187,14 @@ export default function ReportForm({
       <button
         type="submit"
         disabled={!canSubmit}
-        className="w-full rounded-lg bg-[#B76E79] px-6 py-3.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+        className="w-full rounded-lg bg-[#F4F1EA] px-6 py-3.5 font-semibold text-[#0E0E12] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {status === 'sending' ? 'Sending…' : 'Submit report'}
       </button>
 
-      <p className="text-center text-xs text-white/30">
+      <p className="text-center text-xs text-[#F4F1EA]/30">
         No account needed. Reports are confidential. For formal copyright takedowns, use the{' '}
-        <a href="/dmca" className="text-white/50 hover:underline">DMCA page</a>.
+        <a href="/dmca" className="text-[#F4F1EA]/50 hover:underline">DMCA page</a>.
       </p>
     </form>
   )

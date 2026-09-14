@@ -164,7 +164,7 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className="w-full flex items-center justify-center gap-2 py-3 bg-[#1A1A20] border border-[#2A2A30] rounded-2xl text-[#F4F1EA]/60 hover:text-[#F4F1EA] hover:border-[#B76E79]/40 transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-3 bg-[#1A1A20] border border-[#2A2A30] rounded-2xl text-[#F4F1EA]/60 hover:text-[#F4F1EA] hover:border-[#F4F1EA]/30 transition-colors"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -181,7 +181,7 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
         onChange={(e) => setBody(e.target.value)}
         placeholder="Share something with the studio..."
         rows={3}
-        className="w-full px-4 py-3 bg-[#0E0E12] border border-white/15 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#B76E79] transition-colors resize-y"
+        className="w-full px-4 py-3 bg-[#0E0E12] border border-white/15 rounded-xl text-[#F4F1EA] placeholder:text-[#F4F1EA]/30 focus:outline-none focus:border-[#F4F1EA]/40 transition-colors resize-y"
         autoFocus
       />
 
@@ -236,7 +236,7 @@ export default function PostComposer({ creatorId, userId, onPostCreated }: PostC
           <button
             onClick={handleSubmit}
             disabled={isSubmitting || (!body.trim() && !selectedImage)}
-            className="px-6 py-2 bg-[#B76E79] text-[#F4F1EA] text-sm font-semibold rounded-full hover:bg-[#a05f69] transition-colors disabled:opacity-40"
+            className="px-6 py-2 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] text-sm font-semibold rounded-full hover:opacity-90 transition-colors disabled:opacity-40"
           >
             {isSubmitting ? 'Posting...' : 'Post'}
           </button>
