@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* App default is the NOIR theme: ebony page, ivory ink. This is what the
+     un-layered `body` rule below paints, so any page that doesn't set its own
+     background sits on ebony (not white) — the root cause of the old
+     white-on-white bug, where `--background: #fff` overrode the layout's dark
+     body class. Ivory/marketing surfaces override background+color explicitly
+     on their own wrapper (.mk, StripeMessage, etc.), which beats the body
+     element selector on specificity. */
+  --background: #0E0E12;
+  --foreground: #F4F1EA;
 }
 
 @theme inline {
@@ -10,13 +17,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
