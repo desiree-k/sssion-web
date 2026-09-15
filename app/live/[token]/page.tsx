@@ -8,7 +8,8 @@
  * The edge function does all access control; this page:
  *   1. requires a signed-in Sssion session (else → sign-in w/ return URL)
  *   2. POSTs { live_token } + JWT to daily-token, which returns
- *      { token, room_url, is_owner, title } (403 = no ticket)
+ *      { token, room_url, is_owner, title, creator_username } (403 = no
+ *      ticket, still carries creator_username; 410 = the session has ended)
  *   3. mounts Daily Prebuilt full-viewport and joins
  *   4. OWNER only: records creator-track-only (single-participant layout),
  *      re-pinning the layout on reconnect (guarded against double-start)
@@ -34,7 +35,6 @@ const IVORY = '#F4F1EA'
 const CHAMPAGNE = '#C9A96A'
 
 const TOKEN_FETCH_TIMEOUT_MS = 15000
-const CREATOR_LOOKUP_TIMEOUT_MS = 6000
 // If the owner token did NOT auto-start recording, start it ourselves after a
 // short grace period. When start_cloud_recording is on (current token shape),
 // 'recording-started' fires first and this timer is cancelled.
@@ -45,6 +45,7 @@ type TokenResponse = {
   room_url: string
   is_owner: boolean
   title: string
+  creator_username?: string
 }
 
 // Distinct phases so "empty" and "broken" never look the same.
@@ -143,10 +144,25 @@ export default function LiveRoomPage() {
       }
 
       if (res.status === 403) {
-        // No ticket. Best-effort resolve the creator's Space for a direct link.
-        const spaceHref = await resolveSpaceHref(liveToken)
+        // No ticket. The response carries creator_username for a direct link.
+        let creatorUsername: string | undefined
+        try {
+          const body = (await res.json()) as { creator_username?: string }
+          creatorUsername = body?.creator_username || undefined
+        } catch {
+          /* body is optional here — fall back to /discover below */
+        }
         if (cancelled) return
-        setPhase({ k: 'no-ticket', spaceHref })
+        setPhase({
+          k: 'no-ticket',
+          spaceHref: creatorUsername ? `/${creatorUsername}` : '/discover',
+        })
+        return
+      }
+
+      if (res.status === 410) {
+        // The session's window has closed → over. { error: 'ended' }
+        setPhase({ k: 'ended' })
         return
       }
 
@@ -488,32 +504,6 @@ export default function LiveRoomPage() {
   function retry() {
     setPhase({ k: 'auth' })
     setReloadKey((k) => k + 1)
-  }
-}
-
-// Best-effort: resolve the creator's Space URL from the live token so the
-// no-ticket state can deep-link. Falls back to /discover if the row isn't
-// readable (live_classes has no client SELECT policy guaranteed) or times out.
-async function resolveSpaceHref(liveToken: string): Promise<string> {
-  const FALLBACK = '/discover'
-  try {
-    const query = supabase
-      .from('live_classes')
-      .select('creators:creator_id(username)')
-      .eq('live_token', liveToken)
-      .maybeSingle()
-    const timeout = new Promise<null>((resolve) =>
-      setTimeout(() => resolve(null), CREATOR_LOOKUP_TIMEOUT_MS),
-    )
-    const result = await Promise.race([query, timeout])
-    if (!result) return FALLBACK // timed out
-    const row = (result as { data?: { creators?: { username?: string } | { username?: string }[] } })
-      .data
-    const creator = Array.isArray(row?.creators) ? row?.creators[0] : row?.creators
-    const username = creator?.username
-    return username ? `/${username}` : FALLBACK
-  } catch {
-    return FALLBACK
   }
 }
 
