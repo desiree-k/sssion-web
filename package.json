@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@daily-co/daily-js": "^0.92.2",
     "@supabase/supabase-js": "^2.101.1",
     "gray-matter": "^4.0.3",
     "hls.js": "^1.6.15",

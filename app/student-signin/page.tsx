@@ -53,8 +53,12 @@ export default function StudentSignInPage() {
       }
 
       if (data.user) {
-        // Creators who land here get sent to their own dashboard
-        if (data.user.user_metadata?.role === 'creator') {
+        // Honor a return URL (e.g. a /live/<token> room) for members AND creators.
+        const redirect = new URLSearchParams(window.location.search).get('redirect')
+        if (redirect && redirect.startsWith('/')) {
+          router.push(redirect)
+        } else if (data.user.user_metadata?.role === 'creator') {
+          // Creators who land here get sent to their own dashboard
           router.push('/dashboard')
         } else {
           router.push('/student/dashboard')
