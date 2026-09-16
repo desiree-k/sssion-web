@@ -175,7 +175,13 @@ export default function StudioTab({ creatorId, userId }: {
             .from('live_classes')
             .select('id, title, description, scheduled_at, duration_minutes, meeting_url, meeting_platform')
             .eq('creator_id', creatorId)
-            .gt('scheduled_at', new Date().toISOString())
+            // Lower bound is a generous buffer, not the real cutoff: a class is
+            // "upcoming" while scheduled_at + duration_minutes > now, so one that
+            // started before now can still be in progress. We fetch anything from
+            // the last 24h (well beyond any class length) and apply the exact
+            // end-time filter client-side (see `upcoming` below) so it re-runs on
+            // each minute tick. Matches live_classes_screen.dart in sssion-327.
+            .gt('scheduled_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
             .order('scheduled_at', { ascending: true }),
           supabase
             .from('watch_history')
@@ -256,6 +262,18 @@ export default function StudioTab({ creatorId, userId }: {
     }
   }
 
+  // A class stays "upcoming" while scheduled_at + duration_minutes > now, so a
+  // class that has already started is still shown (labelled "Live now" by
+  // countdownTo) until it ends. Recomputed each render — the minute tick above
+  // drops classes as they end. Matches live_classes_screen.dart in sssion-327.
+  const nowMs = Date.now()
+  const upcomingClasses = liveClasses.filter((c) => {
+    const start = new Date(c.scheduled_at).getTime()
+    if (isNaN(start)) return false
+    const end = start + (c.duration_minutes ?? 60) * 60000
+    return end > nowMs
+  })
+
   const filteredVideos =
     difficultyFilter === 'All'
       ? videos
@@ -288,12 +306,13 @@ export default function StudioTab({ creatorId, userId }: {
       )}
 
       {/* Upcoming Live Classes */}
-      {liveClasses.length > 0 && (
+      {upcomingClasses.length > 0 && (
         <section>
           <h2 className="text-xl font-bold mb-4">Upcoming Live Classes</h2>
           <div className="space-y-4">
-            {liveClasses.map((liveClass) => {
+            {upcomingClasses.map((liveClass) => {
               const isGoing = rsvpedClassIds.has(liveClass.id)
+              const isLive = new Date(liveClass.scheduled_at).getTime() <= nowMs
               return (
                 <div
                   key={liveClass.id}
@@ -307,7 +326,16 @@ export default function StudioTab({ creatorId, userId }: {
                         {liveClass.meeting_platform ? ` · ${liveClass.meeting_platform}` : ''}
                       </p>
                     </div>
-                    <span className="px-3 py-1 bg-[#F4F1EA]/10 text-[#F4F1EA] text-xs font-semibold rounded-full whitespace-nowrap">
+                    <span
+                      className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${
+                        isLive
+                          ? 'bg-red-500/20 text-red-300 ring-1 ring-red-500/40'
+                          : 'bg-[#F4F1EA]/10 text-[#F4F1EA]'
+                      }`}
+                    >
+                      {isLive && (
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-400 mr-1.5 align-middle" />
+                      )}
                       {countdownTo(liveClass.scheduled_at)}
                     </span>
                   </div>
