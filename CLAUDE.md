@@ -2,6 +2,8 @@
 
 Read before editing. This is production — Vercel auto-deploys every push to main.
 
+**The app repo (Flutter + Supabase edge functions/SQL) is at `~/Documents/sssion-327` — NOT `~/code/sssion-327`, which does not exist.** This web clone is the only sssion repo under `~/code`; the app repo lives under `~/Documents`. Cross-repo docs (state, decisions, specs, briefs) live in the app repo at `~/Documents/sssion-327/docs/` — read STATE.md and DECISIONS.md there before starting work.
+
 ## Ground rules
 - **This clone (~/code/sssion-web-clone) is the active working copy.** ~/Documents/sssion-web is an older checkout with macOS permission issues; do not build from it without checking with the founder.
 - Nonstandard/new Next.js version — read the bundled docs before using APIs (params are Promises: `await params`).
