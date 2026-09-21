@@ -1,4 +1,5 @@
 import { Fraunces, Hanken_Grotesk } from 'next/font/google'
+import NewsletterSignup from '@/components/NewsletterSignup'
 
 // Shared ivory-editorial chrome for the marketing pages (homepage, /features,
 // /studios, blog). Fraunces = display; Hanken = body/UI.
@@ -70,6 +71,7 @@ export const MARKETING_CSS = `
 
 /* Footer */
 .mk-footer{background:#FFFFFF;border-top:1px solid #E5E0D6;padding:clamp(52px,8vw,84px) clamp(20px,5vw,64px) clamp(32px,5vw,44px);color:#1D1B18}
+.mk-footer-news{max-width:1180px;margin:0 auto clamp(44px,6vw,64px);padding-bottom:clamp(44px,6vw,64px);border-bottom:1px solid #E5E0D6}
 .mk-footer-top{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between}
 .mk-footer-brand{flex:1 1 260px;min-width:240px}
 .mk-footer-logo{font-family:var(--font-fraunces),Georgia,serif;font-weight:500;font-size:28px;margin-bottom:8px}
@@ -124,6 +126,9 @@ export function MarketingNav({
 export function MarketingFooter() {
   return (
     <footer className="mk-footer">
+      <div className="mk-footer-news">
+        <NewsletterSignup />
+      </div>
       <div className="mk-footer-top">
         <div className="mk-footer-brand">
           <div className="mk-footer-logo">sssion</div>
