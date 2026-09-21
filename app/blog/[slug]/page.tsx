@@ -71,6 +71,7 @@ const css = `
 .mk-post-body ul,.mk-post-body ol{margin:0 0 1.4em;padding-left:1.4em}
 .mk-post-body li{margin-bottom:.4em}
 .mk-post-body img{max-width:100%;border-radius:14px;margin:1.6em 0;border:1px solid #E5E0D6}
+.mk-post-body img[src*="/set-up-your-studio-space/"]{max-width:320px;display:block;margin:1.6em auto}
 .mk-post-body code{background:#F0EDE6;border-radius:6px;padding:2px 6px;font-size:.9em}
 .mk-post-body pre{background:#FFFFFF;border:1px solid #E5E0D6;border-radius:12px;padding:18px;overflow-x:auto;margin:1.6em 0}
 .mk-post-body pre code{background:none;padding:0}
