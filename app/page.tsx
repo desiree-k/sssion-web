@@ -1,6 +1,7 @@
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 import OpenDoorCta from '@/components/OpenDoorCta'
 import VideoWell from '@/components/marketing/VideoWell'
+import FiveAppsSection from '@/components/marketing/FiveAppsSection'
 import IvoryInteractions from '@/components/marketing/IvoryInteractions'
 import {
   MARKETING_CSS,
@@ -128,6 +129,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ================= FIVE APPS → ONE SPACE — swap list / accordion ================= */}
+        <FiveAppsSection />
 
         {/* ================= HOW IT WORKS — the ladder ================= */}
         <section id="how" className="mk-section" style={{ background: '#FFFFFF', borderTop: '1px solid #E5E0D6', borderBottom: '1px solid #E5E0D6' }}>
