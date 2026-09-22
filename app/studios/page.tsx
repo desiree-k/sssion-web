@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 import VideoWell from '@/components/marketing/VideoWell'
 import IvoryInteractions from '@/components/marketing/IvoryInteractions'
+import StudiosSpaceSection from '@/components/marketing/StudiosSpaceSection'
 import StudioRoiCalculator from './StudioRoiCalculator'
 import {
   MARKETING_CSS,
@@ -115,24 +116,6 @@ export default function StudiosPage() {
           </div>
         </section>
 
-        {/* ================= THE PROBLEM ================= */}
-        <section className="mk-section">
-          <div className="mk-intro">
-            <div data-reveal className="mk-eyebrow">The quiet leak</div>
-            <p data-reveal data-reveal-delay="60" className="mk-intro-lead">
-              Most studios don&apos;t lose students in dramatic ways. They drift. A missed week
-              becomes a missed month, the habit fades, and one day a student you loved teaching
-              just isn&apos;t on the schedule anymore. You already paid to win them — in marketing,
-              in intro offers, in your own time — and the recurring revenue they represented
-              quietly walks out the door.
-            </p>
-            <p data-reveal data-reveal-delay="140" className="mk-intro-big">
-              Keeping a student costs far less than winning a new one.{' '}
-              <span className="mk-serif-i mk-accent">Retention is the most valuable lever a studio has.</span>
-            </p>
-          </div>
-        </section>
-
         {/* ================= THE SOLUTION ================= */}
         <section className="mk-section" style={{ background: '#FFFFFF', borderTop: '1px solid #E5E0D6', borderBottom: '1px solid #E5E0D6' }}>
           <div className="mk-wrap">
@@ -176,6 +159,9 @@ export default function StudiosPage() {
             </div>
           </div>
         </section>
+
+        {/* ================= FIVE APPS → ONE SPACE (studio register) ================= */}
+        <StudiosSpaceSection ctaHref={STUDIO_MAILTO} />
 
         {/* ================= THE CALCULATOR ================= */}
         <section className="mk-section" id="calculator">
