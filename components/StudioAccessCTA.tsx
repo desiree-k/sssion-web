@@ -47,7 +47,7 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
 
         // Access can come from a legacy studio_access grant OR an active
         // offering purchase (member_offerings) — check both.
-        const [{ data: access }, { data: offeringAccess }] = await Promise.all([
+        const [{ data: access }, { data: offeringRows }] = await Promise.all([
           supabase
             .from('studio_access')
             .select('id, status')
@@ -56,14 +56,19 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
             .maybeSingle(),
           supabase
             .from('member_offerings')
-            .select('status')
+            .select('expires_at')
             .eq('user_id', session.user.id)
             .eq('creator_id', creatorId)
-            .eq('status', 'active')
-            .maybeSingle(),
+            .eq('status', 'active'),
         ])
 
-        if (access?.status === 'approved' || offeringAccess) {
+        // An active offering only grants access while unexpired — matches the
+        // studio interior / watch gates so this CTA and those agree.
+        const hasActiveOffering = (offeringRows || []).some(
+          (r) => !r.expires_at || new Date(r.expires_at) > new Date()
+        )
+
+        if (access?.status === 'approved' || hasActiveOffering) {
           // Already a member — the hero "Enter Space" button handles entry.
           setState('approved')
         } else if (access?.status === 'pending') {
