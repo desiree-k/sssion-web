@@ -575,6 +575,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                 creatorId={creator.id}
                 offerings={offerings}
                 username={profile.username || creator.id}
+                creatorDisplayName={displayName}
               />
             </div>
           )}
