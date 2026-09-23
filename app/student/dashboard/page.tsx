@@ -113,6 +113,7 @@ export default function StudentDashboardPage() {
   const [pending, setPending] = useState<SpaceRow[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [withdrawingId, setWithdrawingId] = useState<string | null>(null)
 
   useEffect(() => {
     const loadStudios = async () => {
@@ -185,6 +186,33 @@ export default function StudentDashboardPage() {
 
     loadStudios()
   }, [])
+
+  // Withdraw a pending offering request. Uses the existing member_offerings
+  // policy (a member may UPDATE their own 'pending' row to 'cancelled').
+  // NOTE: there is deliberately no "leave" action for ACTIVE memberships —
+  // no RLS policy lets a member cancel an active member_offerings row, so we
+  // don't offer a button that would silently fail. Add the leave flow once
+  // that policy exists.
+  const handleWithdraw = async (memberId: string) => {
+    setWithdrawingId(memberId)
+    setError(null)
+    try {
+      const { data, error: updateError } = await supabase
+        .from('member_offerings')
+        .update({ status: 'cancelled' })
+        .eq('id', memberId)
+        .eq('status', 'pending')
+        .select('id')
+      if (updateError) throw updateError
+      if (!data || data.length === 0) throw new Error('not-withdrawn')
+      setPending((prev) => prev.filter((r) => r.offeringMemberId !== memberId))
+    } catch (err) {
+      console.error('Error withdrawing request:', err)
+      setError('Could not withdraw your request. Please try again.')
+    } finally {
+      setWithdrawingId(null)
+    }
+  }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -275,9 +303,24 @@ export default function StudentDashboardPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-[#F4F1EA] font-medium truncate">{name}</p>
                         </div>
-                        <span className="px-3 py-1 bg-amber-500/15 text-amber-400 text-xs font-medium rounded-full">
-                          Pending
-                        </span>
+                        <div className="flex items-center gap-3 flex-none">
+                          <span className="px-3 py-1 bg-amber-500/15 text-amber-400 text-xs font-medium rounded-full">
+                            Pending
+                          </span>
+                          {row.offeringMemberId && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleWithdraw(row.offeringMemberId!)
+                              }}
+                              disabled={withdrawingId === row.offeringMemberId}
+                              className="text-[#F4F1EA]/50 hover:text-[#F4F1EA] text-xs underline transition-colors disabled:opacity-50"
+                            >
+                              {withdrawingId === row.offeringMemberId ? 'Withdrawing…' : 'Withdraw request'}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     )
                     return username ? (
