@@ -58,15 +58,29 @@ export default function StudentStudioPage() {
           ? creatorData.profile[0]
           : creatorData.profile
 
-        // Approved access required — otherwise send to the public studio page
-        const { data: access } = await supabase
-          .from('studio_access')
-          .select('status')
-          .eq('student_id', user.id)
-          .eq('creator_id', creatorId)
-          .maybeSingle()
+        // Access required — a legacy approved studio_access grant OR an active
+        // offering membership (member_offerings). Dual-check during the soak
+        // period; otherwise send to the public studio page.
+        const [{ data: access }, { data: offeringRows }] = await Promise.all([
+          supabase
+            .from('studio_access')
+            .select('status')
+            .eq('student_id', user.id)
+            .eq('creator_id', creatorId)
+            .maybeSingle(),
+          supabase
+            .from('member_offerings')
+            .select('expires_at')
+            .eq('user_id', user.id)
+            .eq('creator_id', creatorId)
+            .eq('status', 'active'),
+        ])
 
-        if (access?.status !== 'approved') {
+        const hasActiveOffering = (offeringRows || []).some(
+          (r) => !r.expires_at || new Date(r.expires_at) > new Date()
+        )
+
+        if (access?.status !== 'approved' && !hasActiveOffering) {
           router.replace(`/${profile?.username || creatorId}`)
           return
         }
