@@ -13,9 +13,16 @@ interface StudioAccessCTAProps {
    * 'Request to Join' (gathering mode).
    */
   joinLabel?: string
+  /**
+   * Route slug for this Space. Signed-out visitors carry it through signup
+   * (?creator&u) so they land back here after verifying. There's no offering
+   * to join on this path (this CTA renders only when the Space has no active
+   * offerings), so no ?offering param.
+   */
+  username?: string
 }
 
-export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access' }: StudioAccessCTAProps) {
+export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access', username }: StudioAccessCTAProps) {
   const [state, setState] = useState<AccessState>('loading')
   const [existingRequestId, setExistingRequestId] = useState<string | null>(null)
   const [studentId, setStudentId] = useState<string | null>(null)
@@ -116,7 +123,9 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
       {state === 'signedOut' && (
         <>
           <Link
-            href="/student-signup"
+            href={username
+              ? `/signup?creator=${encodeURIComponent(creatorId)}&u=${encodeURIComponent(username)}`
+              : '/signup'}
             className="px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] rounded-[var(--pt-radius,9999px)] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
           >
             Sign up to {joinLabel.toLowerCase()}

@@ -42,6 +42,8 @@ interface LiveClass {
 interface OfferingCardsProps {
   creatorId: string
   offerings: Offering[]
+  /** Route slug for this Space, used to carry it through signup (?u=). */
+  username: string
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -64,7 +66,7 @@ function isLive(mo: MemberOffering): boolean {
   return new Date(mo.expires_at) > new Date()
 }
 
-export default function OfferingCards({ creatorId, offerings }: OfferingCardsProps) {
+export default function OfferingCards({ creatorId, offerings, username }: OfferingCardsProps) {
   const [signedInStudentId, setSignedInStudentId] = useState<string | null>(null)
   const [signedOut, setSignedOut] = useState(false)
   const [mine, setMine] = useState<Record<string, MemberOffering>>({})
@@ -279,7 +281,7 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
                 <div className="mt-1 flex-1 flex flex-col justify-end">
                   {signedOut ? (
                     <Link
-                      href="/student-signup"
+                      href={`/signup?creator=${encodeURIComponent(creatorId)}&offering=${encodeURIComponent(offering.id)}&u=${encodeURIComponent(username)}`}
                       className="block text-center px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
                     >
                       {offering.is_free ? 'Sign up to join' : 'Sign up to get access'}

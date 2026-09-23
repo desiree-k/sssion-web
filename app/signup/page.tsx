@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import {
   AuthShell,
@@ -20,7 +21,14 @@ import {
 
 type View = 'form' | 'checkEmail' | 'accountExists'
 
-export default function SignupPage() {
+function SignupInner() {
+  const searchParams = useSearchParams()
+  // A logged-out Join on a creator page sends the Space through signup so we
+  // can land the new member back inside it after they verify (see completeJoin).
+  const joinCreatorId = searchParams.get('creator')
+  const joinOfferingId = searchParams.get('offering')
+  const joinUsername = searchParams.get('u')
+
   const [view, setView] = useState<View>('form')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -60,6 +68,16 @@ export default function SignupPage() {
           data: {
             role: 'student',
             full_name: name.trim(),
+            // Carried through verification, then consumed by completeJoin. The
+            // signup trigger ignores every key except full_name, so these are
+            // safe to stash here.
+            ...(joinCreatorId && joinOfferingId
+              ? {
+                  join_creator_id: joinCreatorId,
+                  join_offering_id: joinOfferingId,
+                  join_username: joinUsername,
+                }
+              : {}),
           },
           emailRedirectTo: 'https://sssion.studio/auth/callback',
         },
@@ -74,6 +92,13 @@ export default function SignupPage() {
       if (data.user && (data.user.identities?.length ?? 0) === 0) {
         setView('accountExists')
         return
+      }
+
+      // Stash the Space slug so the post-verify fallback page can offer an
+      // "Open your Space" link on this device even if the session isn't
+      // established there (the happy path redirects straight in via metadata).
+      if (joinUsername) {
+        try { localStorage.setItem('join_username', joinUsername) } catch { /* ignore */ }
       }
 
       setView('checkEmail')
@@ -254,5 +279,14 @@ export default function SignupPage() {
         </div>
       )}
     </AuthShell>
+  )
+}
+
+export default function SignupPage() {
+  // useSearchParams requires a Suspense boundary in this Next version.
+  return (
+    <Suspense fallback={null}>
+      <SignupInner />
+    </Suspense>
   )
 }

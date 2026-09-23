@@ -502,7 +502,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                     {/* No offerings → the request-to-join CTA lives here; with
                         offerings, the cards below carry each CTA. */}
                     {offerings.length === 0 ? (
-                      <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} />
+                      <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} username={profile.username || creator.id} />
                     ) : (
                       <a
                         href="#offerings"
@@ -571,7 +571,11 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
               join/offering CTAs. */}
           {showCommunityFeatures && (
             <div id="offerings">
-              <OfferingCards creatorId={creator.id} offerings={offerings} />
+              <OfferingCards
+                creatorId={creator.id}
+                offerings={offerings}
+                username={profile.username || creator.id}
+              />
             </div>
           )}
 
