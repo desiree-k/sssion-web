@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
+import { completeJoinFromSession } from '@/lib/completeJoin'
 import { AuthCenter, Masthead, authSecondaryBtn } from '@/components/auth/AuthChrome'
 
 export default function AuthCallback() {
@@ -55,6 +57,37 @@ export default function AuthCallback() {
       return () => recoverySub.unsubscribe()
     }
 
+    // Shared post-auth routing: apply any pending username, complete a
+    // pending Space join, then route. A join always wins over the dashboards
+    // so a new member lands inside the Space they tapped Join on.
+    const finishAuth = async (session: Session) => {
+      const pendingUsername = localStorage.getItem('pending_username')
+      if (pendingUsername) {
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ username: pendingUsername.toLowerCase() })
+          .eq('id', session.user.id)
+        if (!updateError) {
+          localStorage.removeItem('pending_username')
+        } else {
+          console.error('Username update error:', updateError)
+        }
+      }
+
+      const join = await completeJoinFromSession(session)
+      if (join.joined && join.username) {
+        router.push(`/${join.username}`)
+        return
+      }
+
+      // Students get their own dashboard; creators keep the existing one.
+      if (session.user.user_metadata?.role === 'student') {
+        router.push('/student/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
+    }
+
     const handleCallback = async () => {
       // supabase-js automatically detects tokens in the URL hash
       // and establishes the session. We just need to wait for it.
@@ -72,46 +105,15 @@ export default function AuthCallback() {
       }
 
       if (session) {
-        // Session established — check for pending username
-        const pendingUsername = localStorage.getItem('pending_username')
-        if (pendingUsername) {
-          const { error: updateError } = await supabase
-            .from('profiles')
-            .update({ username: pendingUsername.toLowerCase() })
-            .eq('id', session.user.id)
-
-          if (!updateError) {
-            localStorage.removeItem('pending_username')
-          } else {
-            console.error('Username update error:', updateError)
-          }
-        }
-        // Students get their own dashboard; creators keep the existing one
-        if (session.user.user_metadata?.role === 'student') {
-          router.push('/student/dashboard')
-        } else {
-          router.push('/dashboard')
-        }
+        await finishAuth(session)
       } else {
         // No session yet — supabase might still be processing
         // Listen for auth state change
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
-              const pendingUsername = localStorage.getItem('pending_username')
-              if (pendingUsername) {
-                await supabase
-                  .from('profiles')
-                  .update({ username: pendingUsername.toLowerCase() })
-                  .eq('id', session.user.id)
-                localStorage.removeItem('pending_username')
-              }
               subscription.unsubscribe()
-              if (session.user.user_metadata?.role === 'student') {
-                router.push('/student/dashboard')
-              } else {
-                router.push('/dashboard')
-              }
+              await finishAuth(session)
             }
           }
         )

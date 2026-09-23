@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { EmailOtpType } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
+import { completeJoinFromSession } from '@/lib/completeJoin'
 import { AuthCenter, Masthead, authPrimaryBtn } from '@/components/auth/AuthChrome'
 
 // 'verifying' — exchanging the token for a session
@@ -51,6 +52,14 @@ export default function VerifyPage() {
 
       if (verifyError || !data.session) {
         setStage('expired')
+        return
+      }
+
+      // A pending Space join (tapped Join → signed up) wins over the
+      // dashboards, so the new member lands inside the Space.
+      const join = await completeJoinFromSession(data.session)
+      if (join.joined && join.username) {
+        router.replace(`/${join.username}`)
         return
       }
 
