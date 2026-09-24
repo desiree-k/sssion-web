@@ -42,6 +42,10 @@ interface LiveClass {
 interface OfferingCardsProps {
   creatorId: string
   offerings: Offering[]
+  /** Route slug for this Space, used to carry it through signup (?u=). */
+  username: string
+  /** Creator's display name, shown in the "Request sent" pending copy. */
+  creatorDisplayName: string
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -64,7 +68,7 @@ function isLive(mo: MemberOffering): boolean {
   return new Date(mo.expires_at) > new Date()
 }
 
-export default function OfferingCards({ creatorId, offerings }: OfferingCardsProps) {
+export default function OfferingCards({ creatorId, offerings, username, creatorDisplayName }: OfferingCardsProps) {
   const [signedInStudentId, setSignedInStudentId] = useState<string | null>(null)
   const [signedOut, setSignedOut] = useState(false)
   const [mine, setMine] = useState<Record<string, MemberOffering>>({})
@@ -164,7 +168,24 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
           ...(autoApproved ? { granted_at: new Date().toISOString(), expires_at: expiresAt } : {}),
         })
         .select('id, offering_id, status, expires_at')
-      if (insertError) throw insertError
+      if (insertError) {
+        // 23505 = the unique index already holds a pending/active row for this
+        // (user, offering). Already requested — reflect the existing row.
+        if (insertError.code === '23505') {
+          const { data: existing } = await supabase
+            .from('member_offerings')
+            .select('id, offering_id, status, expires_at')
+            .eq('user_id', signedInStudentId)
+            .eq('offering_id', offering.id)
+            .maybeSingle()
+          if (existing) {
+            setMine((prev) => ({ ...prev, [offering.id]: existing as MemberOffering }))
+          }
+          setAwaitingPaymentId(null)
+          return
+        }
+        throw insertError
+      }
       const saved = rows?.[0]
       if (!saved) throw new Error('request-not-saved')
       setMine((prev) => ({
@@ -217,9 +238,13 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
             const awaiting = awaitingPaymentId === offering.id
             const processing = processingId === offering.id
 
+            // Paid offerings still need the external payment step even once the
+            // request is in — surface it below the pending card.
+            const showPendingPayment = pending && !offering.is_free && !!offering.payment_url
+
             let label: string
             if (have) label = 'You have this'
-            else if (pending) label = 'Requested — awaiting approval'
+            else if (pending) label = `Request sent — ${creatorDisplayName} approves members personally`
             else if (awaiting) label = "I've paid — request access"
             else if (offering.is_free) {
               // Manual-review free offerings send a request, not an instant join.
@@ -279,7 +304,7 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
                 <div className="mt-1 flex-1 flex flex-col justify-end">
                   {signedOut ? (
                     <Link
-                      href="/student-signup"
+                      href={`/signup?creator=${encodeURIComponent(creatorId)}&offering=${encodeURIComponent(offering.id)}&u=${encodeURIComponent(username)}`}
                       className="block text-center px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
                     >
                       {offering.is_free ? 'Sign up to join' : 'Sign up to get access'}
@@ -299,6 +324,22 @@ export default function OfferingCards({ creatorId, offerings }: OfferingCardsPro
                     <p className="text-[var(--pt-text2,#ffffff66)] text-xs mt-2 leading-relaxed">
                       Paid on the linked page? Tap above to request access — the creator will confirm and let you in.
                     </p>
+                  )}
+                  {showPendingPayment && (
+                    <div className="mt-2 leading-relaxed">
+                      <p className="text-[var(--pt-text2,#ffffff99)] text-xs">
+                        Next step: complete your payment so {creatorDisplayName} can let you in.
+                      </p>
+                      <a
+                        href={offering.payment_url!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block mt-1.5 text-xs font-semibold uppercase tracking-[0.16em] hover:underline"
+                        style={{ color: 'var(--pt-accent,#B76E79)' }}
+                      >
+                        Pay here →
+                      </a>
+                    </div>
                   )}
                 </div>
               </div>

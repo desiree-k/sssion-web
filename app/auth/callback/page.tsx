@@ -2,13 +2,23 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
-import { AuthCenter, Masthead, authSecondaryBtn } from '@/components/auth/AuthChrome'
+import { completeJoinFromSession } from '@/lib/completeJoin'
+import Link from 'next/link'
+import { AuthCenter, Masthead, authPrimaryBtn, authSecondaryBtn } from '@/components/auth/AuthChrome'
 
 export default function AuthCallback() {
   const router = useRouter()
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [showExpiredLink, setShowExpiredLink] = useState(false)
+  // Stashed by /signup when a Space was carried through — lets the fallback
+  // confirmation page offer "Open your Space" even without a session here.
+  const [joinUsername, setJoinUsername] = useState<string | null>(null)
+
+  useEffect(() => {
+    try { setJoinUsername(localStorage.getItem('join_username')) } catch { /* ignore */ }
+  }, [])
 
   useEffect(() => {
     let recoveryHandled = false
@@ -55,6 +65,37 @@ export default function AuthCallback() {
       return () => recoverySub.unsubscribe()
     }
 
+    // Shared post-auth routing: apply any pending username, complete a
+    // pending Space join, then route. A join always wins over the dashboards
+    // so a new member lands inside the Space they tapped Join on.
+    const finishAuth = async (session: Session) => {
+      const pendingUsername = localStorage.getItem('pending_username')
+      if (pendingUsername) {
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ username: pendingUsername.toLowerCase() })
+          .eq('id', session.user.id)
+        if (!updateError) {
+          localStorage.removeItem('pending_username')
+        } else {
+          console.error('Username update error:', updateError)
+        }
+      }
+
+      const join = await completeJoinFromSession(session)
+      if (join.joined && join.username) {
+        router.push(`/${join.username}`)
+        return
+      }
+
+      // Students get their own dashboard; creators keep the existing one.
+      if (session.user.user_metadata?.role === 'student') {
+        router.push('/student/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
+    }
+
     const handleCallback = async () => {
       // supabase-js automatically detects tokens in the URL hash
       // and establishes the session. We just need to wait for it.
@@ -72,46 +113,15 @@ export default function AuthCallback() {
       }
 
       if (session) {
-        // Session established — check for pending username
-        const pendingUsername = localStorage.getItem('pending_username')
-        if (pendingUsername) {
-          const { error: updateError } = await supabase
-            .from('profiles')
-            .update({ username: pendingUsername.toLowerCase() })
-            .eq('id', session.user.id)
-
-          if (!updateError) {
-            localStorage.removeItem('pending_username')
-          } else {
-            console.error('Username update error:', updateError)
-          }
-        }
-        // Students get their own dashboard; creators keep the existing one
-        if (session.user.user_metadata?.role === 'student') {
-          router.push('/student/dashboard')
-        } else {
-          router.push('/dashboard')
-        }
+        await finishAuth(session)
       } else {
         // No session yet — supabase might still be processing
         // Listen for auth state change
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
-              const pendingUsername = localStorage.getItem('pending_username')
-              if (pendingUsername) {
-                await supabase
-                  .from('profiles')
-                  .update({ username: pendingUsername.toLowerCase() })
-                  .eq('id', session.user.id)
-                localStorage.removeItem('pending_username')
-              }
               subscription.unsubscribe()
-              if (session.user.user_metadata?.role === 'student') {
-                router.push('/student/dashboard')
-              } else {
-                router.push('/dashboard')
-              }
+              await finishAuth(session)
             }
           }
         )
@@ -188,15 +198,25 @@ export default function AuthCallback() {
             Email verified!
           </Masthead>
           <p className="text-[#F4F1EA]/60 text-lg mb-8">
-            You&apos;re all set. Head back to the Sssion app to sign in.
+            You&apos;re all set. {joinUsername ? 'Open your Space to join.' : 'Jump into Sssion on the web.'}
           </p>
 
-          {/* App download section */}
-          <div className="pt-6 border-t border-[#2A2A30]">
+          {/* Primary action: land the member in the Space (web is first-class). */}
+          <Link
+            href={joinUsername ? `/${joinUsername}` : '/student/dashboard'}
+            className={`${authPrimaryBtn} inline-block w-auto px-8 py-3`}
+          >
+            {joinUsername ? 'Open your Space' : 'Go to your Spaces'}
+          </Link>
+
+          {/* App download — secondary. Android has no public link while it's in
+              closed testing (referrals route through the founder), so it's
+              plain text, not a dead link. */}
+          <div className="pt-8 mt-8 border-t border-[#2A2A30]">
             <p className="text-[#F4F1EA]/40 text-sm mb-4">
-              Don&apos;t have the app yet?
+              Prefer the app?
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <a
                 href="https://apps.apple.com/us/app/sssion/id6763607808"
                 target="_blank"
@@ -208,15 +228,7 @@ export default function AuthCallback() {
                 </svg>
                 <span>App Store</span>
               </a>
-              <a
-                href="#"
-                className={authSecondaryBtn}
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
-                </svg>
-                <span>Google Play</span>
-              </a>
+              <span className="text-[#F4F1EA]/40 text-sm">Android: coming soon</span>
             </div>
           </div>
         </div>

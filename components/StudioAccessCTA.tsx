@@ -13,9 +13,16 @@ interface StudioAccessCTAProps {
    * 'Request to Join' (gathering mode).
    */
   joinLabel?: string
+  /**
+   * Route slug for this Space. Signed-out visitors carry it through signup
+   * (?creator&u) so they land back here after verifying. There's no offering
+   * to join on this path (this CTA renders only when the Space has no active
+   * offerings), so no ?offering param.
+   */
+  username?: string
 }
 
-export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access' }: StudioAccessCTAProps) {
+export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access', username }: StudioAccessCTAProps) {
   const [state, setState] = useState<AccessState>('loading')
   const [existingRequestId, setExistingRequestId] = useState<string | null>(null)
   const [studentId, setStudentId] = useState<string | null>(null)
@@ -40,7 +47,7 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
 
         // Access can come from a legacy studio_access grant OR an active
         // offering purchase (member_offerings) — check both.
-        const [{ data: access }, { data: offeringAccess }] = await Promise.all([
+        const [{ data: access }, { data: offeringRows }] = await Promise.all([
           supabase
             .from('studio_access')
             .select('id, status')
@@ -49,14 +56,19 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
             .maybeSingle(),
           supabase
             .from('member_offerings')
-            .select('status')
+            .select('expires_at')
             .eq('user_id', session.user.id)
             .eq('creator_id', creatorId)
-            .eq('status', 'active')
-            .maybeSingle(),
+            .eq('status', 'active'),
         ])
 
-        if (access?.status === 'approved' || offeringAccess) {
+        // An active offering only grants access while unexpired — matches the
+        // studio interior / watch gates so this CTA and those agree.
+        const hasActiveOffering = (offeringRows || []).some(
+          (r) => !r.expires_at || new Date(r.expires_at) > new Date()
+        )
+
+        if (access?.status === 'approved' || hasActiveOffering) {
           // Already a member — the hero "Enter Space" button handles entry.
           setState('approved')
         } else if (access?.status === 'pending') {
@@ -116,7 +128,9 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
       {state === 'signedOut' && (
         <>
           <Link
-            href="/student-signup"
+            href={username
+              ? `/signup?creator=${encodeURIComponent(creatorId)}&u=${encodeURIComponent(username)}`
+              : '/signup'}
             className="px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] rounded-[var(--pt-radius,9999px)] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
           >
             Sign up to {joinLabel.toLowerCase()}

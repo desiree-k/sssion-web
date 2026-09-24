@@ -18,10 +18,14 @@ interface StudioCreator {
   profile: StudioProfile | null
 }
 
-interface StudioAccessRow {
-  id: string
-  status: string
-  creator: StudioCreator | null
+// A Space on the dashboard, whether reached via a legacy studio_access grant
+// or an offering membership (member_offerings). Merged and de-duped by creator.
+interface SpaceRow {
+  key: string
+  status: 'approved' | 'pending'
+  creator: StudioCreator
+  /** Set for offering-sourced pending rows — enables "Withdraw request". */
+  offeringMemberId?: string
 }
 
 // Supabase can return joined rows as an object or a single-element array
@@ -87,11 +91,29 @@ function StudioCard({ creator }: { creator: StudioCreator }) {
   )
 }
 
+const CREATOR_SELECT = `
+  id,
+  display_name,
+  specialties,
+  profile:profiles!user_id (
+    username,
+    full_name,
+    profile_image_url
+  )
+`
+
+function normalizeCreator(value: unknown): StudioCreator | null {
+  const c = first(value as StudioCreator | StudioCreator[] | null)
+  if (!c) return null
+  return { ...c, profile: first(c.profile) as StudioProfile | null }
+}
+
 export default function StudentDashboardPage() {
-  const [approved, setApproved] = useState<StudioAccessRow[]>([])
-  const [pending, setPending] = useState<StudioAccessRow[]>([])
+  const [approved, setApproved] = useState<SpaceRow[]>([])
+  const [pending, setPending] = useState<SpaceRow[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [withdrawingId, setWithdrawingId] = useState<string | null>(null)
 
   useEffect(() => {
     const loadStudios = async () => {
@@ -99,38 +121,59 @@ export default function StudentDashboardPage() {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
 
-        const { data, error: queryError } = await supabase
-          .from('studio_access')
-          .select(`
-            id,
-            status,
-            creator:creators!creator_id (
-              id,
-              display_name,
-              specialties,
-              profile:profiles!user_id (
-                username,
-                full_name,
-                profile_image_url
-              )
-            )
-          `)
-          .eq('student_id', user.id)
-          .in('status', ['approved', 'pending'])
+        // Two sources, merged: legacy studio_access grants and offering
+        // memberships (member_offerings). Additive dual-read during the soak.
+        const [legacyRes, offeringRes] = await Promise.all([
+          supabase
+            .from('studio_access')
+            .select(`id, status, creator:creators!creator_id ( ${CREATOR_SELECT} )`)
+            .eq('student_id', user.id)
+            .in('status', ['approved', 'pending']),
+          supabase
+            .from('member_offerings')
+            .select(`id, status, expires_at, creator:creators!creator_id ( ${CREATOR_SELECT} )`)
+            .eq('user_id', user.id)
+            .in('status', ['active', 'pending']),
+        ])
 
-        if (queryError) throw queryError
+        if (legacyRes.error) throw legacyRes.error
+        if (offeringRes.error) throw offeringRes.error
 
-        const rows: StudioAccessRow[] = (data || []).map((row) => {
-          const creator = first(row.creator) as StudioCreator | null
-          return {
-            id: row.id as string,
-            status: row.status as string,
-            creator: creator
-              ? { ...creator, profile: first(creator.profile) as StudioProfile | null }
-              : null,
+        // De-dupe by creator: approved/active wins over pending. Offerings are
+        // considered first so an offering-sourced pending row (which carries
+        // offeringMemberId for Withdraw) is kept over an equal-rank legacy one.
+        const byCreator = new Map<string, SpaceRow>()
+        const rank = (s: SpaceRow['status']) => (s === 'approved' ? 2 : 1)
+        const consider = (row: SpaceRow) => {
+          const existing = byCreator.get(row.creator.id)
+          if (!existing || rank(row.status) > rank(existing.status)) {
+            byCreator.set(row.creator.id, row)
           }
-        }).filter((row) => row.creator !== null)
+        }
 
+        for (const r of offeringRes.data || []) {
+          const creator = normalizeCreator(r.creator)
+          if (!creator) continue
+          if (r.status === 'active') {
+            // Expired active memberships don't count as access.
+            if (r.expires_at && new Date(r.expires_at as string) <= new Date()) continue
+            consider({ key: `off-${r.id}`, status: 'approved', creator })
+          } else {
+            consider({ key: `off-${r.id}`, status: 'pending', creator, offeringMemberId: r.id as string })
+          }
+        }
+
+        for (const r of legacyRes.data || []) {
+          const creator = normalizeCreator(r.creator)
+          if (!creator) continue
+          consider({
+            key: `legacy-${r.id}`,
+            status: r.status === 'approved' ? 'approved' : 'pending',
+            creator,
+          })
+        }
+
+        const rows = [...byCreator.values()]
         setApproved(rows.filter((row) => row.status === 'approved'))
         setPending(rows.filter((row) => row.status === 'pending'))
       } catch (err) {
@@ -143,6 +186,33 @@ export default function StudentDashboardPage() {
 
     loadStudios()
   }, [])
+
+  // Withdraw a pending offering request. Uses the existing member_offerings
+  // policy (a member may UPDATE their own 'pending' row to 'cancelled').
+  // NOTE: there is deliberately no "leave" action for ACTIVE memberships —
+  // no RLS policy lets a member cancel an active member_offerings row, so we
+  // don't offer a button that would silently fail. Add the leave flow once
+  // that policy exists.
+  const handleWithdraw = async (memberId: string) => {
+    setWithdrawingId(memberId)
+    setError(null)
+    try {
+      const { data, error: updateError } = await supabase
+        .from('member_offerings')
+        .update({ status: 'cancelled' })
+        .eq('id', memberId)
+        .eq('status', 'pending')
+        .select('id')
+      if (updateError) throw updateError
+      if (!data || data.length === 0) throw new Error('not-withdrawn')
+      setPending((prev) => prev.filter((r) => r.offeringMemberId !== memberId))
+    } catch (err) {
+      console.error('Error withdrawing request:', err)
+      setError('Could not withdraw your request. Please try again.')
+    } finally {
+      setWithdrawingId(null)
+    }
+  }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -181,7 +251,7 @@ export default function StudentDashboardPage() {
             {approved.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 mb-12">
                 {approved.map((row) => (
-                  row.creator && <StudioCard key={row.id} creator={row.creator} />
+                  <StudioCard key={row.key} creator={row.creator} />
                 ))}
               </div>
             ) : (
@@ -212,7 +282,6 @@ export default function StudentDashboardPage() {
                 <h2 className="text-xl font-bold mb-4">Pending Requests</h2>
                 <div className="space-y-3">
                   {pending.map((row) => {
-                    if (!row.creator) return null
                     const name = studioName(row.creator)
                     const imageUrl = row.creator.profile?.profile_image_url
                     const username = row.creator.profile?.username
@@ -234,17 +303,32 @@ export default function StudentDashboardPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-[#F4F1EA] font-medium truncate">{name}</p>
                         </div>
-                        <span className="px-3 py-1 bg-amber-500/15 text-amber-400 text-xs font-medium rounded-full">
-                          Pending
-                        </span>
+                        <div className="flex items-center gap-3 flex-none">
+                          <span className="px-3 py-1 bg-amber-500/15 text-amber-400 text-xs font-medium rounded-full">
+                            Pending
+                          </span>
+                          {row.offeringMemberId && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleWithdraw(row.offeringMemberId!)
+                              }}
+                              disabled={withdrawingId === row.offeringMemberId}
+                              className="text-[#F4F1EA]/50 hover:text-[#F4F1EA] text-xs underline transition-colors disabled:opacity-50"
+                            >
+                              {withdrawingId === row.offeringMemberId ? 'Withdrawing…' : 'Withdraw request'}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     )
                     return username ? (
-                      <Link key={row.id} href={`/${username}`} className="block">
+                      <Link key={row.key} href={`/${username}`} className="block">
                         {inner}
                       </Link>
                     ) : (
-                      <div key={row.id}>{inner}</div>
+                      <div key={row.key}>{inner}</div>
                     )
                   })}
                 </div>

@@ -27,7 +27,7 @@ export default function EnterSpaceButton({ creatorId }: { creatorId: string }) {
       }
       const userId = session.user.id
 
-      const [{ data: legacyAccess }, { data: offeringAccess }] = await Promise.all([
+      const [{ data: legacyAccess }, { data: offeringRows }] = await Promise.all([
         supabase
           .from('studio_access')
           .select('status')
@@ -37,15 +37,20 @@ export default function EnterSpaceButton({ creatorId }: { creatorId: string }) {
           .maybeSingle(),
         supabase
           .from('member_offerings')
-          .select('status')
+          .select('expires_at')
           .eq('user_id', userId)
           .eq('creator_id', creatorId)
-          .eq('status', 'active')
-          .maybeSingle(),
+          .eq('status', 'active'),
       ])
 
+      // An active offering only grants access while unexpired — matches the
+      // studio interior / watch gates so this button and those agree.
+      const hasActiveOffering = (offeringRows || []).some(
+        (r) => !r.expires_at || new Date(r.expires_at) > new Date()
+      )
+
       if (active) {
-        setHasAccess(!!(legacyAccess || offeringAccess))
+        setHasAccess(!!legacyAccess || hasActiveOffering)
         setReady(true)
       }
     }
