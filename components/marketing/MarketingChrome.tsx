@@ -103,7 +103,7 @@ export const GooglePlayLogo = () => (
 
 /** Ivory sticky marketing header. `pill` overrides the right-hand CTA. */
 export function MarketingNav({
-  pill = { label: 'Get the app', href: APP_STORE, external: true },
+  pill = { label: 'Discover Creators & Studios', href: '/discover' },
 }: {
   pill?: { label: string; href: string; external?: boolean }
 }) {
