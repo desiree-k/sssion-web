@@ -209,9 +209,7 @@ export default function AuthCallback() {
             {joinUsername ? 'Open your Space' : 'Go to your Spaces'}
           </Link>
 
-          {/* App download — secondary. Android has no public link while it's in
-              closed testing (referrals route through the founder), so it's
-              plain text, not a dead link. */}
+          {/* App download — secondary. Live on both stores. */}
           <div className="pt-8 mt-8 border-t border-[#2A2A30]">
             <p className="text-[#F4F1EA]/40 text-sm mb-4">
               Prefer the app?
@@ -228,7 +226,17 @@ export default function AuthCallback() {
                 </svg>
                 <span>App Store</span>
               </a>
-              <span className="text-[#F4F1EA]/40 text-sm">Android: coming soon</span>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.sssion.studio"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={authSecondaryBtn}
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85c-.5-.25-.84-.76-.84-1.35zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27zm3.35-4.31c.34.27.59.68.59 1.19s-.25.92-.59 1.19l-2.29 1.32-2.5-2.5 2.5-2.5 2.29 1.3zM6.05 2.66l10.76 6.22-2.27 2.27L6.05 2.66z"/>
+                </svg>
+                <span>Google Play</span>
+              </a>
             </div>
           </div>
         </div>

@@ -15,6 +15,7 @@ const hanken = Hanken_Grotesk({
 export const marketingFontVars = `${fraunces.variable} ${hanken.variable}`
 
 export const APP_STORE = 'https://apps.apple.com/us/app/sssion/id6763607808'
+export const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.sssion.studio'
 
 // ── Shared ivory system CSS ──────────────────────────────────────────────────
 // Palette: page #F7F4EF · surface #FFFFFF · hairline #E5E0D6 · ink #1D1B18 ·
@@ -94,6 +95,12 @@ export const AppleLogo = () => (
   </svg>
 )
 
+export const GooglePlayLogo = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="#F7F4EF" aria-hidden="true">
+    <path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85c-.5-.25-.84-.76-.84-1.35zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27zm3.35-4.31c.34.27.59.68.59 1.19s-.25.92-.59 1.19l-2.29 1.32-2.5-2.5 2.5-2.5 2.29 1.3zM6.05 2.66l10.76 6.22-2.27 2.27L6.05 2.66z" />
+  </svg>
+)
+
 /** Ivory sticky marketing header. `pill` overrides the right-hand CTA. */
 export function MarketingNav({
   pill = { label: 'Get the app', href: APP_STORE, external: true },
@@ -128,13 +135,22 @@ export function MarketingFooter() {
         <div className="mk-footer-brand">
           <div className="mk-footer-logo">sssion</div>
           <p className="mk-footer-tagline">Own your movement.</p>
-          <a href={APP_STORE} target="_blank" rel="noopener" className="mk-appstore">
-            <AppleLogo />
-            <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
-              <span className="l1">Download on the</span>
-              <span className="l2">App Store</span>
-            </span>
-          </a>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            <a href={APP_STORE} target="_blank" rel="noopener" className="mk-appstore">
+              <AppleLogo />
+              <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
+                <span className="l1">Download on the</span>
+                <span className="l2">App Store</span>
+              </span>
+            </a>
+            <a href={PLAY_STORE} target="_blank" rel="noopener" className="mk-appstore">
+              <GooglePlayLogo />
+              <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
+                <span className="l1">Get it on</span>
+                <span className="l2">Google Play</span>
+              </span>
+            </a>
+          </div>
         </div>
         <div className="mk-footer-cols">
           <div className="mk-footer-col">

@@ -9,7 +9,9 @@ import {
   MarketingNav,
   MarketingFooter,
   AppleLogo,
+  GooglePlayLogo,
   APP_STORE,
+  PLAY_STORE,
 } from '@/components/marketing/MarketingChrome'
 
 // Page-specific ivory styles layered on top of the shared MARKETING_CSS.
@@ -94,13 +96,22 @@ export default function Home() {
             <div data-reveal data-reveal-delay="280" className="mk-hero-ctas">
               <a href="/signup" className="mk-btn mk-btn-cream">Start free today</a>
             </div>
-            <a data-reveal data-reveal-delay="360" href={APP_STORE} target="_blank" rel="noopener" className="mk-appstore mk-appstore--hero">
-              <AppleLogo />
-              <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
-                <span className="l1">Download on the</span>
-                <span className="l2">App Store</span>
-              </span>
-            </a>
+            <div data-reveal data-reveal-delay="360" style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+              <a href={APP_STORE} target="_blank" rel="noopener" className="mk-appstore mk-appstore--hero">
+                <AppleLogo />
+                <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
+                  <span className="l1">Download on the</span>
+                  <span className="l2">App Store</span>
+                </span>
+              </a>
+              <a href={PLAY_STORE} target="_blank" rel="noopener" className="mk-appstore mk-appstore--hero">
+                <GooglePlayLogo />
+                <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
+                  <span className="l1">Get it on</span>
+                  <span className="l2">Google Play</span>
+                </span>
+              </a>
+            </div>
           </div>
         </section>
 

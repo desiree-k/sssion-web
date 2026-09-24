@@ -125,14 +125,24 @@ export default function VideoPlayerModal({
             <p className="text-white/70 mb-4">
               Want to see more? Join {creatorName}&apos;s Studio
             </p>
-            <a
-              href="https://apps.apple.com/us/app/sssion/id6763607808"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-6 py-3 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] font-semibold rounded-full hover:opacity-90 transition-colors"
-            >
-              Download Sssion
-            </a>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://apps.apple.com/us/app/sssion/id6763607808"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-6 py-3 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] font-semibold rounded-full hover:opacity-90 transition-colors"
+              >
+                App Store
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.sssion.studio"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-6 py-3 bg-[var(--pt-btn-bg,#F4F1EA)] text-[var(--pt-btn-text,#0E0E12)] font-semibold rounded-full hover:opacity-90 transition-colors"
+              >
+                Google Play
+              </a>
+            </div>
           </div>
         </div>
       </div>

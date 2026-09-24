@@ -194,7 +194,15 @@ export default function ResetPasswordPage() {
               rel="noopener noreferrer"
               className={authSecondaryBtn}
             >
-              Get the App
+              App Store
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.sssion.studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={authSecondaryBtn}
+            >
+              Google Play
             </a>
           </div>
         </div>

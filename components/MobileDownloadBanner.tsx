@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import AppStoreBadge from './AppStoreBadge'
+import AppStoreBadge, { GooglePlayBadge } from './AppStoreBadge'
 
 export default function MobileDownloadBanner() {
   const [dismissed, setDismissed] = useState(true) // start hidden to avoid SSR flash
@@ -29,6 +29,7 @@ export default function MobileDownloadBanner() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <AppStoreBadge size="sm" />
+          <GooglePlayBadge size="sm" />
           <button
             onClick={() => {
               setDismissed(true)

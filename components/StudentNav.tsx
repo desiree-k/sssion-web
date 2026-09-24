@@ -9,6 +9,7 @@ import type { Session } from '@supabase/supabase-js'
 type NavState = 'loading' | 'student' | 'creator' | 'signedOut'
 
 const APP_STORE_URL = 'https://apps.apple.com/us/app/sssion/id6763607808'
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.sssion.studio'
 
 function resolveState(session: Session | null): NavState {
   if (!session) return 'signedOut'
@@ -106,7 +107,15 @@ export default function StudentNav() {
                 rel="noopener noreferrer"
                 className="px-5 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-semibold rounded-full hover:bg-white transition-colors"
               >
-                Download App
+                App Store
+              </a>
+              <a
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-semibold rounded-full hover:bg-white transition-colors"
+              >
+                Google Play
               </a>
             </>
           )}

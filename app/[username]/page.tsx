@@ -8,7 +8,7 @@ import { Bodoni_Moda, Archivo } from 'next/font/google'
 import { resolveProfileTheme, profileThemeVars } from '@/lib/profileThemes'
 import FoundingSpark from '@/components/FoundingSpark'
 import PreviewContentGrid from '@/components/PreviewContentGrid'
-import AppStoreBadge from '@/components/AppStoreBadge'
+import AppStoreBadge, { GooglePlayBadge } from '@/components/AppStoreBadge'
 import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 import StudentNav from '@/components/StudentNav'
 import StudioAccessCTA from '@/components/StudioAccessCTA'
@@ -648,8 +648,9 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
             <p className="text-[var(--pt-text2)] mb-10 max-w-md mx-auto leading-relaxed">
               Download Sssion to access all content, join live classes, and connect directly with {displayName}.
             </p>
-            <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center gap-3">
               <AppStoreBadge size="lg" />
+              <GooglePlayBadge size="lg" />
             </div>
           </section>
 

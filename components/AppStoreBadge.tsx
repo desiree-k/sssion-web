@@ -1,32 +1,33 @@
 const APP_STORE_URL = 'https://apps.apple.com/us/app/sssion/id6763607808'
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.sssion.studio'
 
 interface AppStoreBadgeProps {
   className?: string
   size?: 'sm' | 'md' | 'lg'
 }
 
-export default function AppStoreBadge({ className = '', size = 'md' }: AppStoreBadgeProps) {
-  const sizeClasses = {
-    sm: 'px-4 py-2.5 gap-2.5 rounded-xl',
-    md: 'px-5 py-3 gap-3 rounded-xl',
-    lg: 'px-7 py-4 gap-4 rounded-2xl',
-  }
-  const iconClasses = {
-    sm: 'w-5 h-5',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-  }
-  const labelClasses = {
-    sm: 'text-[9px]',
-    md: 'text-[10px]',
-    lg: 'text-xs',
-  }
-  const titleClasses = {
-    sm: 'text-sm',
-    md: 'text-base',
-    lg: 'text-xl',
-  }
+const sizeClasses = {
+  sm: 'px-4 py-2.5 gap-2.5 rounded-xl',
+  md: 'px-5 py-3 gap-3 rounded-xl',
+  lg: 'px-7 py-4 gap-4 rounded-2xl',
+}
+const iconClasses = {
+  sm: 'w-5 h-5',
+  md: 'w-6 h-6',
+  lg: 'w-8 h-8',
+}
+const labelClasses = {
+  sm: 'text-[9px]',
+  md: 'text-[10px]',
+  lg: 'text-xs',
+}
+const titleClasses = {
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-xl',
+}
 
+export default function AppStoreBadge({ className = '', size = 'md' }: AppStoreBadgeProps) {
   return (
     <a
       href={APP_STORE_URL}
@@ -46,4 +47,24 @@ export default function AppStoreBadge({ className = '', size = 'md' }: AppStoreB
   )
 }
 
-export { APP_STORE_URL }
+export function GooglePlayBadge({ className = '', size = 'md' }: AppStoreBadgeProps) {
+  return (
+    <a
+      href={PLAY_STORE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`inline-flex items-center bg-black border border-white/20 hover:border-white/50 transition-all hover:scale-[1.02] active:scale-[0.98] ${sizeClasses[size]} ${className}`}
+    >
+      {/* Google Play logo */}
+      <svg className={`${iconClasses[size]} text-white shrink-0`} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3 20.5v-17c0-.59.34-1.11.84-1.35L13.69 12l-9.85 9.85c-.5-.25-.84-.76-.84-1.35zm13.81-5.38L6.05 21.34l8.49-8.49 2.27 2.27zm3.35-4.31c.34.27.59.68.59 1.19s-.25.92-.59 1.19l-2.29 1.32-2.5-2.5 2.5-2.5 2.29 1.3zM6.05 2.66l10.76 6.22-2.27 2.27L6.05 2.66z" />
+      </svg>
+      <div className="text-left">
+        <div className={`text-white/60 leading-none uppercase tracking-wide ${labelClasses[size]}`}>Get it on</div>
+        <div className={`text-white font-semibold leading-tight mt-0.5 ${titleClasses[size]}`}>Google Play</div>
+      </div>
+    </a>
+  )
+}
+
+export { APP_STORE_URL, PLAY_STORE_URL }
