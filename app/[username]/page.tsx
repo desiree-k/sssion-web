@@ -89,6 +89,9 @@ interface Review {
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
+// Allowed member_offerings.join_source values (?src=).
+const JOIN_SOURCES = ['qr', 'link', 'embed', 'web', 'app']
+
 async function getCreatorByUsernameOrId(identifier: string) {
   console.log('=== CREATOR LOOKUP DEBUG ===')
   console.log('Identifier received:', identifier)
@@ -299,7 +302,10 @@ export default async function CreatorStudioPage({
   // logged-out signup link and written as member_offerings.join_source for
   // logged-in joins (defaults to 'web' when absent).
   const rawSrc = (await searchParams).src
-  const src = (Array.isArray(rawSrc) ? rawSrc[0] : rawSrc) || null
+  const firstSrc = Array.isArray(rawSrc) ? rawSrc[0] : rawSrc
+  // Clamp to the known join_source values; an unknown non-empty tag falls back
+  // to 'web'. Absent stays null (clean signup link; the join defaults to 'web').
+  const src = firstSrc ? (JOIN_SOURCES.includes(firstSrc) ? firstSrc : 'web') : null
   const data = await getCreatorByUsernameOrId(username)
 
   if (!data) {

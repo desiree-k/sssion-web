@@ -1,6 +1,9 @@
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
+// Allowed member_offerings.join_source values; anything else clamps to 'web'.
+const JOIN_SOURCES = ['qr', 'link', 'embed', 'web', 'app']
+
 export interface JoinResult {
   /** True when this session carried join metadata (whether or not every
    *  write succeeded) — the caller should route to the Space, not a dashboard. */
@@ -26,7 +29,8 @@ export async function completeJoinFromSession(session: Session): Promise<JoinRes
   const offeringId = meta.join_offering_id as string | undefined
   const creatorId = meta.join_creator_id as string | undefined
   const username = (meta.join_username as string | undefined) || null
-  const joinSource = meta.join_source as string | undefined
+  const rawJoinSource = meta.join_source as string | undefined
+  const joinSource = rawJoinSource && JOIN_SOURCES.includes(rawJoinSource) ? rawJoinSource : 'web'
 
   if (!offeringId || !creatorId) return { joined: false, username: null }
 
@@ -52,7 +56,7 @@ export async function completeJoinFromSession(session: Session): Promise<JoinRes
           offering_id: offering.id,
           creator_id: offering.creator_id,
           status: autoApproved ? 'active' : 'pending',
-          join_source: joinSource || 'web',
+          join_source: joinSource,
           ...(autoApproved
             ? { granted_at: new Date().toISOString(), expires_at: expiresAt }
             : {}),
