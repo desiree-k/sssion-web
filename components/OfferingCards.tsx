@@ -46,6 +46,9 @@ interface OfferingCardsProps {
   username: string
   /** Creator's display name, shown in the "Request sent" pending copy. */
   creatorDisplayName: string
+  /** Join-source tag (?src=) from the page — carried onto the signup link and
+   *  stored as member_offerings.join_source; defaults to 'web' when absent. */
+  src?: string | null
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -68,7 +71,7 @@ function isLive(mo: MemberOffering): boolean {
   return new Date(mo.expires_at) > new Date()
 }
 
-export default function OfferingCards({ creatorId, offerings, username, creatorDisplayName }: OfferingCardsProps) {
+export default function OfferingCards({ creatorId, offerings, username, creatorDisplayName, src }: OfferingCardsProps) {
   const [signedInStudentId, setSignedInStudentId] = useState<string | null>(null)
   const [signedOut, setSignedOut] = useState(false)
   const [mine, setMine] = useState<Record<string, MemberOffering>>({})
@@ -165,6 +168,7 @@ export default function OfferingCards({ creatorId, offerings, username, creatorD
           offering_id: offering.id,
           creator_id: creatorId,
           status: autoApproved ? 'active' : 'pending',
+          join_source: src || 'web',
           ...(autoApproved ? { granted_at: new Date().toISOString(), expires_at: expiresAt } : {}),
         })
         .select('id, offering_id, status, expires_at')
@@ -304,7 +308,7 @@ export default function OfferingCards({ creatorId, offerings, username, creatorD
                 <div className="mt-1 flex-1 flex flex-col justify-end">
                   {signedOut ? (
                     <Link
-                      href={`/signup?creator=${encodeURIComponent(creatorId)}&offering=${encodeURIComponent(offering.id)}&u=${encodeURIComponent(username)}`}
+                      href={`/signup?creator=${encodeURIComponent(creatorId)}&offering=${encodeURIComponent(offering.id)}&u=${encodeURIComponent(username)}${src ? `&src=${encodeURIComponent(src)}` : ''}`}
                       className="block text-center px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,#B76E79)] text-[var(--pt-btn-text,#ffffff)]"
                     >
                       {offering.is_free ? 'Sign up to join' : 'Sign up to get access'}

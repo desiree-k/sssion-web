@@ -28,6 +28,9 @@ function SignupInner() {
   const joinCreatorId = searchParams.get('creator')
   const joinOfferingId = searchParams.get('offering')
   const joinUsername = searchParams.get('u')
+  // Join-source tag (qr|link|embed|web|app), stashed so completeJoin can write
+  // it as member_offerings.join_source after verification.
+  const joinSource = searchParams.get('src')
 
   const [view, setView] = useState<View>('form')
   const [name, setName] = useState('')
@@ -78,6 +81,7 @@ function SignupInner() {
                   join_username: joinUsername,
                 }
               : {}),
+            ...(joinSource ? { join_source: joinSource } : {}),
           },
           emailRedirectTo: 'https://sssion.studio/auth/callback',
         },

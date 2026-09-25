@@ -287,8 +287,19 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default async function CreatorStudioPage({ params }: { params: Promise<{ username: string }> }) {
+export default async function CreatorStudioPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ username: string }>
+  searchParams: Promise<{ src?: string | string[] }>
+}) {
   const { username } = await params
+  // Optional join-source tag (?src=qr|link|embed|web|app). Carried onto the
+  // logged-out signup link and written as member_offerings.join_source for
+  // logged-in joins (defaults to 'web' when absent).
+  const rawSrc = (await searchParams).src
+  const src = (Array.isArray(rawSrc) ? rawSrc[0] : rawSrc) || null
   const data = await getCreatorByUsernameOrId(username)
 
   if (!data) {
@@ -502,7 +513,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                     {/* No offerings → the request-to-join CTA lives here; with
                         offerings, the cards below carry each CTA. */}
                     {offerings.length === 0 ? (
-                      <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} username={profile.username || creator.id} />
+                      <StudioAccessCTA creatorId={creator.id} joinLabel={joinLabel} username={profile.username || creator.id} src={src} />
                     ) : (
                       <a
                         href="#offerings"
@@ -576,6 +587,7 @@ export default async function CreatorStudioPage({ params }: { params: Promise<{ 
                 offerings={offerings}
                 username={profile.username || creator.id}
                 creatorDisplayName={displayName}
+                src={src}
               />
             </div>
           )}

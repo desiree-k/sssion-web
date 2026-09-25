@@ -26,6 +26,7 @@ export async function completeJoinFromSession(session: Session): Promise<JoinRes
   const offeringId = meta.join_offering_id as string | undefined
   const creatorId = meta.join_creator_id as string | undefined
   const username = (meta.join_username as string | undefined) || null
+  const joinSource = meta.join_source as string | undefined
 
   if (!offeringId || !creatorId) return { joined: false, username: null }
 
@@ -51,6 +52,7 @@ export async function completeJoinFromSession(session: Session): Promise<JoinRes
           offering_id: offering.id,
           creator_id: offering.creator_id,
           status: autoApproved ? 'active' : 'pending',
+          join_source: joinSource || 'web',
           ...(autoApproved
             ? { granted_at: new Date().toISOString(), expires_at: expiresAt }
             : {}),
@@ -86,7 +88,7 @@ export async function completeJoinFromSession(session: Session): Promise<JoinRes
     // Clear the join_* keys so re-verifying or revisiting doesn't re-run this.
     try {
       await supabase.auth.updateUser({
-        data: { join_creator_id: null, join_offering_id: null, join_username: null },
+        data: { join_creator_id: null, join_offering_id: null, join_username: null, join_source: null },
       })
     } catch (err) {
       console.error('completeJoin: could not clear join metadata', err)

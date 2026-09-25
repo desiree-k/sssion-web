@@ -63,7 +63,7 @@ async function getEmbedData(username: string): Promise<EmbedData | null> {
     specialties: Array.isArray(creator.specialties) ? creator.specialties.slice(0, 4) : [],
     accent: creator.accent_color || ROSE_GOLD,
     thumbnails,
-    profileUrl: `${BASE}/${username}`,
+    profileUrl: `${BASE}/${username}?src=embed`,
   }
 }
 

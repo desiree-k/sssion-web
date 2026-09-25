@@ -20,9 +20,15 @@ interface StudioAccessCTAProps {
    * offerings), so no ?offering param.
    */
   username?: string
+  /**
+   * Join-source tag (?src=) from the page. Appended to the signup link so the
+   * value survives signup. This CTA's own request writes studio_access (not
+   * member_offerings), so it carries no join_source itself.
+   */
+  src?: string | null
 }
 
-export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access', username }: StudioAccessCTAProps) {
+export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access', username, src }: StudioAccessCTAProps) {
   const [state, setState] = useState<AccessState>('loading')
   const [existingRequestId, setExistingRequestId] = useState<string | null>(null)
   const [studentId, setStudentId] = useState<string | null>(null)
@@ -128,9 +134,9 @@ export default function StudioAccessCTA({ creatorId, joinLabel = 'Request Access
       {state === 'signedOut' && (
         <>
           <Link
-            href={username
+            href={`${username
               ? `/signup?creator=${encodeURIComponent(creatorId)}&u=${encodeURIComponent(username)}`
-              : '/signup'}
+              : '/signup'}${src ? `${username ? '&' : '?'}src=${encodeURIComponent(src)}` : ''}`}
             className="px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] rounded-[var(--pt-radius,9999px)] transition-opacity hover:opacity-85 bg-[var(--pt-btn-bg,transparent)] text-[var(--pt-btn-text,#B76E79)] border border-[var(--pt-btn-bg,#B76E79)]"
           >
             Sign up to {joinLabel.toLowerCase()}
