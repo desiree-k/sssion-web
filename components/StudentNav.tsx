@@ -53,9 +53,16 @@ const STUDENT_LINKS = [
 export default function StudentNav() {
   const pathname = usePathname()
   const [navState, setNavState] = useState<NavState>('loading')
+  // The collapsed "Get the app" link points at the viewer's store. Defaults to
+  // the App Store for SSR; flips to Google Play on Android after hydration.
+  const [getAppUrl, setGetAppUrl] = useState(APP_STORE_URL)
 
   // On /student/* pages, mobile gets a bottom tab bar instead of top links
   const useBottomNavOnMobile = navState === 'student' && pathname.startsWith('/student')
+
+  useEffect(() => {
+    if (navigator.userAgent.includes('Android')) setGetAppUrl(PLAY_STORE_URL)
+  }, [])
 
   useEffect(() => {
     let isMounted = true
@@ -107,7 +114,7 @@ export default function StudentNav() {
               {/* Narrow screens: one compact link so the store pills can't
                   overflow off-screen. ≥640px: the two full pills. */}
               <a
-                href={APP_STORE_URL}
+                href={getAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="sm:hidden shrink-0 whitespace-nowrap px-3 py-1.5 bg-[#F4F1EA] text-[#0E0E12] text-xs font-semibold rounded-full hover:bg-white transition-colors"
