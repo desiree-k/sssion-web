@@ -684,8 +684,9 @@ export default async function CreatorStudioPage({
         </div>
       </main>
 
-      {/* Floating mobile download banner */}
-      <MobileDownloadBanner />
+      {/* Quiet, non-fixed app row — a floating bar here would cover the
+          offering cards' Join / Get access buttons on phones. */}
+      <MobileDownloadBanner floating={false} />
 
       {/* Footer */}
       <footer className="border-t border-[var(--pt-border)] py-6 px-6 md:px-16">

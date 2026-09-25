@@ -23,7 +23,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className={`text-sm transition-colors ${
+      className={`text-sm whitespace-nowrap transition-colors ${
         isActive ? 'text-[#F4F1EA] font-semibold' : 'text-[#F4F1EA]/70 hover:text-[#F4F1EA]'
       }`}
     >
@@ -75,13 +75,16 @@ export default function StudentNav() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-40 py-4 px-6 border-b border-[#2A2A30] bg-[#0E0E12]/95 backdrop-blur">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link href="/" className="text-2xl font-semibold tracking-[0.3em] text-[#F4F1EA]">
+    <header className="sticky top-0 z-40 py-4 px-4 sm:px-6 border-b border-[#2A2A30] bg-[#0E0E12]/95 backdrop-blur">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+        <Link
+          href="/"
+          className="shrink-0 text-xl sm:text-2xl font-semibold tracking-[0.2em] sm:tracking-[0.3em] text-[#F4F1EA]"
+        >
           SSSION
         </Link>
 
-        <nav className={`items-center gap-4 sm:gap-6 ${useBottomNavOnMobile ? 'hidden md:flex' : 'flex'}`}>
+        <nav className={`items-center gap-3 sm:gap-6 ${useBottomNavOnMobile ? 'hidden md:flex' : 'flex'}`}>
           {navState === 'student' && (
             <>
               <NavLink href="/discover" label="Discover" />
@@ -101,11 +104,21 @@ export default function StudentNav() {
             <>
               <NavLink href="/discover" label="Discover" />
               <NavLink href="/student-signin" label="Sign In" />
+              {/* Narrow screens: one compact link so the store pills can't
+                  overflow off-screen. ≥640px: the two full pills. */}
               <a
                 href={APP_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-semibold rounded-full hover:bg-white transition-colors"
+                className="sm:hidden shrink-0 whitespace-nowrap px-3 py-1.5 bg-[#F4F1EA] text-[#0E0E12] text-xs font-semibold rounded-full hover:bg-white transition-colors"
+              >
+                Get the app
+              </a>
+              <a
+                href={APP_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-block whitespace-nowrap px-5 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-semibold rounded-full hover:bg-white transition-colors"
               >
                 App Store
               </a>
@@ -113,7 +126,7 @@ export default function StudentNav() {
                 href={PLAY_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-semibold rounded-full hover:bg-white transition-colors"
+                className="hidden sm:inline-block whitespace-nowrap px-5 py-2 bg-[#F4F1EA] text-[#0E0E12] text-sm font-semibold rounded-full hover:bg-white transition-colors"
               >
                 Google Play
               </a>

@@ -1,15 +1,54 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import AppStoreBadge, { GooglePlayBadge } from './AppStoreBadge'
+import AppStoreBadge, { GooglePlayBadge, APP_STORE_URL, PLAY_STORE_URL } from './AppStoreBadge'
 
-export default function MobileDownloadBanner() {
+/**
+ * Mobile app-download prompt.
+ *
+ * `floating` (default) pins a dismissible bar to the bottom of the viewport.
+ * On pages with their own bottom-anchored CTAs (the creator page's offering
+ * cards) that bar covers the Join/Get-access button, so pass `floating={false}`
+ * to render a quiet, non-fixed "Also on …" row that sits in normal flow.
+ */
+export default function MobileDownloadBanner({ floating = true }: { floating?: boolean }) {
   const [dismissed, setDismissed] = useState(true) // start hidden to avoid SSR flash
 
   useEffect(() => {
+    if (!floating) return
     const wasDismissed = sessionStorage.getItem('app_banner_dismissed')
     if (!wasDismissed) setDismissed(false)
-  }, [])
+  }, [floating])
+
+  // Quiet, non-fixed variant — never overlaps a CTA.
+  if (!floating) {
+    return (
+      <div className="md:hidden px-6 pt-2 pb-8 text-center">
+        <p className="text-sm text-[var(--pt-text2)]">
+          Also on the{' '}
+          <a
+            href={APP_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:opacity-80"
+            style={{ color: 'var(--pt-accent)' }}
+          >
+            App Store
+          </a>{' '}
+          and{' '}
+          <a
+            href={PLAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:opacity-80"
+            style={{ color: 'var(--pt-accent)' }}
+          >
+            Google Play
+          </a>
+        </p>
+      </div>
+    )
+  }
 
   if (dismissed) return null
 
