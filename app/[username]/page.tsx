@@ -9,7 +9,6 @@ import { resolveProfileTheme, profileThemeVars } from '@/lib/profileThemes'
 import FoundingSpark from '@/components/FoundingSpark'
 import PreviewContentGrid from '@/components/PreviewContentGrid'
 import AppStoreBadge, { GooglePlayBadge } from '@/components/AppStoreBadge'
-import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 import StudentNav from '@/components/StudentNav'
 import StudioAccessCTA from '@/components/StudioAccessCTA'
 import FollowButton from '@/components/FollowButton'
@@ -683,10 +682,6 @@ export default async function CreatorStudioPage({
           </div>
         </div>
       </main>
-
-      {/* Quiet, non-fixed app row — a floating bar here would cover the
-          offering cards' Join / Get access buttons on phones. */}
-      <MobileDownloadBanner floating={false} />
 
       {/* Footer */}
       <footer className="border-t border-[var(--pt-border)] py-6 px-6 md:px-16">

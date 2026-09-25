@@ -1,4 +1,3 @@
-import MobileDownloadBanner from '@/components/MobileDownloadBanner'
 import OpenDoorCta from '@/components/OpenDoorCta'
 import VideoWell from '@/components/marketing/VideoWell'
 import FiveAppsSection from '@/components/marketing/FiveAppsSection'
@@ -314,7 +313,6 @@ export default function Home() {
       </div>
 
       <IvoryInteractions />
-      <MobileDownloadBanner />
       <MarketingFooter />
     </div>
   )
